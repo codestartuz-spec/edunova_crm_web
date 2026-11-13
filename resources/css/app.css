@@ -1,0 +1,324 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    /* Standart Edunova qizili (filial rangi bo'lsa App\Support\BrandTheme shularni <style> bilan almashtiradi) */
+    :root {
+        --brand-50: 255 241 242; --brand-100: 255 225 228; --brand-200: 255 199 205; --brand-300: 255 157 167; --brand-400: 255 100 116;
+        --brand-500: 245 53 72; --brand-600: 225 29 52; --brand-700: 190 18 39; --brand-800: 157 19 37; --brand-900: 130 22 37; --brand-950: 71 8 16;
+    }
+    /* Grafik ranglari (dataviz): yorug' va qorong'i rejim uchun alohida tanlangan qadamlar */
+    :root {
+        --viz-surface: #ffffff;
+        --viz-ink: #17171d;
+        --viz-text: #52525e;
+        --viz-muted: #6f6f7b;
+        --viz-grid: #e3e3e7;
+        --viz-s1: #2a78d6; /* ko'k */
+        --viz-s2: #eb6834; /* to'q sariq */
+        --viz-s3: #1baf7a; /* aqua */
+        --viz-s4: #eda100; /* sariq */
+        --viz-s5: #e87ba4; /* pushti */
+        --viz-s6: #008300; /* yashil */
+        --viz-s7: #4a3aa7; /* binafsha */
+        --viz-s8: #e34948; /* qizil */
+        --viz-good: #0ca30c;
+        --viz-warning: #fab219;
+        --viz-serious: #ec835a;
+        --viz-critical: #d03b3b;
+        --viz-neutral: #9a9aa5;
+        --viz-f1: #86b6ef; /* voronka: tartibli ko'k qadamlar */
+        --viz-f2: #3987e5;
+        --viz-f3: #256abf;
+        --viz-f4: #184f95;
+    }
+    .dark {
+        --viz-surface: #17171d;
+        --viz-ink: #ffffff;
+        --viz-text: #c9c9d0;
+        --viz-muted: #9a9aa5;
+        --viz-grid: #2c2c34;
+        --viz-s1: #3987e5;
+        --viz-s2: #d95926;
+        --viz-s3: #199e70;
+        --viz-s4: #c98500;
+        --viz-s5: #d55181;
+        --viz-s6: #008300;
+        --viz-s7: #9085e9;
+        --viz-s8: #e66767;
+        --viz-neutral: #6f6f7b;
+    }
+    html {
+        @apply antialiased;
+    }
+    body {
+        @apply bg-ink-50 text-ink-800 dark:bg-ink-950 dark:text-ink-100;
+        background-image: radial-gradient(1100px 420px at 85% -8%, rgb(var(--brand-500) / .07), transparent 70%), radial-gradient(800px 360px at -5% 105%, rgb(var(--brand-500) / .05), transparent 70%);
+        background-attachment: fixed;
+    }
+    ::selection { background: rgb(var(--brand-500) / .22); }
+    * { scrollbar-width: thin; scrollbar-color: rgb(154 154 165 / .45) transparent; }
+    :focus-visible { outline: none; }
+    [x-cloak] {
+        display: none !important;
+    }
+}
+
+@layer components {
+    /* Kartalar */
+    .card {
+        @apply rounded-2xl border border-ink-200/70 bg-white shadow-card transition-shadow duration-300 dark:border-ink-800 dark:bg-ink-900;
+    }
+    /* Bosiladigan / e'tibor jalb qiladigan kartalar uchun: ustiga borganda ko'tariladi va filial rangida yorishadi */
+    .card-hover {
+        @apply transition duration-300 ease-out hover:-translate-y-1;
+    }
+    .card-hover:hover {
+        box-shadow: 0 18px 36px -18px rgb(var(--brand-600) / .45), 0 6px 14px -8px rgb(23 23 29 / .16);
+        border-color: rgb(var(--brand-300) / .6);
+    }
+    .card-body {
+        @apply p-5 sm:p-6;
+    }
+
+    /* Tugmalar */
+    .btn {
+        @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-ink-900;
+    }
+    .btn {
+        @apply active:scale-[.97];
+    }
+    .btn-primary {
+        @apply btn bg-brand-600 text-white hover:bg-brand-700 active:bg-brand-800;
+        background-image: linear-gradient(180deg, rgb(255 255 255 / .14), transparent);
+        box-shadow: 0 6px 16px -8px rgb(var(--brand-600) / .7), inset 0 1px 0 rgb(255 255 255 / .18);
+    }
+    .btn-primary:hover { box-shadow: 0 10px 22px -8px rgb(var(--brand-600) / .75), inset 0 1px 0 rgb(255 255 255 / .22); transform: translateY(-1px); }
+    .btn-primary:active { transform: none; }
+    .btn-secondary {
+        @apply btn border border-ink-200 bg-white text-ink-700 hover:bg-ink-50 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-100 dark:hover:bg-ink-700;
+    }
+    .btn-ghost {
+        @apply btn text-ink-600 hover:bg-ink-100 dark:text-ink-300 dark:hover:bg-ink-800;
+    }
+    .btn-danger {
+        @apply btn bg-ink-900 text-white hover:bg-ink-800 dark:bg-ink-100 dark:text-ink-900 dark:hover:bg-white;
+    }
+    .btn-sm {
+        @apply px-3 py-1.5 text-xs;
+    }
+
+    /* Formalar */
+    .label {
+        @apply mb-1.5 block text-sm font-medium text-ink-700 dark:text-ink-200;
+    }
+    .input {
+        @apply block w-full rounded-xl border-ink-200 bg-white px-3.5 py-2.5 text-sm text-ink-900 shadow-sm transition duration-200 placeholder:text-ink-400 focus:border-brand-500 focus:ring-brand-500 dark:border-ink-700 dark:bg-ink-800 dark:text-ink-50 dark:placeholder:text-ink-500;
+    }
+    .input:focus { box-shadow: 0 0 0 4px rgb(var(--brand-500) / .14); }
+    .input-error {
+        @apply border-brand-500 focus:border-brand-500 focus:ring-brand-500;
+    }
+    .hint {
+        @apply mt-1.5 text-xs text-ink-500 dark:text-ink-400;
+    }
+    /* v10 (5-band): input[type=color] .input klassi bilan cho'zilganda tanlangan rang deyarli ko'rinmas
+       bo'lib qolgan edi - shu ustun uchun rangni to'liq to'ldiruvchi, aniq balandlikdagi ko'rinish. */
+    input[type='color'].color-swatch {
+        @apply h-11 w-14 shrink-0 cursor-pointer appearance-none rounded-lg border border-ink-200 bg-white p-1 dark:border-ink-700 dark:bg-ink-800;
+    }
+    input[type='color'].color-swatch::-webkit-color-swatch-wrapper {
+        padding: 0;
+    }
+    input[type='color'].color-swatch::-webkit-color-swatch {
+        border: none;
+        border-radius: 0.5rem;
+    }
+    .error-text {
+        @apply mt-1.5 text-xs font-medium text-brand-600 dark:text-brand-400;
+    }
+    .checkbox {
+        @apply h-4 w-4 rounded border-ink-300 text-brand-600 focus:ring-brand-500 dark:border-ink-600 dark:bg-ink-800;
+    }
+
+    /* Jadval */
+    .table-wrap {
+        @apply overflow-x-auto;
+    }
+    .table {
+        @apply w-full text-left text-sm;
+    }
+    .table thead th {
+        @apply whitespace-nowrap border-b border-ink-200 bg-ink-50 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-ink-500 dark:border-ink-800 dark:bg-ink-900 dark:text-ink-400;
+    }
+    .table tbody td {
+        @apply border-b border-ink-100 px-4 py-3.5 align-middle dark:border-ink-800;
+    }
+    .table tbody tr:last-child td {
+        @apply border-b-0;
+    }
+    .table tbody tr {
+        @apply transition-colors duration-150;
+    }
+    .table tbody tr:hover {
+        @apply bg-ink-50/70 dark:bg-ink-800/40;
+    }
+    .table tbody tr:hover > td:first-child {
+        box-shadow: inset 3px 0 0 rgb(var(--brand-500));
+    }
+
+    /* Belgilar */
+    .badge {
+        @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold;
+    }
+    .badge-red {
+        @apply badge bg-brand-50 text-brand-700 dark:bg-brand-950 dark:text-brand-300;
+    }
+    .badge-dark {
+        @apply badge bg-ink-900 text-white dark:bg-ink-100 dark:text-ink-900;
+    }
+    .badge-blue {
+        @apply badge bg-sky-50 text-sky-700 dark:bg-sky-950 dark:text-sky-300;
+    }
+    .badge-amber {
+        @apply badge bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300;
+    }
+    .badge-purple {
+        @apply badge bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300;
+    }
+    .badge-green {
+        @apply badge bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300;
+    }
+    .badge-gray {
+        @apply badge bg-ink-100 text-ink-600 dark:bg-ink-800 dark:text-ink-300;
+    }
+
+    /* Yon panel havolalari */
+    .nav-link {
+        @apply relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-ink-600 transition duration-200 hover:bg-ink-100 hover:text-ink-900 dark:text-ink-300 dark:hover:bg-ink-800 dark:hover:text-white;
+    }
+    .nav-link > svg { @apply transition duration-200; }
+    .nav-link:hover > svg { transform: translateX(2px) scale(1.12); }
+    .nav-link-active {
+        @apply bg-brand-50 text-brand-700 hover:bg-brand-50 hover:text-brand-700 dark:bg-brand-950/60 dark:text-brand-300 dark:hover:bg-brand-950/60 dark:hover:text-brand-300;
+        background-image: linear-gradient(90deg, rgb(var(--brand-500) / .12), transparent);
+    }
+    .nav-link-active::before {
+        content: ''; position: absolute; left: -12px; top: 18%; bottom: 18%; width: 4px; border-radius: 0 4px 4px 0;
+        background: linear-gradient(180deg, rgb(var(--brand-400)), rgb(var(--brand-600)));
+        animation: ui-bar .35s cubic-bezier(.2,.8,.2,1) both;
+    }
+    .nav-link-active > svg { color: rgb(var(--brand-600)); }
+    .dark .nav-link-active > svg { color: rgb(var(--brand-300)); }
+
+    /* Sahifa sarlavhasi belgisi */
+    .page-accent { @apply inline-block h-7 w-1.5 shrink-0 rounded-full; background: linear-gradient(180deg, rgb(var(--brand-400)), rgb(var(--brand-600))); transform-origin: top; animation: ui-grow .5s cubic-bezier(.2,.8,.2,1) both; }
+}
+
+/* Tasdiqlash oynasi animatsiyasi */
+@keyframes confirm-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes confirm-pop { from { opacity: 0; transform: translateY(16px) scale(.97); } to { opacity: 1; transform: none; } }
+@keyframes confirm-sheet { from { transform: translateY(100%); } to { transform: none; } }
+.confirm-overlay:not(.hidden) .confirm-backdrop { animation: confirm-fade .18s ease-out; }
+.confirm-overlay:not(.hidden) .confirm-panel { animation: confirm-sheet .26s cubic-bezier(.2,.8,.2,1); }
+@media (min-width: 640px) { .confirm-overlay:not(.hidden) .confirm-panel { animation: confirm-pop .22s cubic-bezier(.2,.8,.2,1); } }
+.confirm-overlay.is-closing .confirm-backdrop { animation: confirm-fade .16s ease-in reverse forwards; }
+.confirm-overlay.is-closing .confirm-panel { animation: confirm-fade .16s ease-in reverse forwards; }
+@media (prefers-reduced-motion: reduce) { .confirm-overlay .confirm-backdrop, .confirm-overlay .confirm-panel { animation: none !important; } }
+
+/* Huquqiy hujjatlar matni */
+.legal-prose { line-height: 1.7; font-size: .95rem; }
+.legal-prose h2 { margin: 1.6em 0 .5em; font-size: 1.05rem; font-weight: 700; }
+.legal-prose h2:first-child { margin-top: 0; }
+.legal-prose p { margin: .7em 0; }
+.legal-prose ul { margin: .7em 0; padding-left: 1.25rem; list-style: disc; }
+.legal-prose li { margin: .3em 0; }
+
+
+/* ===== Umumiy harakat tizimi (o'rtacha daraja) ===== */
+@keyframes ui-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@keyframes ui-bar { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes ui-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes ui-slide { from { opacity: 0; transform: translateY(-10px) scale(.98); } to { opacity: 1; transform: none; } }
+@keyframes ui-pop { 0% { transform: scale(.4); opacity: 0; } 60% { transform: scale(1.15); } 100% { transform: scale(1); opacity: 1; } }
+@keyframes ui-sheen { 0% { transform: translateX(-130%); } 100% { transform: translateX(330%); } }
+
+/* Sahifa kirishida bloklar ketma-ket paydo bo'ladi (faqat birinchi darajadagi bloklar) */
+main > * { animation: ui-in .5s cubic-bezier(.2,.8,.2,1) backwards; }
+main > *:nth-child(2) { animation-delay: 50ms; }
+main > *:nth-child(3) { animation-delay: 100ms; }
+main > *:nth-child(4) { animation-delay: 150ms; }
+main > *:nth-child(5) { animation-delay: 200ms; }
+main > *:nth-child(n+6) { animation-delay: 240ms; }
+
+/* Yuqori panel ostidagi filial rangidagi chiziq */
+.topbar-line { position: absolute; inset: auto 0 -1px 0; height: 2px; pointer-events: none; overflow: hidden; background: linear-gradient(90deg, rgb(var(--brand-600)), rgb(var(--brand-400)) 40%, transparent 85%); }
+.topbar-line::after { content: ''; position: absolute; inset: 0 auto 0 0; width: 22%; background: linear-gradient(90deg, transparent, rgb(255 255 255 / .7), transparent); animation: ui-sheen 5s ease-in-out infinite; }
+
+/* Xabar (alert) kirishi */
+.alert-anim { animation: ui-slide .4s cubic-bezier(.2,.8,.2,1) both; }
+.alert-anim > svg { animation: ui-pop .5s .15s cubic-bezier(.2,.8,.2,1) both; }
+
+/* Filial belgisi (sidebar pastida va yuqori panelda) */
+.brand-chip { background: linear-gradient(135deg, rgb(var(--brand-500)), rgb(var(--brand-700))); color: #fff; box-shadow: 0 6px 14px -6px rgb(var(--brand-600) / .7); }
+
+@media (prefers-reduced-motion: reduce) {
+    main > *, .alert-anim, .alert-anim > svg, .nav-link-active::before, .page-accent, .topbar-line::after { animation: none !important; }
+    .card-hover:hover, .btn-primary:hover { transform: none; }
+}
+
+/* ---- v19 Phase 2: umumiy komponentlar (stat kartalar, bo'sh holat, avatar) ---- */
+.stat-card { position: relative; overflow: hidden; }
+.stat-card::after { content: ""; position: absolute; right: -1.5rem; top: -1.5rem; height: 5rem; width: 5rem; border-radius: 9999px; background: radial-gradient(circle, rgb(var(--stat-rgb, var(--brand-500)) / .14), transparent 70%); transition: transform .4s cubic-bezier(.2,.8,.2,1); pointer-events: none; }
+.stat-card:hover::after { transform: scale(1.6); }
+.stat-icon { display: flex; height: 3rem; width: 3rem; flex-shrink: 0; align-items: center; justify-content: center; border-radius: .85rem; background: rgb(var(--stat-rgb, var(--brand-500)) / .12); color: rgb(var(--stat-rgb, var(--brand-600))); transition: transform .3s cubic-bezier(.2,.8,.2,1); }
+.stat-card:hover .stat-icon { transform: scale(1.08) rotate(-4deg); }
+.stat-tone-emerald { --stat-rgb: 16 185 129; }
+.stat-tone-amber { --stat-rgb: 245 158 11; }
+.stat-tone-red { --stat-rgb: 239 68 68; }
+.stat-tone-blue { --stat-rgb: 59 130 246; }
+.stat-tone-ink { --stat-rgb: 100 116 139; }
+.empty-state { display: flex; flex-direction: column; align-items: center; gap: .5rem; padding: 3rem 1rem; text-align: center; color: rgb(var(--ink-500, 100 116 139)); }
+.empty-state .empty-icon { display: flex; height: 3.5rem; width: 3.5rem; align-items: center; justify-content: center; border-radius: 9999px; background: rgb(var(--brand-500) / .1); color: rgb(var(--brand-600)); animation: ui-pop .5s cubic-bezier(.2,.8,.2,1) both; }
+.avatar-sm { display: inline-flex; height: 2rem; width: 2rem; flex-shrink: 0; align-items: center; justify-content: center; border-radius: 9999px; font-size: .75rem; font-weight: 700; background: rgb(var(--brand-500) / .14); color: rgb(var(--brand-700)); }
+.dark .avatar-sm { color: rgb(var(--brand-300)); }
+.todo-row { transition: transform .2s ease, background-color .2s ease; }
+.todo-row:hover { transform: translateX(3px); background-color: rgb(var(--brand-500) / .08); }
+.filter-bar { background: linear-gradient(180deg, rgb(var(--brand-500) / .035), transparent); }
+@media (prefers-reduced-motion: reduce) { .stat-card::after, .stat-icon, .todo-row, .empty-state .empty-icon { transition: none !important; animation: none !important; } .stat-card:hover .stat-icon, .todo-row:hover { transform: none; } }
+.login-hero { background: linear-gradient(135deg, rgb(var(--brand-500)), rgb(var(--brand-700)) 60%, rgb(var(--brand-900))); }
+.login-orb { animation: login-float 9s ease-in-out infinite; }
+.login-orb-2 { animation-delay: -4s; animation-duration: 12s; }
+@keyframes login-float { 0%,100% { transform: translate3d(0,0,0) scale(1); } 50% { transform: translate3d(14px,-18px,0) scale(1.06); } }
+.login-rise { animation: ui-in .6s cubic-bezier(.2,.8,.2,1) both; }
+.login-rise-2 { animation-delay: .12s; } .login-rise-3 { animation-delay: .24s; }
+@media (prefers-reduced-motion: reduce) { .login-orb, .login-rise { animation: none !important; } }
+
+/* ---- v19: kassa/moliya animatsiyalari va yon menyu ---- */
+[data-countup].counting { color: rgb(var(--brand-600)); text-shadow: 0 0 18px rgb(var(--brand-500) / .35); transition: color .2s; }
+[data-countup].count-done { animation: money-pop .6s cubic-bezier(.2,.8,.2,1); }
+@keyframes money-pop { 0% { transform: scale(1); } 35% { transform: scale(1.07); } 100% { transform: scale(1); } }
+.table-anim tbody tr { animation: ui-in .45s cubic-bezier(.2,.8,.2,1) both; }
+.table-anim tbody tr:nth-child(1) { animation-delay: .04s; } .table-anim tbody tr:nth-child(2) { animation-delay: .08s; }
+.table-anim tbody tr:nth-child(3) { animation-delay: .12s; } .table-anim tbody tr:nth-child(4) { animation-delay: .16s; }
+.table-anim tbody tr:nth-child(5) { animation-delay: .20s; } .table-anim tbody tr:nth-child(6) { animation-delay: .24s; }
+.table-anim tbody tr:nth-child(7) { animation-delay: .28s; } .table-anim tbody tr:nth-child(8) { animation-delay: .32s; }
+.table-anim tbody tr:nth-child(n+9) { animation-delay: .36s; }
+.money-card { position: relative; overflow: hidden; }
+.money-card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / .35) 50%, transparent 70%); transform: translateX(-120%); animation: ui-sheen 1.4s .5s ease-out 1 both; pointer-events: none; }
+.dark .money-card::before { background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / .07) 50%, transparent 70%); }
+.action-card { transition: transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s; }
+.action-card:hover { transform: translateY(-3px); box-shadow: 0 18px 36px -20px rgb(var(--brand-600) / .4); }
+aside nav > * { animation: nav-in .45s cubic-bezier(.2,.8,.2,1) both; }
+aside nav > *:nth-child(1) { animation-delay: .03s; } aside nav > *:nth-child(2) { animation-delay: .07s; }
+aside nav > *:nth-child(3) { animation-delay: .11s; } aside nav > *:nth-child(4) { animation-delay: .15s; }
+aside nav > *:nth-child(5) { animation-delay: .19s; } aside nav > *:nth-child(6) { animation-delay: .23s; }
+aside nav > *:nth-child(7) { animation-delay: .27s; } aside nav > *:nth-child(n+8) { animation-delay: .31s; }
+@keyframes nav-in { from { opacity: 0; transform: translateX(-14px); } to { opacity: 1; transform: none; } }
+.nav-link { transition: background-color .2s, color .2s, padding-left .2s, transform .2s; }
+.nav-link:not(.nav-link-active):hover { padding-left: 1rem; }
+.nav-link:hover > svg { animation: nav-wiggle .5s ease; }
+@keyframes nav-wiggle { 0%,100% { transform: rotate(0) scale(1.1); } 30% { transform: rotate(-10deg) scale(1.15); } 60% { transform: rotate(8deg) scale(1.15); } }
+.nav-link-active > svg { filter: drop-shadow(0 2px 6px rgb(var(--brand-500) / .45)); }
+@media (prefers-reduced-motion: reduce) { [data-countup].count-done, .table-anim tbody tr, .money-card::before, aside nav > *, .nav-link:hover > svg { animation: none !important; } }
