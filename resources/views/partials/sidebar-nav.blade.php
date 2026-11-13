@@ -52,6 +52,7 @@
             'key' => 'system', 'title' => 'Tizim', 'icon' => 'cog',
             'items' => [
                 ['label' => 'Filiallar', 'href' => route('branches.index'), 'icon' => 'building', 'active' => request()->routeIs('branches.*'), 'show' => $me->can('branches.manage')],
+                ['label' => 'Obuna', 'href' => route('subscriptions.index'), 'icon' => 'wallet', 'active' => request()->routeIs('subscriptions.*'), 'show' => $me->isSuperAdmin() || $me->isDirector()],
                 ['label' => 'Direktorlar', 'href' => route('directors.index'), 'icon' => 'shield', 'active' => request()->routeIs('directors.*'), 'show' => $me->isSuperAdmin()],
                 ['label' => 'Brend', 'href' => route('brand.edit'), 'icon' => 'sparkles', 'active' => request()->routeIs('brand.*'), 'show' => $me->isSuperAdmin()],
                 ['label' => 'Telegram bot', 'href' => route('telegram.index'), 'icon' => 'megaphone', 'active' => request()->routeIs('telegram.*'), 'show' => $me->isSuperAdmin()],

@@ -105,6 +105,23 @@ Route::middleware(['auth', 'active', 'legal'])->group(function () {
     // Filial almashtirish: sAdmin (barcha filiallar) va qo'shimcha filialli operator (faqat o'ziga berilganlar)
     Route::post('branch/switch', [BranchController::class, 'switch'])->name('branches.switch');
 
+    // v22: filial obunasi (direktor: o'z filiallari; sAdmin: sozlamalar va cheklarni tasdiqlash)
+    Route::middleware('role:sadmin,director')->group(function () {
+        Route::get('subscriptions', [\App\Http\Controllers\SubscriptionController::class, 'index'])->name('subscriptions.index');
+        Route::get('subscriptions/receipts/{subscriptionRequest}', [\App\Http\Controllers\SubscriptionController::class, 'receipt'])->whereNumber('subscriptionRequest')->name('subscriptions.receipt');
+    });
+    Route::middleware('role:director')->group(function () {
+        Route::get('subscriptions/{branch}/buy', [\App\Http\Controllers\SubscriptionController::class, 'buy'])->whereNumber('branch')->name('subscriptions.buy');
+        Route::post('subscriptions/{branch}/buy', [\App\Http\Controllers\SubscriptionController::class, 'store'])->whereNumber('branch')->middleware(['once', 'throttle:10,1'])->name('subscriptions.store');
+    });
+    Route::middleware('role:sadmin')->group(function () {
+        Route::get('subscriptions/settings', [\App\Http\Controllers\SubscriptionController::class, 'settings'])->name('subscriptions.settings');
+        Route::post('subscriptions/settings', [\App\Http\Controllers\SubscriptionController::class, 'saveSettings'])->name('subscriptions.settings.save');
+        Route::post('subscriptions/requests/{subscriptionRequest}/approve', [\App\Http\Controllers\SubscriptionController::class, 'approve'])->whereNumber('subscriptionRequest')->middleware('once')->name('subscriptions.approve');
+        Route::post('subscriptions/requests/{subscriptionRequest}/reject', [\App\Http\Controllers\SubscriptionController::class, 'reject'])->whereNumber('subscriptionRequest')->name('subscriptions.reject');
+        Route::put('subscriptions/{branch}', [\App\Http\Controllers\SubscriptionController::class, 'updateBranch'])->whereNumber('branch')->name('subscriptions.branch.update');
+    });
+
     // Filiallar (v14: sAdmin yoki shu ruxsat berilgan direktor)
     Route::middleware('can:branches.manage')->group(function () {
         Route::resource('branches', BranchController::class)->except(['destroy']);

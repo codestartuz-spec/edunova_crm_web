@@ -27,6 +27,11 @@ trait BelongsToBranch
                 $model->branch_id = $branchId;
             }
         });
+
+        // v22: obunasi tugagan filialda yozish/o'zgartirish/o'chirish yo'q (faqat ko'rish)
+        foreach (['creating', 'updating', 'deleting'] as $event) {
+            static::$event(fn ($model) => \App\Services\SubscriptionService::assertWritable($model->branch_id ? (int) $model->branch_id : null));
+        }
     }
 
     public function branch(): BelongsTo

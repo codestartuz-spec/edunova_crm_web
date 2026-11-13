@@ -102,6 +102,7 @@
 
     <main class="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
         <x-alert />
+        @include('partials.subscription-banner')
         @yield('content')
         @include('partials.legal-links', ['class' => 'mt-10 border-t border-ink-100 pt-4 dark:border-ink-800'])
     </main>

@@ -14,7 +14,7 @@ class Branch extends Model
     public const DEFAULT_BRAND_COLOR = '#dc2626';
 
     protected $fillable = [
-        'name', 'code', 'phone', 'address', 'charity_percent', 'discount_days_before', 'discount_days_after', 'sms_enabled', 'sms_modem_daily_limit', 'status', 'opened_at', 'closed_at', 'closed_reason',
+        'name', 'code', 'phone', 'address', 'charity_percent', 'discount_days_before', 'discount_days_after', 'sms_enabled', 'sms_modem_daily_limit', 'status', 'opened_at', 'closed_at', 'closed_reason', 'subscription_ends_on', 'subscription_exempt',
         'eskiz_email', 'eskiz_password', 'eskiz_from', 'sms_auto_debt', 'sms_auto_absent',
         'stir', 'director_name', 'director_title', 'contract_template',
         'brand_color', 'public_about', 'usluga_from', 'usluga_rates',
@@ -26,6 +26,13 @@ class Branch extends Model
     {
         // v20: ba'zi filiallarga cheklangan direktor boshqa filiallarni umuman ko'rmaydi
         static::addGlobalScope(new \App\Models\Concerns\BranchVisibilityScope);
+
+        // v22: yangi filial sinov muddati (standart 30 kun) bilan ochiladi
+        static::creating(function (self $b) {
+            if (! $b->subscription_exempt && ! $b->subscription_ends_on) {
+                $b->subscription_ends_on = now()->addDays(\App\Services\SubscriptionService::trialDays())->toDateString();
+            }
+        });
     }
 
     protected $attributes = ['status' => 'active'];
@@ -34,6 +41,8 @@ class Branch extends Model
     {
         return [
             'status' => BranchStatus::class,
+            'subscription_ends_on' => 'date:Y-m-d',
+            'subscription_exempt' => 'boolean',
             'opened_at' => 'datetime',
             'closed_at' => 'datetime',
             'eskiz_password' => \App\Casts\SafeEncrypted::class,
@@ -64,6 +73,27 @@ class Branch extends Model
     public function isActive(): bool
     {
         return $this->status === BranchStatus::Active;
+    }
+
+    /** v22: obuna tugaganmi (tugash kunidan boshlab). Obunasiz filial hech qachon tugamaydi. */
+    public function subscriptionExpired(): bool
+    {
+        return ! $this->subscription_exempt && $this->subscription_ends_on !== null && $this->subscription_ends_on->startOfDay()->lte(today());
+    }
+
+    /** v22: obuna tugashigacha qolgan kun (null — obunasiz; manfiy/0 — tugagan). */
+    public function subscriptionDaysLeft(): ?int
+    {
+        if ($this->subscription_exempt || ! $this->subscription_ends_on) {
+            return null;
+        }
+
+        return (int) today()->diffInDays($this->subscription_ends_on->startOfDay(), false);
+    }
+
+    public function subscriptionRequests(): HasMany
+    {
+        return $this->hasMany(SubscriptionRequest::class);
     }
 
     public function hasOwnSmsAccount(): bool

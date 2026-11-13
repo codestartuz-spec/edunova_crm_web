@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->append(StripMoneySpaces::class);
         $middleware->append(SecurityHeaders::class);
+        $middleware->appendToGroup('web', \App\Http\Middleware\EnsureSubscriptionWritable::class);
         $middleware->encryptCookies(except: ['cookie_consent']);
         $middleware->validateCsrfTokens(except: ['telegram/webhook']);
         $middleware->redirectGuestsTo(fn () => route('login'));
@@ -31,6 +32,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'branch' => EnsureBranchSelected::class,
             'once' => PreventDuplicateSubmission::class,
             'legal' => EnsureLegalAccepted::class,
+            'subscription' => \App\Http\Middleware\EnsureSubscriptionWritable::class,
             'feature' => \App\Http\Middleware\EnsureFeature::class,
         ]);
 
@@ -45,6 +47,13 @@ return Application::configure(basePath: dirname(__DIR__))
         );
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        // v22: obunasi tugagan filialda yozish urinishi
+        $exceptions->render(function (\App\Exceptions\SubscriptionExpiredException $e, Request $request) {
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => $e->getMessage()], 403);
+            }
+
+            return back()->with('error', $e->getMessage());
+        });
     })
     ->create();

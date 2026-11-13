@@ -1,3 +1,12 @@
+## v22 — Filial obunasi (oylik/yillik to'lov)
+- Yangi **Obuna** bo'limi: direktor o'z filiallari obunasi holati, tugash sanasi va qolgan muddatni ko'radi; faol filialda «Obunani uzaytirish», tugaganida «Obuna sotib olish».
+- Obuna tugagan kuni filial **avtomatik faqat-ko'rish rejimiga** o'tadi (sanaga qarab hisoblanadi, rejalashtiruvchiga bog'liq emas): xodimlar ham, direktor ham yangi ma'lumot kirita olmaydi (HTTP middleware + model darajasida himoya). sAdmin va o'quvchilarga cheklov yo'q.
+- Sotib olish sahifasi: shartlar, karta raqami, tarif tanlash (oylik/yillik), chek rasmini yuklash (private disk). sAdmin tasdiqlasa obuna avtomatik uzayadi (faol bo'lsa tugash sanasidan, tugagan bo'lsa bugundan), `branch_payments` tarixiga yoziladi; rad etilsa sabab direktorga Telegram orqali boradi.
+- **Obuna sozlamalari** (sAdmin): oylik/yillik narx (hamma filial uchun bir xil), karta raqami va egasi, shartlar matni, yangi filial uchun bepul sinov (standart 30 kun). Filialni «Obunasiz (doim faol)» qilish yoki sanani qo'lda belgilash mumkin.
+- Mavjud filiallarga migratsiya vaqtidan boshlab 30 kun bepul beriladi. Yangi filial sinov muddati bilan ochiladi.
+- Eslatmalar: panel banneri (7 kun qolganda / tugaganda; sAdmin uchun kutayotgan cheklar) va Telegram (`subscriptions:notify`, har kuni 09:30 Toshkent: 7/3/1 kun oldin va tugagan kuni); yangi chek kelganda sAdmin Telegramiga xabar.
+- Testlar: `V22SubscriptionTest` (12 ta); jami 594 ta test, hammasi o'tadi.
+
 ## v21 (2026-11) - xavfsizlik va sifat
 - Git: zaxira nusxalar, eski baza dumplari va yuklangan fayllar (`storage/app/*`) endi kuzatilmaydi (`.gitignore`); ular repodan olib tashlandi.
 - Eski bazani veb orqali ko'chirish endi odatda O'CHIQ: faqat `LEGACY_IMPORT_ENABLED=true` bo'lganda ishlaydi (menyu ham yashirin). `php artisan app:import-legacy` bu flagga bog'liq emas.

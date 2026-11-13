@@ -28,3 +28,6 @@ Schedule::call(fn () => app(\App\Services\HealthService::class)->run())->everyFi
 
 // v15: kunlik hisobot (filiallar kesimida) - har kuni 20:00 Toshkent
 Schedule::command('report:daily')->dailyAt('20:00')->timezone('Asia/Tashkent')->withoutOverlapping();
+
+// v22: filial obunasi tugashi haqida eslatma (7/3/1 kun oldin va tugagan kuni) - Telegram orqali direktorga
+Schedule::command('subscriptions:notify')->dailyAt('09:30')->timezone('Asia/Tashkent')->withoutOverlapping();
