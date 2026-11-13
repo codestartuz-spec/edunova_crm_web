@@ -45,7 +45,7 @@ class StaffRequest extends FormRequest
             'hired_at' => ['nullable', 'date', 'before_or_equal:today'],
             'address' => ['nullable', 'string', 'max:255'],
             'status' => ['required', Rule::enum(UserStatus::class)],
-            'password' => [$creating ? 'required' : 'nullable', 'confirmed', Password::min(8)],
+            'password' => [$creating ? 'required' : 'nullable', 'confirmed', Password::defaults()],
         ];
 
         // v13: operatorga qo'shimcha filiallar - faqat sAdmin belgilaydi

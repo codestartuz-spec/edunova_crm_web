@@ -29,8 +29,8 @@ class BrandController extends Controller
             'name' => ['required', 'string', 'min:2', 'max:40'],
             'short' => ['required', 'string', 'min:2', 'max:12'],
             'tagline' => ['nullable', 'string', 'max:120'],
-            'logo' => ['nullable', 'file'],
-            'logo_wide' => ['nullable', 'file'],
+            'logo' => ['nullable', 'file', 'mimes:png', 'max:'.\App\Support\Brand::MAX_KB],
+            'logo_wide' => ['nullable', 'file', 'mimes:png', 'max:'.\App\Support\Brand::MAX_KB],
             'remove_logo' => ['nullable', 'boolean'],
             'remove_logo_wide' => ['nullable', 'boolean'],
         ], [], ['name' => 'Loyiha nomi', 'short' => 'Qisqa nom', 'tagline' => 'Shior', 'logo' => 'Logotip', 'logo_wide' => 'Gorizontal logotip']);
@@ -67,7 +67,7 @@ class BrandController extends Controller
 
         AuditLog::record('brand.updated', null, "Brend yangilandi: «{$old}» → «".trim($data['name']).'»'.($notes ? ' ('.implode(', ', $notes).')' : ''));
 
-        return redirect()->route('brand.edit')->with('success', 'Brend saqlandi. Ilovani telefonga o\'rnatgan foydalanuvchilarda ikonka qayta o\'rnatilgandan keyin yangilanadi.');
+        return redirect()->route('brand.edit')->with('success', 'Brend saqlandi. Saytni ilova sifatida (PWA) o\'rnatgan foydalanuvchilarda ikonka qayta o\'rnatilgandan keyin yangilanadi.');
     }
 
     /** Brend fayllari (logotip, ikonkalar): kirish sahifasi ham ko'rsin deb ochiq; faqat ro'yxatdagi nomlar beriladi. */

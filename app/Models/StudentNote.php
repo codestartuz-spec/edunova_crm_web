@@ -6,6 +6,7 @@ use App\Models\Concerns\BelongsToBranch;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * v8 B8: xodimlar o'rtasidagi ichki eslatmalar (o'quvchi profilidagi bitta "Eslatma" maydonidan farqli).
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class StudentNote extends Model
 {
-    use BelongsToBranch;
+    use BelongsToBranch, SoftDeletes; // o'chirilgan eslatma yashiriladi, bazadan yo'qolmaydi
 
     protected $fillable = ['branch_id', 'student_id', 'user_id', 'body'];
 

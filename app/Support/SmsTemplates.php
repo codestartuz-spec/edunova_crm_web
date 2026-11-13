@@ -15,7 +15,7 @@ class SmsTemplates
         return [
             'student_welcome' => [
                 'label' => "Yangi o'quvchiga xush kelibsiz (login va parol bilan)", 'enabled' => true,
-                'body' => "Hurmatli {name}, {branch} o'quv markaziga xush kelibsiz! Mobil ilova uchun login: {login}, parol: {password}.",
+                'body' => "Hurmatli {name}, {branch} o'quv markaziga xush kelibsiz! Kabinetga kirish uchun login: {login}, parol: {password}.",
             ],
             'payment_received' => [
                 'label' => "To'lov qabul qilindi", 'enabled' => true,

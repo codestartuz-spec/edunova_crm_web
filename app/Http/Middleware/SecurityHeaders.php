@@ -24,7 +24,18 @@ class SecurityHeaders
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
         $response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
 
-        if (! $request->routeIs('apply.*')) {
+        // Content-Security-Policy: sahifa kodiga ta'sir qilmaydigan xavfsiz qismlar HAR DOIM qo'llanadi
+        // (plaginlar, <base> almashtirish, boshqa saytga forma yuborish va iframe ichiga joylash taqiqlanadi).
+        // To'liq (script/style) siyosat esa avval faqat HISOBOT rejimida - sahifalarni buzmaydi, brauzer konsolida ko'rinadi.
+        $embeddable = $request->routeIs('apply.*');
+        $enforced = ["object-src 'none'", "base-uri 'self'", "form-action 'self'"];
+        if (! $embeddable) {
+            $enforced[] = "frame-ancestors 'none'";
+        }
+        $response->headers->set('Content-Security-Policy', implode('; ', $enforced));
+        $response->headers->set('Content-Security-Policy-Report-Only', "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; media-src 'self' blob:; frame-src 'self' https:");
+
+        if (! $embeddable) {
             $response->headers->set('X-Frame-Options', 'DENY');
         }
 

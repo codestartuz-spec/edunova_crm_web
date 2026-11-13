@@ -66,8 +66,8 @@ class V8PasswordPolicyTest extends TestCase
 
         $this->actingAs($admin)->put('/profile/password', [
             'current_password' => 'parol12345',
-            'password' => 'yangi-xavfsiz-parol',
-            'password_confirmation' => 'yangi-xavfsiz-parol',
+            'password' => 'yangi-xavfsiz-parol1',
+            'password_confirmation' => 'yangi-xavfsiz-parol1',
         ])->assertRedirect();
 
         $this->assertTrue($admin->fresh()->password_changed_at->equalTo(now()));

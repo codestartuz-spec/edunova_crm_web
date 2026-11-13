@@ -55,7 +55,7 @@
                 ['label' => 'Direktorlar', 'href' => route('directors.index'), 'icon' => 'shield', 'active' => request()->routeIs('directors.*'), 'show' => $me->isSuperAdmin()],
                 ['label' => 'Brend', 'href' => route('brand.edit'), 'icon' => 'sparkles', 'active' => request()->routeIs('brand.*'), 'show' => $me->isSuperAdmin()],
                 ['label' => 'Telegram bot', 'href' => route('telegram.index'), 'icon' => 'megaphone', 'active' => request()->routeIs('telegram.*'), 'show' => $me->isSuperAdmin()],
-                ['label' => "Eski bazani ko'chirish", 'href' => route('legacy.index'), 'icon' => 'file', 'active' => request()->routeIs('legacy.*'), 'show' => $me->isSuperAdmin()],
+                ['label' => "Eski bazani ko'chirish", 'href' => route('legacy.index'), 'icon' => 'file', 'active' => request()->routeIs('legacy.*'), 'show' => $me->isSuperAdmin() && config('features.legacy_import')],
                 ['label' => 'Zaxira nusxalar', 'href' => route('backups.index'), 'icon' => 'file', 'active' => request()->routeIs('backups.*'), 'show' => $me->isSuperAdmin()],
                 ['label' => 'Huquqiy hujjatlar', 'href' => route('legal.admin'), 'icon' => 'shield', 'active' => request()->routeIs('legal.admin*', 'legal.journal*'), 'show' => $me->can('legal.manage')],
                 ['label' => 'Tizim holati', 'href' => route('system-status.index'), 'icon' => 'cog', 'active' => request()->routeIs('system-status.*'), 'show' => $me->can('system.view')],

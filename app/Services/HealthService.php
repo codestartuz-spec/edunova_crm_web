@@ -216,6 +216,10 @@ class HealthService
             return $this->row('services', 'telegram', 'Telegram bot', 'warn', 'Admin ID qo\'shilmagan — zaxira va ogohlantirishlar hech kimga bormaydi.');
         }
 
+        if ($err = Cache::get('telegram.webhook_last_error')) {
+            return $this->row('services', 'telegram', 'Telegram bot', 'warn', 'Oxirgi webhook xatosi ('.($err['at'] ?? '?').'): '.($err['message'] ?? ''));
+        }
+
         return $this->row('services', 'telegram', 'Telegram bot', 'ok', 'Token sozlangan, Admin ID: '.count($tg->adminIds()).' ta.');
     }
 

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -29,6 +30,11 @@ class AppServiceProvider extends ServiceProvider
             $m::saved(fn () => \App\Http\Controllers\StatisticsController::bump());
             $m::deleted(fn () => \App\Http\Controllers\StatisticsController::bump());
         }
+
+        // Parol siyosati: kamida 10 belgi, harf va raqam; productionda ma'lum sizib chiqqan parollar rad etiladi
+        Password::defaults(fn () => $this->app->isProduction()
+            ? Password::min(10)->letters()->numbers()->uncompromised()
+            : Password::min(10)->letters()->numbers());
 
         Paginator::defaultView('vendor.pagination.edunova');
         Model::preventLazyLoading(! $this->app->isProduction());

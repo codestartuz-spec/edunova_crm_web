@@ -35,7 +35,7 @@
                             <option value="{{ $role->value }}" @selected(old('role', $staff->role->value) === $role->value)>{{ $role->label() }}</option>
                         @endforeach
                     </x-select>
-                    <p class="mt-1 text-xs text-ink-500">Lavozim o'zgarsa, ruxsatlar yangi lavozim shabloniga qaytariladi va mobil ilovadagi seanslari tugatiladi.</p>
+                    <p class="mt-1 text-xs text-ink-500">Lavozim o'zgarsa, ruxsatlar yangi lavozim shabloniga qaytariladi va boshqa qurilmalardagi seanslari tugatiladi.</p>
                 </div>
             @endif
 

@@ -1,3 +1,17 @@
+## v21 (2026-11) - xavfsizlik va sifat
+- Git: zaxira nusxalar, eski baza dumplari va yuklangan fayllar (`storage/app/*`) endi kuzatilmaydi (`.gitignore`); ular repodan olib tashlandi.
+- Eski bazani veb orqali ko'chirish endi odatda O'CHIQ: faqat `LEGACY_IMPORT_ENABLED=true` bo'lganda ishlaydi (menyu ham yashirin). `php artisan app:import-legacy` bu flagga bog'liq emas.
+- Zaxira ZIP paroli ixtiyoriy ravishda `.env` dagi `BACKUP_ZIP_PASSWORD` dan olinadi (bazadan va APP_KEY dan alohida).
+- Kirish himoyasi: login+IP (5/daq) ga qo'shimcha IP bo'yicha (30 ta xato / 15 daq) va akkaunt bo'yicha (15 ta xato / 15 daq) bloklash.
+- Parol siyosati: kamida 10 belgi, harf va raqam; productionda sizib chiqqan parollar rad etiladi (`Password::defaults()`).
+- Logotip yuklash: faqat PNG va hajm cheklovi validatsiya qatlamida ham.
+- Sarlavhalar: Content-Security-Policy (object-src, base-uri, form-action, frame-ancestors majburiy; to'liq siyosat report-only rejimida).
+- Telegram webhook xatolari «Tizim holati»da ko'rinadi.
+- Mobil/Firebase qoldiqlari (`FIREBASE_*`, `services.fcm`, matnlar) olib tashlandi; `LOG_LEVEL=warning`.
+- Indekslar: `payments`, `wallet_transactions`, `sms_messages` uchun qo'shimcha; `student_notes` soft delete.
+- Statistika: hodim faoliyati hisobi `Services/Statistics/StaffActivityStatistics` ga ajratildi.
+- Testlar: yangi `V21HardeningTest`; eskirgan `V10DashboardTest` va `V15PwaTest` tuzatildi.
+
 ## v20 (2026-11)
 - Brend: sAdmin loyiha nomi, qisqa nom, shior va logotipni o'zgartiradi (`/brand`). Logotip faqat PNG, aniq 512×512 px (gorizontal - 640×160 px); favicon va PWA ikonkalari avtomatik yasaladi.
 - Direktor filial ruxsati: direktorga barcha filiallar yoki faqat tanlanganlari (bitta/bir nechta) beriladi. Mavjud direktorlar barcha filiallarda qoladi; yangi filial cheklangan direktorga avtomatik ochilmaydi.

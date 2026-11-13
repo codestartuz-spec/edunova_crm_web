@@ -2,10 +2,13 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class V15PwaTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_manifest_offline_and_worker(): void
     {
         $this->getJson('/manifest.webmanifest')->assertOk()->assertJsonPath('display', 'standalone')->assertJsonCount(3, 'icons');

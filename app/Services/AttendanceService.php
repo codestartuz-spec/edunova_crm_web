@@ -220,7 +220,7 @@ class AttendanceService
     /**
      * v12: bitta o'quvchi uchun bitta guruhdagi davomat xulosasi - `matrix()` kabi BUTUN
      * guruh matritsasini (barcha o'quvchilar, barcha kunlar, barcha yozuvlar) qurmasdan,
-     * to'g'ridan-to'g'ri shu o'quvchining yozuvlarini agregatsiya qiladi. Mobil `/me/attendance`
+     * to'g'ridan-to'g'ri shu o'quvchining yozuvlarini agregatsiya qiladi. O'quvchi kabineti
      * o'quvchi a'zo bo'lgan HAR BIR guruh uchun shuni chaqiradi - shuning uchun har biri
      * yengil (bitta agregat so'rov) bo'lishi kerak, guruh kattaligiga bog'liq bo'lmasdan.
      *

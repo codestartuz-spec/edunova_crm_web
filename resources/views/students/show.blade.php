@@ -30,7 +30,7 @@
 
     @if (session('credentials'))
         <div class="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
-            <b>Mobil ilova uchun kirish ma'lumotlari</b> (parol faqat hozir ko'rsatiladi, uni o'quvchiga bering):
+            <b>O'quvchi kabinetiga kirish ma'lumotlari</b> (parol faqat hozir ko'rsatiladi, uni o'quvchiga bering):
             <div class="mt-2 font-mono text-base">Login: <b>{{ session('credentials')['login'] }}</b> &nbsp; Parol: <b>{{ session('credentials')['password'] }}</b></div>
         </div>
     @endif

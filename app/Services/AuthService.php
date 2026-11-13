@@ -10,10 +10,18 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
-/** Veb va mobil API uchun umumiy kirish qoidalari. */
+/** Veb uchun umumiy kirish qoidalari. */
 class AuthService
 {
     private const MAX_ATTEMPTS = 5;
+
+    /** Bir IP dan 15 daqiqada shuncha xato urinishdan keyin shu IP vaqtincha bloklanadi (turli loginlarni sinab ko'rishga qarshi). */
+    private const MAX_IP_FAILURES = 30;
+
+    /** Bitta login (akkaunt) uchun 15 daqiqada shuncha xato urinishdan keyin bloklanadi (turli IP lardan hujumga qarshi). */
+    private const MAX_LOGIN_FAILURES = 15;
+
+    private const LONG_WINDOW = 900;
 
     /**
      * v14: login (username / email / telefon raqami) va parol bo'yicha mos FAOL akkauntlarni qaytaradi.
@@ -28,9 +36,17 @@ class AuthService
     {
         $login = trim($login);
         $key = Str::lower($login).'|'.$request->ip();
+        $ipKey = 'login-ip|'.$request->ip();
+        $loginKey = 'login-user|'.Str::lower($login);
 
-        if (RateLimiter::tooManyAttempts($key, self::MAX_ATTEMPTS)) {
-            $seconds = RateLimiter::availableIn($key);
+        $blockedKey = collect([
+            [$key, self::MAX_ATTEMPTS],
+            [$ipKey, self::MAX_IP_FAILURES],
+            [$loginKey, self::MAX_LOGIN_FAILURES],
+        ])->first(fn ($k) => RateLimiter::tooManyAttempts($k[0], $k[1]))[0] ?? null;
+
+        if ($blockedKey !== null) {
+            $seconds = RateLimiter::availableIn($blockedKey);
 
             throw ValidationException::withMessages([
                 'login' => "Juda ko'p urinish. {$seconds} soniyadan keyin qayta urinib ko'ring.",
@@ -41,11 +57,14 @@ class AuthService
 
         if ($matched->isEmpty()) {
             RateLimiter::hit($key, 60);
+            RateLimiter::hit($ipKey, self::LONG_WINDOW);
+            RateLimiter::hit($loginKey, self::LONG_WINDOW);
 
             throw ValidationException::withMessages(['login' => "Login yoki parol noto'g'ri."]);
         }
 
         RateLimiter::clear($key);
+        RateLimiter::clear($loginKey);
 
         $usable = $matched->filter(fn (User $u) => $this->canLogin($u))->values();
 

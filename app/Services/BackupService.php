@@ -29,6 +29,11 @@ class BackupService
 
     public function zipPassword(): string
     {
+        // .env dagi BACKUP_ZIP_PASSWORD bazadan va APP_KEY dan alohida saqlanadi - mavjud bo'lsa, shu ishlatiladi
+        if ($env = config('features.backup_zip_password')) {
+            return (string) $env;
+        }
+
         $p = AppSetting::get('backup.zip_password');
         if (! $p) {
             $p = Str::random(28);

@@ -88,7 +88,7 @@ class PasswordResetController extends Controller
         $user = $this->selectedUser($request);
         abort_unless($user, 404);
 
-        $data = $request->validate(['password' => ['required', 'confirmed', Password::min(8)]], [], ['password' => 'Parol']);
+        $data = $request->validate(['password' => ['required', 'confirmed', Password::defaults()]], [], ['password' => 'Parol']);
 
         $service->reset($user, $data['password']);
         $request->session()->forget('pr');

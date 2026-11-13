@@ -59,8 +59,8 @@ class V10DashboardTest extends TestCase
         $this->actingAs($admin)->get('/')->assertOk()
             ->assertSee('Faol guruhlar')
             ->assertSee('Boshlanishi kutilayotgan guruhlar')
-            ->assertSee("2 o'quvchi", false)
-            ->assertSee("1 o'quvchi", false);
+            ->assertSee("2 o&#039;quvchi", false)
+            ->assertSee("1 o&#039;quvchi", false);
     }
 
     public function test_group_stats_hidden_without_permission_or_unselected_branch(): void

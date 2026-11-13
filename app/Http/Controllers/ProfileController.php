@@ -63,13 +63,13 @@ class ProfileController extends Controller
     {
         $data = $request->validate([
             'current_password' => ['required', 'current_password'],
-            'password' => ['required', 'confirmed', 'different:current_password', Password::min(8)],
+            'password' => ['required', 'confirmed', 'different:current_password', Password::defaults()],
         ], [], ['current_password' => 'Joriy parol', 'password' => 'Yangi parol']);
 
         $user = $request->user();
         $user->update(['password' => $data['password']]);
 
-        // v8 A5: parol o'zgarganda eski kirishlar bekor qilinadi (mobil token bo'lsa) va joriy
+        // v8 A5: parol o'zgarganda boshqa qurilmalardagi kirishlar bekor qilinadi va joriy
         // sessiya identifikatori yangilanadi (o'zi hozir chiqarilmaydi, faqat xavfsizlik uchun yangilanadi).
         $request->session()->regenerate();
         app(SessionService::class)->available() && app(SessionService::class)->revokeOthers($user, $request->session()->getId());

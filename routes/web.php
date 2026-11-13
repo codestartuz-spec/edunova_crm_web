@@ -150,12 +150,12 @@ Route::middleware(['auth', 'active', 'legal'])->group(function () {
         Route::post('telegram-bot/admins', [\App\Http\Controllers\TelegramAdminController::class, 'addAdmin'])->name('telegram.admins.add');
         Route::delete('telegram-bot/admins/{id}', [\App\Http\Controllers\TelegramAdminController::class, 'removeAdmin'])->whereNumber('id')->name('telegram.admins.remove');
         Route::delete('telegram-bot/users/{id}', [\App\Http\Controllers\TelegramAdminController::class, 'unlink'])->whereNumber('id')->name('telegram.unlink');
-        Route::get('legacy-import', [\App\Http\Controllers\LegacyImportController::class, 'index'])->name('legacy.index');
-        Route::post('legacy-import', [\App\Http\Controllers\LegacyImportController::class, 'upload'])->middleware('throttle:10,1')->name('legacy.upload');
-        Route::get('legacy-import/review', [\App\Http\Controllers\LegacyImportController::class, 'review'])->name('legacy.review');
-        Route::get('legacy-import/progress/{token}', [\App\Http\Controllers\LegacyImportController::class, 'progress'])->where('token', '[a-f0-9]{16}')->name('legacy.progress');
-        Route::get('legacy-import/status/{token}', [\App\Http\Controllers\LegacyImportController::class, 'status'])->where('token', '[a-f0-9]{16}')->name('legacy.status');
-        Route::post('legacy-import/run', [\App\Http\Controllers\LegacyImportController::class, 'run'])->middleware('throttle:20,1')->name('legacy.run');
+        Route::get('legacy-import', [\App\Http\Controllers\LegacyImportController::class, 'index'])->middleware('feature:legacy_import')->name('legacy.index');
+        Route::post('legacy-import', [\App\Http\Controllers\LegacyImportController::class, 'upload'])->middleware('feature:legacy_import')->middleware('throttle:10,1')->name('legacy.upload');
+        Route::get('legacy-import/review', [\App\Http\Controllers\LegacyImportController::class, 'review'])->middleware('feature:legacy_import')->name('legacy.review');
+        Route::get('legacy-import/progress/{token}', [\App\Http\Controllers\LegacyImportController::class, 'progress'])->where('token', '[a-f0-9]{16}')->middleware('feature:legacy_import')->name('legacy.progress');
+        Route::get('legacy-import/status/{token}', [\App\Http\Controllers\LegacyImportController::class, 'status'])->where('token', '[a-f0-9]{16}')->middleware('feature:legacy_import')->name('legacy.status');
+        Route::post('legacy-import/run', [\App\Http\Controllers\LegacyImportController::class, 'run'])->middleware('feature:legacy_import')->middleware('throttle:20,1')->name('legacy.run');
         Route::get('backups', [\App\Http\Controllers\BackupController::class, 'index'])->name('backups.index');
         Route::post('backups/run', [\App\Http\Controllers\BackupController::class, 'run'])->middleware('throttle:5,1')->name('backups.run');
         Route::post('backups/password', [\App\Http\Controllers\BackupController::class, 'showPassword'])->middleware('throttle:5,1')->name('backups.password');

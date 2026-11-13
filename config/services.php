@@ -23,13 +23,6 @@ return [
         'daily_limit' => (int) env('OPENAI_DAILY_LIMIT', 200),
     ],
 
-    // v11: Firebase Cloud Messaging (mobil ilova push-bildirishnomasi). Xizmat hisobi
-    // JSON kaliti faqat serverda saqlanadi, hech qachon zip/git'ga kirmaydi.
-    'fcm' => [
-        'project_id' => env('FIREBASE_PROJECT_ID'),
-        'credentials' => env('FIREBASE_CREDENTIALS_PATH', storage_path('app/firebase-service-account.json')),
-    ],
-
     'monitor' => [
         'beat_key' => env('MONITOR_BEAT_KEY'),
     ],

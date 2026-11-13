@@ -31,6 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'branch' => EnsureBranchSelected::class,
             'once' => PreventDuplicateSubmission::class,
             'legal' => EnsureLegalAccepted::class,
+            'feature' => \App\Http\Middleware\EnsureFeature::class,
         ]);
 
         // v8 A5: server odatda Nginx (bir xil mashinada) orqasida ishlaydi - shu holatda haqiqiy mijoz
