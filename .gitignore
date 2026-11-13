@@ -4,3 +4,10 @@
 !.env.example
 /vendor
 /node_modules
+
+/storage/framework/cache/data/*
+/storage/framework/views/*.php
+/storage/framework/sessions/*
+/storage/logs/*
+/database/*.sqlite
+Claude outputs/
