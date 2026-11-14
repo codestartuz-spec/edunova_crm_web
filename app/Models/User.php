@@ -57,6 +57,21 @@ class User extends Authenticatable
                 $user->password_changed_at = now();
             }
         });
+
+        // v22: obunasi tugagan filialda o'quvchi/xodim qo'shish, tahrirlash va o'chirish yo'q (faqat ko'rish).
+        // Foydalanuvchining o'z profili va tizim maydonlari (kirish vaqti, Telegram) cheklanmaydi.
+        $guard = function (self $user, bool $checkDirty) {
+            if (! $user->branch_id || (\Illuminate\Support\Facades\Auth::id() && \Illuminate\Support\Facades\Auth::id() === $user->id)) {
+                return;
+            }
+            if ($checkDirty && array_diff(array_keys($user->getDirty()), ['last_login_at', 'remember_token', 'updated_at', 'telegram_chat_id', 'telegram_username', 'telegram_linked_at']) === []) {
+                return;
+            }
+            \App\Services\SubscriptionService::assertWritable((int) $user->branch_id);
+        };
+        static::creating(fn (self $u) => $guard($u, false));
+        static::updating(fn (self $u) => $guard($u, true));
+        static::deleting(fn (self $u) => $guard($u, false));
     }
 
     /** Parol 30 kundan ortiq oldin o'zgargan bo'lsa (yumshoq eslatma uchun - majburiy emas). */
