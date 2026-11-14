@@ -140,6 +140,7 @@ Route::middleware(['auth', 'active', 'legal'])->group(function () {
         Route::post('subscriptions/settings', [\App\Http\Controllers\SubscriptionController::class, 'saveSettings'])->name('subscriptions.settings.save');
         Route::post('subscriptions/requests/{subscriptionRequest}/approve', [\App\Http\Controllers\SubscriptionController::class, 'approve'])->whereNumber('subscriptionRequest')->middleware('once')->name('subscriptions.approve');
         Route::post('subscriptions/requests/{subscriptionRequest}/reject', [\App\Http\Controllers\SubscriptionController::class, 'reject'])->whereNumber('subscriptionRequest')->name('subscriptions.reject');
+        Route::delete('subscriptions/requests/{subscriptionRequest}', [\App\Http\Controllers\SubscriptionController::class, 'destroy'])->whereNumber('subscriptionRequest')->name('subscriptions.requests.destroy');
         Route::put('subscriptions/{branch}', [\App\Http\Controllers\SubscriptionController::class, 'updateBranch'])->whereNumber('branch')->name('subscriptions.branch.update');
     });
 

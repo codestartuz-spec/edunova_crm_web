@@ -109,6 +109,26 @@ class SubscriptionController extends Controller
         return back()->with('success', "So'rov rad etildi.");
     }
 
+    /**
+     * sAdmin: chek yozuvini (va rasmini) o'chiradi. Filial obunasi muddatiga va moliya yozuviga TEGMAYDI -
+     * muddatni o'zgartirish uchun filial obunasini qo'lda tahrirlang.
+     */
+    public function destroy(SubscriptionRequest $subscriptionRequest): RedirectResponse
+    {
+        $req = $subscriptionRequest;
+        $branch = Branch::withoutGlobalScopes()->find($req->branch_id);
+        $desc = "{$branch?->name}: obuna cheki o'chirildi ({$req->planLabel()}, ".Format::money($req->amount).', '.$req->status.')';
+
+        if ($req->receipt_path) {
+            Storage::disk('local')->delete($req->receipt_path);
+        }
+        $req->delete();
+
+        AuditLog::record('subscription.request_deleted', $branch, $desc, [], [], $req->branch_id);
+
+        return back()->with('success', "Chek o'chirildi.");
+    }
+
     // ---- sAdmin: sozlamalar va filial obunasini qo'lda boshqarish -------------------------------------------
 
     public function settings()

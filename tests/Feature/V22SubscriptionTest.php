@@ -319,4 +319,30 @@ class V22SubscriptionTest extends TestCase
 
         Storage::disk('local')->assertMissing($path);
     }
+
+    public function test_only_sadmin_can_delete_a_receipt_and_it_removes_file_but_keeps_branch_dates(): void
+    {
+        Storage::fake('local');
+        $this->configure();
+        $b = $this->expire($this->branch());
+        $director = $this->user(Role::Director);
+        $sadmin = $this->user(Role::SAdmin);
+
+        $this->actingAs($director)->post(route('subscriptions.store', $b), ['plan' => 'monthly', 'receipt' => UploadedFile::fake()->image('chek.jpg')]);
+        $req = SubscriptionRequest::firstOrFail();
+        $path = $req->receipt_path;
+        $this->actingAs($sadmin)->post(route('subscriptions.approve', $req));
+        $ends = $b->fresh()->subscription_ends_on->toDateString();
+
+        $this->actingAs($director)->delete(route('subscriptions.requests.destroy', $req))->assertForbidden();
+        $this->assertSame(1, SubscriptionRequest::count());
+
+        $this->actingAs($sadmin)->get(route('subscriptions.index'))->assertOk()->assertSee('subscriptions/requests/'.$req->id, false);
+        $this->actingAs($sadmin)->delete(route('subscriptions.requests.destroy', $req))->assertSessionHas('success');
+
+        $this->assertSame(0, SubscriptionRequest::count());
+        Storage::disk('local')->assertMissing($path);
+        $this->assertSame($ends, $b->fresh()->subscription_ends_on->toDateString());
+        $this->assertDatabaseHas('audit_logs', ['action' => 'subscription.request_deleted']);
+    }
 }

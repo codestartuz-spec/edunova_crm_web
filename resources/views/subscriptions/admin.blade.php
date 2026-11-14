@@ -10,7 +10,7 @@
         <div class="border-b border-ink-100 px-5 py-3 font-semibold dark:border-ink-800">Cheklar @if ($pendingCount)<span class="badge-amber ml-2">{{ $pendingCount }} ta kutmoqda</span>@endif</div>
         <div class="table-wrap">
             <table class="table">
-                <thead><tr><th>Sana</th><th>Filial</th><th>Tarif / summa</th><th>Yuborgan</th><th>Chek</th><th>Holati</th></tr></thead>
+                <thead><tr><th>Sana</th><th>Filial</th><th>Tarif / summa</th><th>Yuborgan</th><th>Chek</th><th>Holati</th><th class="w-10"></th></tr></thead>
                 <tbody>
                 @forelse ($requests as $r)
                     <tr>
@@ -34,9 +34,14 @@
                                 <span class="badge-red">Rad etilgan</span> <span class="text-xs text-ink-500">{{ $r->reject_reason }}</span>
                             @endif
                         </td>
+                        <td class="text-right">
+                            <form method="POST" action="{{ route('subscriptions.requests.destroy', $r) }}" data-confirm="{{ $r->isPending() ? "Kutayotgan chek o'chiriladi (rasmi ham). Direktor qayta yuborishi mumkin bo'ladi." : "Chek yozuvi va rasmi o'chiriladi. Filial obunasi muddati va to'lov yozuvi o'zgarmaydi." }}" data-confirm-title="Chekni o'chirasizmi?" data-confirm-ok="O'chirish" data-confirm-tone="danger">@csrf @method('DELETE')
+                                <button class="btn-secondary btn-sm text-danger-600" title="Chekni o'chirish" aria-label="Chekni o'chirish"><x-icon name="trash" class="h-4 w-4" /></button>
+                            </form>
+                        </td>
                     </tr>
                 @empty
-                    <tr><td colspan="6" class="py-6 text-center text-ink-500">Cheklar yo'q</td></tr>
+                    <tr><td colspan="7" class="py-6 text-center text-ink-500">Cheklar yo'q</td></tr>
                 @endforelse
                 </tbody>
             </table>
