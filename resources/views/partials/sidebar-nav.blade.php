@@ -1,7 +1,7 @@
 {{--
     v13: yon menyu bo'limlarga ajratilgan va yig'iladi. Bo'lim ichida foydalanuvchiga ko'rinadigan band
-    bo'lmasa, bo'lim sarlavhasi ham chiqmaydi. Faol sahifaning bo'limi o'zi ochiq turadi; qolganlarining
-    holati brauzerda (localStorage) saqlanadi.
+    bo'lmasa, bo'lim sarlavhasi ham chiqmaydi. Akkordeon: faqat faol sahifaning bo'limi ochiq turadi, qolganlari yopiq;
+    boshqasini bossangiz u ochilib, oldingisi yopiladi.
 --}}
 @php
     $isTeacher = $me->role === \App\Enums\Role::Teacher;
@@ -76,16 +76,20 @@
     @endphp
     @if ($visible !== [])
         <div x-data="navGroup('{{ $group['key'] }}', {{ $hasActive ? 'true' : 'false' }})" class="pt-2">
-            <button type="button" @click="toggle()" :aria-expanded="open.toString()" class="nav-group-btn">
+            <button type="button" @click="toggle()" :aria-expanded="open.toString()" aria-expanded="{{ $hasActive ? 'true' : 'false' }}" @class(['nav-group-btn', 'is-current' => $hasActive])>
                 <x-icon :name="$group['icon']" colored class="h-4 w-4 shrink-0" />
                 <span class="flex-1 text-left">{{ $group['title'] }}</span>
-                @if ($hasActive)<span class="h-1.5 w-1.5 rounded-full bg-accent-500" x-show="!open"></span>@endif
-                <x-icon name="chevron" class="h-4 w-4 shrink-0 transition-transform duration-300" ::class="open ? 'rotate-180' : ''" />
+                @if ($hasActive)<span class="nav-dot h-1.5 w-1.5 rounded-full bg-accent-500"></span>@endif
+                <x-icon name="chevron" class="nav-chev h-4 w-4 shrink-0" />
             </button>
-            <div x-show="open" x-cloak x-transition:enter="transition duration-250 ease-out" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition duration-150 ease-in" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0 -translate-y-1" class="mt-1 space-y-1 border-l-2 border-brand-100 pl-2 ml-4 dark:border-ink-800">
-                @foreach ($visible as $item)
-                    <x-nav-link :href="$item['href']" :icon="$item['icon']" :active="$item['active']" :target="! empty($item['blank']) ? '_blank' : null">{{ $item['label'] }}</x-nav-link>
-                @endforeach
+            <div @class(['nav-panel', 'is-open' => $hasActive]) :class="{ 'is-open': open }" :inert="! open">
+                <div class="nav-panel-in">
+                    <div class="ml-4 mt-1 space-y-1 border-l-2 border-brand-100 pl-2 dark:border-ink-800">
+                        @foreach ($visible as $item)
+                            <x-nav-link :href="$item['href']" :icon="$item['icon']" :active="$item['active']" :target="! empty($item['blank']) ? '_blank' : null">{{ $item['label'] }}</x-nav-link>
+                        @endforeach
+                    </div>
+                </div>
             </div>
         </div>
     @endif

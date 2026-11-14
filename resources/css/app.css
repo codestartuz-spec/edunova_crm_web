@@ -207,6 +207,17 @@
     .nav-link-active .nav-ic .ic .ic-l, .nav-link-active .nav-ic .ic .ic-a { stroke: #fff; stroke-opacity: 1; }
     .nav-group-btn { @apply flex w-full items-center gap-3 rounded-xl px-3 py-2 text-[11px] font-bold uppercase tracking-widest text-ink-400 transition hover:bg-ink-100 hover:text-ink-700 dark:hover:bg-ink-800 dark:hover:text-ink-200; }
 
+    .nav-chev { transition: transform .3s var(--ease-out); }
+    .nav-group-btn[aria-expanded='true'] .nav-chev { transform: rotate(180deg); }
+    .nav-dot { transition: opacity .2s; }
+    .nav-group-btn[aria-expanded='true'] .nav-dot { opacity: 0; }
+    .nav-group-btn.is-current { @apply text-brand-700 dark:text-brand-300; }
+    /* Akkordeon paneli: balandlikni silliq ochadi/yopadi (grid 0fr -> 1fr) */
+    .nav-panel { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows .32s var(--ease-out), opacity .22s ease; }
+    .nav-panel.is-open { grid-template-rows: 1fr; opacity: 1; }
+    .nav-panel-in { min-height: 0; overflow: hidden; }
+    .nav-panel.is-open .nav-panel-in { overflow: visible; }
+
     /* Sahifa sarlavhasi belgisi */
     .page-accent {
         @apply inline-block h-8 w-1.5 shrink-0 rounded-full; transform-origin: top; animation: ui-grow .5s var(--ease-out) both;

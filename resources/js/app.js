@@ -120,17 +120,20 @@ Alpine.data('confirmForm', (title = 'Tasdiqlaysizmi?') => ({
 }));
 
 /* Yon menyu bo'limlari: yig'iladi/ochiladi, holati brauzerda saqlanadi (faol sahifaning bo'limi doim ochiq) */
+/* Yon menyu — akkordeon: faqat bitta bo'lim ochiq. Sahifa ochilganda faol bo'lim ochiladi, qolganlari yopiq;
+   boshqa bo'limni bossangiz u ochilib, oldingisi yopiladi (qayta bossangiz yopiladi). */
+Alpine.store('nav', { open: null });
 Alpine.data('navGroup', (key, hasActive = false) => ({
-    open: hasActive,
+    get open() { return Alpine.store('nav').open === key; },
     init() {
-        if (hasActive) return;
-        try { this.open = localStorage.getItem('nav:' + key) === '1'; } catch (e) {}
+        if (hasActive) Alpine.store('nav').open = key;
     },
     toggle() {
-        this.open = !this.open;
-        try { localStorage.setItem('nav:' + key, this.open ? '1' : '0'); } catch (e) {}
+        const nav = Alpine.store('nav');
+        nav.open = nav.open === key ? null : key;
     },
 }));
+
 
 /* Eslatmalar qo'ng'iroqchasi: har 15 soniyada faol eslatmalar sonini yangilaydi (WebSocket kerak emas) */
 Alpine.data('notesBell', (initialCount = 0, urls = {}) => ({
@@ -263,3 +266,11 @@ window.addEventListener('appinstalled', () => document.querySelectorAll('[data-p
         window.dispatchEvent(new Event('themechange'));
     });
 })();
+
+/* Yon menyu: faol band ko'rinish oynasida bo'lsin (uzun menyuda pastda qolib ketmasin) */
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        const a = document.querySelector('.app-sidebar .nav-link-active');
+        if (a) a.scrollIntoView({ block: 'nearest' });
+    }, 380);
+});
