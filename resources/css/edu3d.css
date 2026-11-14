@@ -1,0 +1,213 @@
+/*
+ * v28: butun panel uchun 3D dizayn tizimi + o'quv mavzusidagi animatsion SVG fon.
+ * Barcha ranglar filial rangidan (--brand-*, --accent-*) olinadi, shuning uchun har filial o'z "dunyosida" ko'rinadi.
+ *
+ * Darajalar:  html[data-fx]   = full | lite | off      (foydalanuvchi profilida tanlanadi)
+ * Sahifa:     body[data-fx-mode] = rich | calm | form   (App\Support\Edu3D sahifa turiga qarab belgilaydi)
+ * Selektorlar `body` bilan boshlanadi: Tailwind komponentlaridan ustun turadi, ularni o'zgartirish shart emas.
+ */
+
+:root {
+    --e3-ease: cubic-bezier(.22, 1, .36, 1);
+    --e3-spring: cubic-bezier(.34, 1.56, .64, 1);
+}
+
+/* ============================ FON ============================ */
+.edu-bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; view-transition-name: edu-bg; transition: opacity .6s ease; }
+body[data-fx-mode='calm'] .edu-bg { opacity: .88; }
+body[data-fx-mode='form'] .edu-bg { opacity: .8; }
+
+.edu-aurora { position: absolute; border-radius: 50%; filter: blur(80px); will-change: transform; }
+.edu-au-1 { width: 46vw; height: 46vw; left: -10vw; top: -14vw; background: rgb(var(--brand-400) / .34); animation: edu-au1 30s ease-in-out infinite alternate; }
+.edu-au-2 { width: 40vw; height: 40vw; right: -12vw; top: 18vh; background: rgb(var(--accent-400) / .18); animation: edu-au2 36s ease-in-out infinite alternate; }
+.edu-au-3 { width: 52vw; height: 52vw; left: 26vw; bottom: -26vw; background: rgb(var(--brand-300) / .30); animation: edu-au3 42s ease-in-out infinite alternate; }
+.dark .edu-au-1 { background: rgb(var(--brand-500) / .30); }
+.dark .edu-au-2 { background: rgb(var(--accent-500) / .13); }
+.dark .edu-au-3 { background: rgb(var(--brand-700) / .34); }
+@keyframes edu-au1 { to { transform: translate3d(14vw, 10vh, 0) scale(1.18); } }
+@keyframes edu-au2 { to { transform: translate3d(-16vw, 12vh, 0) scale(.86); } }
+@keyframes edu-au3 { to { transform: translate3d(-18vw, -12vh, 0) scale(1.14); } }
+
+.edu-layer { position: absolute; left: -4%; top: -4%; width: 108%; height: 108%; will-change: transform; }
+.edu-l0 { --o: .40; } .edu-l1 { --o: .50; } .edu-l2 { --o: .58; } .edu-ld { --o: .6; }
+.dark .edu-l0 { --o: .30; } .dark .edu-l1 { --o: .38; } .dark .edu-l2 { --o: .46; } .dark .edu-ld { --o: .5; }
+
+.eb-f { fill: currentColor; fill-opacity: .2; stroke: none; }
+.eb-l { fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+
+.edu-it { transform-box: fill-box; transform-origin: center; color: rgb(var(--c, var(--brand-500)) / var(--o, .35)); animation: edu-float var(--t, 10s) ease-in-out var(--d, 0s) infinite; }
+@keyframes edu-float {
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(var(--r0, 0deg)); }
+    50% { transform: translate3d(var(--dx, 12px), var(--dy, -24px), 0) rotate(var(--r1, 8deg)); }
+}
+.edu-glyph text { fill: currentColor; font-family: ui-serif, Georgia, 'Times New Roman', 'Noto Serif', serif; font-weight: 600; }
+.edu-tw { transform-box: fill-box; transform-origin: center; color: rgb(var(--c, var(--brand-500)) / calc(var(--o, .35) + .1)); animation: edu-tw var(--t, 5s) ease-in-out var(--d, 0s) infinite; }
+@keyframes edu-tw { 0%, 100% { transform: scale(.55) rotate(0); opacity: .35; } 50% { transform: scale(1.1) rotate(18deg); opacity: 1; } }
+.edu-dash { animation: edu-dash 2.4s linear infinite; }
+@keyframes edu-dash { to { stroke-dashoffset: -26; } }
+.edu-wave { animation: edu-wave 11s ease-in-out infinite alternate; }
+.edu-wave2 { animation-duration: 15s; animation-direction: alternate-reverse; }
+@keyframes edu-wave { to { transform: translate3d(-90px, 14px, 0); } }
+.edu-grid { animation: edu-grid 40s linear infinite; }
+@keyframes edu-grid { to { transform: translate3d(64px, 64px, 0); } }
+.edu-bar { fill: rgb(var(--c, var(--brand-500)) / calc(var(--o, .35) * .9)); transform-box: fill-box; transform-origin: bottom; animation: edu-bar 5s ease-in-out var(--d, 0s) infinite alternate; }
+@keyframes edu-bar { from { transform: scaleY(.72); } to { transform: scaleY(1); } }
+.edu-trend { stroke-dasharray: 900; animation: edu-draw 7s ease-in-out infinite; }
+@keyframes edu-draw { 0% { stroke-dashoffset: 900; } 55%, 100% { stroke-dashoffset: 0; } }
+.edu-spin { transform-box: fill-box; transform-origin: center; animation: edu-rot 120s linear infinite; }
+.edu-spin2 { animation-direction: reverse; animation-duration: 90s; }
+@keyframes edu-rot { to { transform: rotate(360deg); } }
+.edu-ring { transform-box: fill-box; transform-origin: center; animation: edu-ring 7s ease-out var(--d, 0s) infinite; }
+@keyframes edu-ring { 0% { transform: scale(.5); opacity: 0; } 15% { opacity: 1; } 100% { transform: scale(2.1); opacity: 0; } }
+.edu-dust { fill: rgb(var(--c, var(--brand-500)) / .42); animation: edu-rise var(--t, 50s) linear var(--d, 0s) infinite; }
+@keyframes edu-rise { 0% { transform: translate3d(0, 0, 0); opacity: 0; } 8% { opacity: 1; } 92% { opacity: .9; } 100% { transform: translate3d(36px, -1100px, 0); opacity: 0; } }
+
+/* Darajalar */
+html[data-fx='lite'] .edu-l2, html[data-fx='lite'] .edu-ld { display: none; }
+html[data-fx='lite'] .edu-aurora { filter: none; animation: none; opacity: .55; }
+html[data-fx='off'] .edu-bg *, html[data-fx='off'] .edu-bg { animation: none !important; }
+html[data-fx='off'] .edu-aurora { filter: none; }
+html[data-fx='off'] .edu-ld { display: none; }
+@media (prefers-reduced-motion: reduce) { html:not([data-fx='full']) .edu-bg * { animation: none !important; } }
+@media print { .edu-bg { display: none; } }
+@media (max-width: 640px) { .edu-l2 { display: none; } .edu-aurora { filter: blur(56px); } }
+
+/* ============================ KARTA (plita) ============================ */
+body .card {
+    background: linear-gradient(180deg, rgb(255 255 255 / .97), rgb(255 255 255 / .92));
+    border-color: rgb(var(--brand-200) / .55);
+    box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / .95),
+        0 4px 0 -1px rgb(var(--brand-100) / .95),
+        0 14px 24px -14px rgb(var(--brand-700) / .26),
+        0 34px 50px -36px rgb(var(--brand-800) / .38);
+}
+.dark body .card, body.dark .card, .dark .card {
+    background: linear-gradient(180deg, rgb(36 35 58 / .94), rgb(25 24 43 / .93));
+    border-color: rgb(var(--brand-400) / .16);
+    box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / .07),
+        0 4px 0 -1px rgb(0 0 0 / .38),
+        0 18px 30px -16px rgb(0 0 0 / .6),
+        0 30px 60px -40px rgb(var(--brand-500) / .45);
+}
+body .card-hover { transition: transform .35s var(--e3-ease), box-shadow .35s, border-color .3s; }
+body .card-hover:hover { transform: translateY(-4px); }
+
+/* Qiyshayadigan kartalar (rich rejim, faqat "full" va sichqoncha bor qurilmada; JS --rx/--ry/--tz beradi) */
+html[data-fx='full'] body[data-fx-mode='rich'] :is(.stat-card, .card-hover, .action-card, [data-tilt]) {
+    transform-style: preserve-3d;
+    transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateZ(var(--tz, 0px));
+    transition: transform .22s ease-out, box-shadow .35s, border-color .3s;
+}
+html[data-fx='full'] body[data-fx-mode='rich'] :is(.stat-card, .card-hover, .action-card, [data-tilt]):hover { --tz: 14px; }
+html[data-fx='full'] body[data-fx-mode='rich'] :is(.stat-card, .card-hover, .action-card, [data-tilt]) :is(.ic-bubble, .stat-icon) { transform: translateZ(36px); }
+html[data-fx='full'] body[data-fx-mode='rich'] .stat-card [data-countup], html[data-fx='full'] body[data-fx-mode='rich'] .stat-card .tabular-nums { transform: translateZ(22px); }
+html[data-fx='full'] body[data-fx-mode='rich'] :is(.stat-card, .card-hover, .action-card)::after { transform: translateZ(1px); }
+
+/* Sahifa bloklari kirishi: chuqurlikdan chiqib keladi */
+@keyframes e3-in { from { opacity: 0; transform: perspective(1200px) translate3d(0, 22px, -40px) rotateX(-6deg); } to { opacity: 1; transform: none; } }
+html:not([data-fx='off']) main > * { animation-name: e3-in; animation-duration: .7s; animation-timing-function: var(--e3-ease); }
+
+/* ============================ TUGMALAR (klavisha) ============================ */
+body .btn { transition: transform .18s var(--e3-ease), box-shadow .18s, filter .2s, background-color .2s, border-color .2s, color .2s; }
+body .btn-primary {
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / .32), 0 4px 0 rgb(var(--brand-800)), 0 14px 22px -10px rgb(var(--brand-600) / .75);
+}
+body .btn-primary:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgb(255 255 255 / .38), 0 6px 0 rgb(var(--brand-800)), 0 20px 28px -12px rgb(var(--brand-600) / .85); }
+body .btn-primary:active { transform: translateY(3px); box-shadow: inset 0 1px 0 rgb(255 255 255 / .2), 0 1px 0 rgb(var(--brand-800)), 0 5px 10px -6px rgb(var(--brand-600) / .6); }
+body .btn-secondary { box-shadow: inset 0 1px 0 rgb(255 255 255 / .9), 0 3px 0 rgb(var(--brand-200)), 0 10px 16px -10px rgb(var(--brand-700) / .35); }
+.dark body .btn-secondary, .dark .btn-secondary { box-shadow: inset 0 1px 0 rgb(255 255 255 / .08), 0 3px 0 rgb(0 0 0 / .45), 0 12px 18px -10px rgb(0 0 0 / .6); }
+body .btn-secondary:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgb(255 255 255 / .9), 0 5px 0 rgb(var(--brand-200)), 0 16px 22px -12px rgb(var(--brand-700) / .45); }
+body .btn-secondary:active { transform: translateY(2px); box-shadow: inset 0 1px 0 rgb(255 255 255 / .6), 0 1px 0 rgb(var(--brand-200)); }
+body .btn-danger { box-shadow: inset 0 1px 0 rgb(255 255 255 / .25), 0 4px 0 #9f1239, 0 14px 22px -10px rgb(216 33 61 / .7); }
+body .btn-danger:hover { transform: translateY(-2px); }
+body .btn-danger:active { transform: translateY(3px); box-shadow: 0 1px 0 #9f1239; }
+body .btn-ghost:hover { box-shadow: inset 0 1px 0 rgb(255 255 255 / .5), 0 2px 0 rgb(var(--brand-100)); transform: translateY(-1px); }
+body .btn-sm { box-shadow: inset 0 1px 0 rgb(255 255 255 / .3), 0 3px 0 rgb(var(--brand-800)), 0 10px 16px -10px rgb(var(--brand-600) / .6); }
+body .btn-sm.btn-secondary { box-shadow: inset 0 1px 0 rgb(255 255 255 / .9), 0 2px 0 rgb(var(--brand-200)); }
+.dark body .btn-sm.btn-secondary, .dark .btn-sm.btn-secondary { box-shadow: inset 0 1px 0 rgb(255 255 255 / .08), 0 2px 0 rgb(0 0 0 / .45); }
+
+/* ============================ FORMA (botiq maydonlar) ============================ */
+body .input {
+    background-color: rgb(var(--brand-50) / .45);
+    box-shadow: inset 0 2px 5px rgb(var(--brand-800) / .10), 0 1px 0 rgb(255 255 255 / .95);
+    transition: transform .2s var(--e3-ease), box-shadow .25s, border-color .2s, background-color .2s;
+}
+.dark body .input, .dark .input { background-color: rgb(12 11 24 / .55); box-shadow: inset 0 2px 7px rgb(0 0 0 / .5), 0 1px 0 rgb(255 255 255 / .05); }
+body .input:focus { background-color: #fff; transform: translateY(-1px); box-shadow: inset 0 1px 3px rgb(var(--brand-800) / .08), 0 0 0 4px rgb(var(--brand-500) / .17), 0 12px 22px -12px rgb(var(--brand-600) / .55); }
+.dark body .input:focus, .dark .input:focus { background-color: rgb(12 11 24 / .85); }
+body .checkbox { box-shadow: inset 0 1px 2px rgb(var(--brand-800) / .18), 0 1px 0 rgb(255 255 255 / .9); }
+body .label { text-shadow: 0 1px 0 rgb(255 255 255 / .6); }
+.dark body .label, .dark .label { text-shadow: none; }
+
+/* ============================ JADVAL ============================ */
+body .table thead th {
+    background: linear-gradient(180deg, rgb(var(--brand-50)), rgb(var(--brand-100) / .65));
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / .95), inset 0 -2px 0 rgb(var(--brand-200) / .75);
+    border-bottom-color: transparent;
+}
+.dark body .table thead th, .dark .table thead th { background: linear-gradient(180deg, rgb(44 42 70), rgb(32 31 52)); box-shadow: inset 0 1px 0 rgb(255 255 255 / .06), inset 0 -2px 0 rgb(0 0 0 / .4); }
+body .table tbody td { border-bottom-color: rgb(var(--brand-100) / .8); transition: background-color .2s, box-shadow .2s; }
+.dark body .table tbody td, .dark .table tbody td { border-bottom-color: rgb(255 255 255 / .06); }
+body .table tbody tr:hover > td { background-color: rgb(var(--brand-500) / .055); box-shadow: inset 0 1px 0 rgb(255 255 255 / .75), inset 0 -1px 0 rgb(var(--brand-200) / .55); }
+.dark body .table tbody tr:hover > td, .dark .table tbody tr:hover > td { box-shadow: inset 0 1px 0 rgb(255 255 255 / .06), inset 0 -1px 0 rgb(0 0 0 / .35); }
+body .table tbody tr:hover > td:first-child { box-shadow: inset 3px 0 0 rgb(var(--brand-500)), inset 0 1px 0 rgb(255 255 255 / .75), inset 0 -1px 0 rgb(var(--brand-200) / .55); }
+
+/* ============================ BELGILAR, AVATAR, IKONKA PLITKASI ============================ */
+body .badge { box-shadow: inset 0 1px 0 rgb(255 255 255 / .55), 0 2px 0 rgb(0 0 0 / .05); }
+.dark body .badge, .dark .badge { box-shadow: inset 0 1px 0 rgb(255 255 255 / .08), 0 2px 0 rgb(0 0 0 / .3); }
+body .avatar-sm { box-shadow: inset 0 2px 3px rgb(255 255 255 / .55), inset 0 -3px 5px rgb(0 0 0 / .1), 0 4px 8px -3px rgb(var(--av) / .55); }
+body .ic-bubble { box-shadow: inset 0 1px 0 rgb(255 255 255 / .6), 0 3px 0 rgb(var(--tone, var(--brand-500)) / .22), 0 10px 14px -8px rgb(var(--tone, var(--brand-500)) / .45); }
+.dark body .ic-bubble, .dark .ic-bubble { box-shadow: inset 0 1px 0 rgb(255 255 255 / .12), 0 3px 0 rgb(0 0 0 / .4), 0 10px 14px -8px rgb(var(--tone, var(--brand-500)) / .5); }
+body .ic-bubble.ic-solid { box-shadow: inset 0 1px 0 rgb(255 255 255 / .4), 0 4px 0 rgb(var(--tone) / .6), 0 14px 20px -10px rgb(var(--tone) / .85); }
+body .stat-icon { box-shadow: inset 0 1px 0 rgb(255 255 255 / .6), 0 3px 0 rgb(var(--stat-rgb, var(--brand-500)) / .25), 0 10px 14px -8px rgb(var(--stat-rgb, var(--brand-500)) / .5); }
+body .brand-chip {
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / .35), 0 4px 0 rgb(var(--brand-800)), 0 14px 20px -8px rgb(var(--brand-600) / .8);
+    transition: transform .4s var(--e3-ease);
+}
+html:not([data-fx='off']) body .brand-chip:is(.rounded-2xl, .rounded-xl):hover { transform: perspective(300px) rotateX(10deg) rotateY(-12deg) translateY(-2px); }
+body .page-accent { box-shadow: 0 0 14px rgb(var(--brand-500) / .55), 2px 3px 0 rgb(var(--brand-800) / .35); }
+body h1 { text-shadow: 0 1px 0 rgb(255 255 255 / .85), 0 8px 18px rgb(var(--brand-600) / .16); }
+.dark body h1, .dark h1 { text-shadow: 0 2px 0 rgb(0 0 0 / .4), 0 10px 24px rgb(var(--brand-500) / .3); }
+body .empty-state .empty-icon { box-shadow: inset 0 1px 0 rgb(255 255 255 / .5), 0 5px 0 rgb(var(--tone, var(--brand-500)) / .2), 0 0 0 10px rgb(var(--tone, var(--brand-500)) / .07), 0 0 0 22px rgb(var(--tone, var(--brand-500)) / .035); }
+
+/* ============================ YON PANEL, YUQORI PANEL, MOBIL PANEL ============================ */
+body aside.app-sidebar { box-shadow: 10px 0 40px -24px rgb(var(--brand-700) / .45), inset -1px 0 0 rgb(var(--brand-200) / .5); }
+.dark body aside.app-sidebar, .dark aside.app-sidebar { box-shadow: 10px 0 44px -22px rgb(0 0 0 / .7), inset -1px 0 0 rgb(255 255 255 / .05); }
+body header.app-topbar { box-shadow: 0 14px 30px -22px rgb(var(--brand-700) / .5), inset 0 -1px 0 rgb(255 255 255 / .5); }
+.dark body header.app-topbar, .dark header.app-topbar { box-shadow: 0 14px 30px -20px rgb(0 0 0 / .7), inset 0 -1px 0 rgb(255 255 255 / .04); }
+body .nav-link:hover { box-shadow: inset 0 1px 0 rgb(255 255 255 / .8), 0 2px 0 rgb(var(--brand-100)); }
+.dark body .nav-link:hover, .dark .nav-link:hover { box-shadow: inset 0 1px 0 rgb(255 255 255 / .06), 0 2px 0 rgb(0 0 0 / .35); }
+body .nav-link-active, body .nav-link-active:hover { box-shadow: inset 0 1px 0 rgb(255 255 255 / .28), 0 4px 0 rgb(var(--brand-800)), 0 14px 22px -12px rgb(var(--brand-600) / .9); }
+body .nav-ic { box-shadow: inset 0 1px 0 rgb(255 255 255 / .6), 0 2px 0 rgb(0 0 0 / .07); }
+.dark body .nav-ic, .dark .nav-ic { box-shadow: inset 0 1px 0 rgb(255 255 255 / .1), 0 2px 0 rgb(0 0 0 / .35); }
+body .nav-link-active .nav-ic { box-shadow: inset 0 1px 0 rgb(255 255 255 / .35), 0 2px 0 rgb(0 0 0 / .2); }
+
+body .tabbar {
+    left: .6rem; right: .6rem; bottom: calc(.5rem + env(safe-area-inset-bottom)); padding: .35rem .5rem; border-radius: 1.6rem;
+    border: 1px solid rgb(var(--brand-200) / .7);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / .8), 0 4px 0 -1px rgb(var(--brand-100)), 0 22px 40px -18px rgb(var(--brand-700) / .6);
+}
+.dark body .tabbar, .dark .tabbar { border-color: rgb(255 255 255 / .08); box-shadow: inset 0 1px 0 rgb(255 255 255 / .06), 0 4px 0 -1px rgb(0 0 0 / .4), 0 22px 40px -16px rgb(0 0 0 / .8); }
+body .tab.is-active .ic-bubble { box-shadow: inset 0 1px 0 rgb(255 255 255 / .35), 0 3px 0 rgb(var(--brand-800)), 0 12px 18px -8px rgb(var(--brand-600) / .9); }
+
+/* ============================ OYNALAR, XABARLAR ============================ */
+@keyframes e3-pop { from { opacity: 0; transform: perspective(900px) translate3d(0, 28px, -60px) rotateX(-14deg) scale(.96); } to { opacity: 1; transform: none; } }
+html:not([data-fx='off']) .confirm-overlay:not(.hidden) .confirm-panel { transform-origin: 50% 100%; }
+@media (min-width: 640px) { html:not([data-fx='off']) .confirm-overlay:not(.hidden) .confirm-panel { animation-name: e3-pop; animation-duration: .45s; animation-timing-function: var(--e3-spring); } }
+body .confirm-panel { box-shadow: inset 0 1px 0 rgb(255 255 255 / .9), 0 6px 0 -2px rgb(var(--brand-100)), 0 40px 70px -30px rgb(var(--brand-800) / .7); }
+.dark body .confirm-panel, .dark .confirm-panel { box-shadow: inset 0 1px 0 rgb(255 255 255 / .07), 0 6px 0 -2px rgb(0 0 0 / .5), 0 40px 70px -26px rgb(0 0 0 / .85); }
+body .toast { box-shadow: 0 4px 0 -1px rgb(0 0 0 / .08), 0 22px 40px -18px rgb(var(--brand-800) / .55); }
+body .glass { transform-style: preserve-3d; }
+
+/* ============================ SAHIFA RICH REJIMIDA QO'SHIMCHA ============================ */
+body[data-fx-mode='rich'] main .card:not(.card-hover):not(.stat-card) { transition: box-shadow .4s; }
+body[data-fx-mode='calm'] .card-hover:hover { transform: translateY(-2px); }
+
+/* ============================ DARAJALAR ============================ */
+html[data-fx='off'] body .card-hover:hover, html[data-fx='off'] body .btn:hover { transform: none; }
+html[data-fx='lite'] body :is(.stat-card, .card-hover, .action-card) { transform: none !important; }
+@media (pointer: coarse) { html body :is(.stat-card, .card-hover, .action-card, [data-tilt]) { transform: none !important; } }
+@media (prefers-reduced-motion: reduce) { html:not([data-fx='full']) body * { scroll-behavior: auto; } }
+@media print { body .card { box-shadow: none; background: #fff; } }

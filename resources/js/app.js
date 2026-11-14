@@ -2,6 +2,8 @@ import '@fontsource-variable/plus-jakarta-sans';
 import Alpine from 'alpinejs';
 import './confirm';
 import './motion';
+import './edu3d';
+import '../css/edu3d.css';
 import notifBell from './notifications';
 
 window.Alpine = Alpine;

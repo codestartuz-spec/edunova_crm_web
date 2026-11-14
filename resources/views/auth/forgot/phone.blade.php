@@ -6,10 +6,12 @@
     <title>Parolni tiklash · {{ \App\Support\Brand::name() }}</title>
     <link rel="icon" href="{{ \App\Support\Brand::faviconUrl() }}">
     <script>try{if(localStorage.getItem('theme')==='dark'||(!localStorage.getItem('theme')&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}</script>
+    @include('partials.fx-head')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="h-full">
-<div class="flex min-h-full items-center justify-center bg-white p-6 dark:bg-ink-950">
+<body class="h-full" data-fx-mode="{{ \App\Support\Edu3D::current()['mode'] }}">
+@include('partials.edu-bg', ['scene' => \App\Support\Edu3D::current()['scene']])
+<div class="flex min-h-full items-center justify-center bg-white/55 p-6 dark:bg-ink-950/55">
     <div class="w-full max-w-sm">
         <x-brand-mark class="mb-8" />
         <h1 class="text-2xl font-bold tracking-tight text-ink-900 dark:text-white">Parolni tiklash</h1>

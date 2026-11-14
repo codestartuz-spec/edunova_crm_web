@@ -29,7 +29,69 @@ class BrandTheme
             $vars .= "--brand-{$step}:{$r} {$g} {$b};";
         }
 
-        return ":root{{$vars}--brand-hex:{$hex};}";
+        // v28: filial rangiga uyg'un ikkinchi (urg'u) rang va grafik ranglari - butun panel bir uyg'unlikda bo'ladi
+        [$a4, $a5] = self::accent($hex);
+        $pal = self::palette($hex);
+        $vars .= '--accent-400:'.implode(' ', $a4).';--accent-500:'.implode(' ', $a5).';';
+        $vars .= '--viz-s1:rgb('.implode(' ', $pal[600]).');--viz-f1:rgb('.implode(' ', $pal[300]).');--viz-f2:rgb('.implode(' ', $pal[400]).');--viz-f3:rgb('.implode(' ', $pal[600]).');--viz-f4:rgb('.implode(' ', $pal[800]).');';
+        $dark = '--viz-s1:rgb('.implode(' ', $pal[400]).');--viz-f1:rgb('.implode(' ', $pal[600]).');--viz-f2:rgb('.implode(' ', $pal[400]).');--viz-f3:rgb('.implode(' ', $pal[300]).');--viz-f4:rgb('.implode(' ', $pal[100]).');';
+
+        return ":root{{$vars}--brand-hex:{$hex};}.dark{{$dark}}";
+    }
+
+    /**
+     * Brend rangiga mos keladigan ikkinchi (urg'u) rang: rang doirasida ~150 gradus (qizil/to'q sariq brendda ~190) siljitiladi.
+     *
+     * @return array{0:array{0:int,1:int,2:int},1:array{0:int,1:int,2:int}}
+     */
+    public static function accent(string $hex): array
+    {
+        [$r, $g, $b] = self::rgb($hex);
+        [$h] = self::toHsl($r, $g, $b);
+        $h = ($h >= 330 || $h <= 30) ? $h + 190 : $h + 150;
+
+        return [self::fromHsl(fmod($h, 360), .88, .64), self::fromHsl(fmod($h, 360), .90, .55)];
+    }
+
+    /** @return array{0:float,1:float,2:float} h(0-360), s, l */
+    private static function toHsl(int $r, int $g, int $b): array
+    {
+        $r /= 255;
+        $g /= 255;
+        $b /= 255;
+        $max = max($r, $g, $b);
+        $min = min($r, $g, $b);
+        $l = ($max + $min) / 2;
+        if ($max === $min) {
+            return [0.0, 0.0, $l];
+        }
+        $d = $max - $min;
+        $s = $l > .5 ? $d / (2 - $max - $min) : $d / ($max + $min);
+        $h = match ($max) {
+            $r => (($g - $b) / $d + ($g < $b ? 6 : 0)),
+            $g => (($b - $r) / $d + 2),
+            default => (($r - $g) / $d + 4),
+        } * 60;
+
+        return [$h, $s, $l];
+    }
+
+    /** @return array{0:int,1:int,2:int} */
+    private static function fromHsl(float $h, float $s, float $l): array
+    {
+        $c = (1 - abs(2 * $l - 1)) * $s;
+        $x = $c * (1 - abs(fmod($h / 60, 2) - 1));
+        $m = $l - $c / 2;
+        [$r, $g, $b] = match (true) {
+            $h < 60 => [$c, $x, 0],
+            $h < 120 => [$x, $c, 0],
+            $h < 180 => [0, $c, $x],
+            $h < 240 => [0, $x, $c],
+            $h < 300 => [$x, 0, $c],
+            default => [$c, 0, $x],
+        };
+
+        return [(int) round(($r + $m) * 255), (int) round(($g + $m) * 255), (int) round(($b + $m) * 255)];
     }
 
     public static function currentHex(): ?string
@@ -44,9 +106,14 @@ class BrandTheme
             return null;
         }
 
-        static $cache = [];
+        // So'rov doirasida keshlanadi (static emas: uzoq yashaydigan jarayon va testlarda eski rang qolib ketmasin)
+        $attrs = request()->attributes;
+        $key = 'brand_theme.hex.'.$id;
+        if (! $attrs->has($key)) {
+            $attrs->set($key, self::valid(Branch::whereKey($id)->value('brand_color')));
+        }
 
-        return $cache[$id] ??= self::valid(Branch::whereKey($id)->value('brand_color'));
+        return $attrs->get($key);
     }
 
     /** @return array<int, array{0:int,1:int,2:int}> */

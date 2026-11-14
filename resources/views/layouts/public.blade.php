@@ -6,12 +6,14 @@
     <title>@yield('title', 'Murojaat') · {{ isset($branch) ? $branch->name : \App\Support\Brand::short() }}</title>
     <link rel="icon" href="{{ \App\Support\Brand::faviconUrl() }}">
     <script>try{if(localStorage.getItem('theme')==='dark'||(!localStorage.getItem('theme')&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}</script>
+    @include('partials.fx-head')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @if (isset($branch))
         <style>:root { --brand-public: {{ $branch->effectiveBrandColor() }}; }</style>
     @endif
 </head>
-<body class="min-h-full">
+<body class="min-h-full" data-fx-mode="{{ \App\Support\Edu3D::current()['mode'] }}">
+@include('partials.edu-bg', ['scene' => \App\Support\Edu3D::current()['scene']])
 <div class="mx-auto flex min-h-full max-w-lg flex-col justify-center px-4 py-10">
     @if (isset($branch))
         {{-- v9 (3-band): umumiy brend o'rniga shu filialning nomi, rangi va ma'lumoti --}}

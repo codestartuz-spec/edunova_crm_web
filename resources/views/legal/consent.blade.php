@@ -6,9 +6,11 @@
     <title>Rozilik · {{ \App\Support\Brand::name() }}</title>
     <link rel="icon" href="{{ \App\Support\Brand::faviconUrl() }}">
     <script>try{if(localStorage.getItem('theme')==='dark'||(!localStorage.getItem('theme')&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}</script>
+    @include('partials.fx-head')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-full bg-ink-50 dark:bg-ink-950">
+<body class="min-h-full bg-ink-50 dark:bg-ink-950" data-fx-mode="{{ \App\Support\Edu3D::current()['mode'] }}">
+@include('partials.edu-bg', ['scene' => \App\Support\Edu3D::current()['scene']])
 <div class="mx-auto flex min-h-full max-w-2xl flex-col justify-center px-4 py-6 sm:py-10"
      x-data="{ n: {{ $pending->count() }}, ok: {}, get all() { return Object.values(this.ok).filter(Boolean).length === this.n }, toggleAll(v) { @foreach ($pending as $d) this.ok['{{ $d->type }}'] = v; @endforeach } }">
     <div class="rounded-3xl bg-white p-5 shadow-xl ring-1 ring-black/5 dark:bg-ink-900 dark:ring-white/10 sm:p-8">

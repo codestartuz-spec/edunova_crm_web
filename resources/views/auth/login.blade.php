@@ -7,9 +7,11 @@
     @include('partials.pwa-head')
     <link rel="icon" href="{{ \App\Support\Brand::faviconUrl() }}">
     <script>try{if(localStorage.getItem('theme')==='dark'||(!localStorage.getItem('theme')&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}</script>
+    @include('partials.fx-head')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="h-full">
+<body class="h-full" data-fx-mode="{{ \App\Support\Edu3D::current()['mode'] }}">
+@include('partials.edu-bg', ['scene' => \App\Support\Edu3D::current()['scene']])
 <div class="grid min-h-full lg:grid-cols-[1.05fr_1fr]">
     {{-- Chap tomon: harakatlanuvchi gradient va suzuvchi shisha kartalar (faqat bezak, haqiqiy ma'lumot emas) --}}
     <div class="login-hero relative hidden overflow-hidden lg:flex lg:flex-col lg:justify-between lg:p-12">
@@ -55,7 +57,7 @@
     </div>
 
     {{-- O'ng tomon: forma --}}
-    <div x-data class="relative flex items-center justify-center bg-white p-6 dark:bg-ink-950 sm:p-12">
+    <div x-data class="relative flex items-center justify-center bg-white/55 p-6 dark:bg-ink-950/55 sm:p-12">
         <div class="pointer-events-none absolute inset-0 opacity-70" style="background: radial-gradient(520px 300px at 85% 0%, rgb(var(--brand-500) / .10), transparent 70%), radial-gradient(420px 260px at 0% 100%, rgb(var(--accent-400) / .09), transparent 70%)"></div>
         <button type="button" class="btn-ghost absolute right-4 top-4 h-10 w-10 !p-0" @click="$store.theme.toggle()" aria-label="Rejimni almashtirish">
             <x-icon name="moon" colored class="no-ic-anim absolute left-2.5 top-2.5 h-5 w-5 transition duration-500" ::class="$store.theme.dark ? 'rotate-90 scale-0 opacity-0' : ''" />

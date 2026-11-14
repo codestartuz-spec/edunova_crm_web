@@ -24,6 +24,29 @@
         </form>
     </div>
 
+    {{-- v28: animatsiya darajasi (faqat shu qurilma/brauzer uchun saqlanadi) --}}
+    <div class="card card-body mt-6 max-w-5xl space-y-4" x-data="{ fx: (window.eduFx ? window.eduFx.get() : 'full'), pick(v) { this.fx = v; if (window.eduFx) window.eduFx.set(v); } }">
+        <div>
+            <h2 class="text-base font-semibold text-ink-900 dark:text-white">Animatsiya va 3D effektlar</h2>
+            <p class="hint">Orqa fondagi harakatlar va kartalarning 3D qiyshayishi. Tanlov faqat shu qurilma va brauzer uchun saqlanadi. Telefon yoki kompyuter sekin ishlasa, «Yengil» yoki «O'chiq» ni tanlang.</p>
+        </div>
+        <div class="grid gap-3 sm:grid-cols-3" role="radiogroup" aria-label="Animatsiya darajasi">
+            @foreach ([
+                ['full', 'To\'liq', 'Doimiy harakatdagi fon, parallaks va 3D qiyshayish.', 'sparkles'],
+                ['lite', 'Yengil', 'Fon sekin harakatlanadi, parallaks va og\'ir effektlarsiz. Zaif qurilmalar uchun.', 'pulse'],
+                ['off', 'O\'chiq', 'Hamma animatsiya o\'chadi, 3D faqat chuqurlik va soyada qoladi.', 'moon'],
+            ] as [$val, $title, $desc, $icon])
+                <button type="button" role="radio" :aria-checked="fx === '{{ $val }}'" @click="pick('{{ $val }}')"
+                        class="rounded-2xl border p-4 text-left transition duration-200 hover:-translate-y-0.5"
+                        :class="fx === '{{ $val }}' ? 'border-brand-500 bg-brand-50 ring-2 ring-brand-500/25 dark:bg-brand-950/40' : 'border-ink-200 dark:border-ink-700'">
+                    <span class="flex items-center gap-2 font-semibold text-ink-900 dark:text-white"><x-icon name="{{ $icon }}" colored class="h-5 w-5" /> {{ $title }}
+                        <span x-show="fx === '{{ $val }}'" x-cloak class="ml-auto"><x-icon name="check" class="h-4 w-4 text-brand-600" /></span></span>
+                    <span class="mt-1.5 block text-xs text-ink-500 dark:text-ink-400">{{ $desc }}</span>
+                </button>
+            @endforeach
+        </div>
+    </div>
+
     <div class="card card-body mt-6 max-w-5xl space-y-4">
         <h2 class="text-base font-semibold text-ink-900 dark:text-white">Faol qurilmalar</h2>
         @if (! $devicesAvailable)

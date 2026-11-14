@@ -1,0 +1,2 @@
+{{-- v28: animatsiya darajasi (To'liq / Yengil / O'chiq) sahifa chizilishidan oldin o'rnatiladi --}}
+<script>try{var f=localStorage.getItem('edu-fx');if(f!=='full'&&f!=='lite'&&f!=='off'){f=(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)?'off':((navigator.deviceMemory&&navigator.deviceMemory<=2)||(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=2)?'lite':'full')}document.documentElement.setAttribute('data-fx',f)}catch(e){document.documentElement.setAttribute('data-fx','full')}</script>

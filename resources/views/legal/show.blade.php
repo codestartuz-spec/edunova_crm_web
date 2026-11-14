@@ -7,9 +7,11 @@
     <meta name="robots" content="noindex">
     <link rel="icon" href="{{ \App\Support\Brand::faviconUrl() }}">
     <script>try{if(localStorage.getItem('theme')==='dark'||(!localStorage.getItem('theme')&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}</script>
+    @include('partials.fx-head')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-full bg-ink-50 text-ink-800 dark:bg-ink-950 dark:text-ink-100">
+<body class="min-h-full bg-ink-50 text-ink-800 dark:bg-ink-950 dark:text-ink-100" data-fx-mode="{{ \App\Support\Edu3D::current()['mode'] }}">
+@include('partials.edu-bg', ['scene' => \App\Support\Edu3D::current()['scene']])
 <div class="mx-auto max-w-3xl px-4 py-8 sm:py-12">
     <div class="mb-6 flex items-center justify-between gap-3">
         <a href="{{ auth()->check() ? route('dashboard') : route('login') }}" class="flex items-center gap-3"><x-logo /><span class="text-xl font-extrabold tracking-tight text-ink-900 dark:text-white">{{ \App\Support\Brand::short() }}</span></a>

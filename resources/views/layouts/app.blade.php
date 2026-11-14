@@ -7,11 +7,13 @@
     <title>@yield('title', 'Bosh sahifa') · {{ \App\Support\Brand::name() }}</title>
     <link rel="icon" href="{{ \App\Support\Brand::faviconUrl() }}">
     <script>try{if(localStorage.getItem('theme')==='dark'||(!localStorage.getItem('theme')&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}</script>
+    @include('partials.fx-head')
     @include('partials.pwa-head')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @if ($brandCss = \App\Support\BrandTheme::css())<style id="brand-theme">{!! $brandCss !!}</style>@endif
 </head>
-<body class="h-full" x-data="{ sidebar: false }" @keydown.escape.window="sidebar = false">
+<body class="h-full" x-data="{ sidebar: false }" @keydown.escape.window="sidebar = false" data-fx-mode="{{ \App\Support\Edu3D::current()['mode'] }}">
+@include('partials.edu-bg', ['scene' => \App\Support\Edu3D::current()['scene']])
 @php
     $me = auth()->user();
     $branches = $me->isGlobal() ? \App\Models\Branch::orderBy('name')->get(['id', 'name', 'status', 'subscription_ends_on', 'subscription_exempt']) : collect();
@@ -63,15 +65,15 @@
     <header class="app-topbar sticky top-0 z-20 flex h-16 items-center gap-2 border-b border-ink-200/60 bg-white/75 px-3 backdrop-blur-xl dark:border-ink-800 dark:bg-ink-900/75 sm:gap-3 sm:px-6">
         <span class="topbar-line"></span>
         <button class="btn-ghost -ml-1 p-2 lg:hidden" @click="sidebar = true" aria-label="Menyu"><x-icon name="menu" colored /></button>
-        <a href="{{ route('dashboard') }}" class="lg:hidden"><x-logo class="h-8 w-8 text-sm" /></a>
+        <a href="{{ route('dashboard') }}" class="hidden sm:block lg:hidden"><x-logo class="h-8 w-8 text-sm" /></a>
 
         <div class="flex-1"></div>
 
         @if ($me->isGlobal() || $multiBranch)
-            <form method="POST" action="{{ route('branches.switch') }}" class="flex min-w-0 items-center gap-2">
+            <form method="POST" action="{{ route('branches.switch') }}" class="flex shrink-0 items-center gap-2">
                 @csrf
                 <x-icon name="building" colored class="hidden h-5 w-5 sm:block" />
-                <select name="branch_id" onchange="this.form.submit()" class="input w-32 py-2 sm:w-56" aria-label="Filial">
+                <select name="branch_id" onchange="this.form.submit()" class="input w-28 truncate py-2 pr-8 sm:w-56" aria-label="Filial">
                     @if ($me->isGlobal() && ($restricted === null || count($restricted) !== 1))<option value="">Barcha filiallar</option>@endif
                     @foreach ($branches as $b)
                         <option value="{{ $b->id }}" @selected($selectedBranch === $b->id)>{{ $b->name }}@if (! $b->isActive()) (arxiv)@endif</option>
