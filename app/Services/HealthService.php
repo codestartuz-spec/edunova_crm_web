@@ -56,10 +56,10 @@ class HealthService
     }
 
     /** Tekshiruvni bajarib, tarixga yozadi va yangi xatolar bo'lsa Telegram orqali Admin ID'larga xabar beradi. */
-    public function run(bool $alert = true): HealthCheck
+    public function run(bool $alert = true, ?array $rows = null): HealthCheck
     {
         $t = microtime(true);
-        $rows = $this->checks();
+        $rows ??= $this->checks();
         $fail = count(array_filter($rows, fn ($r) => $r['status'] === 'fail'));
         $warn = count(array_filter($rows, fn ($r) => $r['status'] === 'warn'));
 

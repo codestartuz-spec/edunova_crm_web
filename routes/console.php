@@ -24,11 +24,11 @@ Schedule::call(fn () => Cache::put('system.cron_heartbeat', now(), now()->addHou
 Schedule::job(new QueueHeartbeatJob())->everyFiveMinutes();
 
 // v14: har 15 daqiqada to'liq "Tizim holati" tekshiruvi: tarixga yoziladi, yangi muammo bo'lsa Telegram orqali Admin ID'larga xabar boradi
-Schedule::call(fn () => app(\App\Services\HealthService::class)->run())->everyFifteenMinutes()->name('health-check')->withoutOverlapping();
+Schedule::call(fn () => app(\App\Services\HealthService::class)->run())->everyFifteenMinutes()->name('health-check')->withoutOverlapping(10);
 
 // v15: kunlik hisobot (filiallar kesimida) - har kuni 20:00 Toshkent
 // v26: har bir direktor o'z vaqtida oladi - har 5 daqiqada vaqti kelganlarga yuboriladi
-Schedule::command('report:daily')->everyFiveMinutes()->withoutOverlapping();
+Schedule::command('report:daily')->everyFiveMinutes()->withoutOverlapping(10);
 
 // v22: filial obunasi tugashi haqida eslatma (7/3/1 kun oldin va tugagan kuni) - Telegram orqali direktorga
-Schedule::command('subscriptions:notify')->dailyAt('09:30')->timezone('Asia/Tashkent')->withoutOverlapping();
+Schedule::command('subscriptions:notify')->dailyAt('09:30')->timezone('Asia/Tashkent')->withoutOverlapping(60);

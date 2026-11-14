@@ -63,6 +63,27 @@ class V14HealthStatsTest extends TestCase
         $this->assertDatabaseCount('health_checks', 2);
     }
 
+    public function test_status_page_self_heals_when_cron_stopped(): void
+    {
+        $sadmin = $this->user(Role::SAdmin);
+        HealthCheck::create(['status' => 'ok', 'results' => [], 'created_at' => now()->subHours(3)]);
+
+        $this->actingAs($sadmin)->get('/system-status')->assertOk()->assertSee('tekshiruv yozmagan');
+        $this->assertSame(2, HealthCheck::count());
+        $this->assertTrue(HealthCheck::latest('id')->first()->created_at->gt(now()->subMinute()));
+
+        // yangi yozuv bor - qayta yozilmaydi
+        $this->actingAs($sadmin)->get('/system-status')->assertOk()->assertDontSee('tekshiruv yozmagan');
+        $this->assertSame(2, HealthCheck::count());
+    }
+
+    public function test_scheduler_overlap_locks_expire_so_a_crash_cannot_stall_history(): void
+    {
+        $events = collect(app(\Illuminate\Console\Scheduling\Schedule::class)->events())->filter(fn ($e) => $e->description === 'health-check');
+        $this->assertCount(1, $events);
+        $this->assertSame(10, $events->first()->expiresAt);
+    }
+
     public function test_old_history_is_pruned(): void
     {
         HealthCheck::create(['status' => 'ok', 'results' => [], 'created_at' => now()->subDays(40)]);
@@ -80,7 +101,8 @@ class V14HealthStatsTest extends TestCase
         $this->actingAs($viewer)->get('/system-status')->assertOk()->assertDontSee('Hozir tekshirish');
         $this->actingAs($viewer)->post(route('system-status.run'))->assertForbidden();
         $this->actingAs($sadmin)->post(route('system-status.run'))->assertRedirect();
-        $this->assertDatabaseCount('health_checks', 1);
+        // 1-ko'rish tarix bo'sh bo'lgani uchun o'zini-o'zi tiklab yozadi, qo'lda ishga tushirish yana bittasini qo'shadi
+        $this->assertDatabaseCount('health_checks', 2);
     }
 
     public function test_statistics_kpi_feed_returns_cards_with_deltas_and_respects_money_permission(): void

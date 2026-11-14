@@ -214,6 +214,11 @@
                     </div>
                 </div>
 
+                @if ($selfHealed && $cronGapMinutes !== null && $cronGapMinutes > 20)
+                    <div class="mb-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
+                        Rejalashtiruvchi (cron) {{ $cronGapMinutes >= 120 ? intdiv($cronGapMinutes, 60).' soatdan ortiq' : $cronGapMinutes.' daqiqa' }} tekshiruv yozmagan. Tarix hozir tiklandi; serverda <code>schedule:run</code> / <code>schedule:work</code> ishlab turganini tekshiring.
+                    </div>
+                @endif
                 @if ($historyCount === 0)
                     <p class="text-sm text-ink-500">Bu davrda tarix yo'q. Cron ishga tushgach har 15 daqiqada yoziladi, yoki sAdmin tekshiruvni qo'lda ishga tushiradi.</p>
                 @else

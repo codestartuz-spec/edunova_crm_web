@@ -8,6 +8,7 @@ use App\Services\HealthService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 
 /** Tizimning umumiy sog'ligi (cron, zaxira, disk, ...) - faqat sAdmin (route darajasida `role:sadmin`), filialga bog'liq emas. */
 class SystemStatusController extends Controller
@@ -22,6 +23,15 @@ class SystemStatusController extends Controller
     {
         $range = array_key_exists((string) $request->query('range'), self::RANGES) ? (string) $request->query('range') : '24h';
         $checks = $health->checks();
+
+        // O'zini-o'zi tiklash: rejalashtiruvchi (cron) to'xtab qolsa ham tarix uzilmasin - oxirgi yozuv 20 daqiqadan eski bo'lsa, hozirgi natijani yozib qo'yamiz.
+        $last = HealthCheck::latest('id')->value('created_at');
+        $stale = ! $last || \Illuminate\Support\Carbon::parse($last)->lt(now()->subMinutes(20));
+        $selfHealed = false;
+        if ($stale && Cache::lock('health.selfheal', 60)->get()) {
+            $health->run(true, $checks);
+            $selfHealed = true;
+        }
 
         $now = now();
         $from = $now->copy()->subHours(self::RANGES[$range]['hours']);
@@ -99,6 +109,8 @@ class SystemStatusController extends Controller
             'uptime' => $uptime,
             'lastCheck' => HealthCheck::latest('id')->value('created_at'),
             'historyCount' => $rows->count(),
+            'selfHealed' => $selfHealed,
+            'cronGapMinutes' => $last ? (int) \Illuminate\Support\Carbon::parse($last)->diffInMinutes(now(), true) : null,
         ]);
     }
 
