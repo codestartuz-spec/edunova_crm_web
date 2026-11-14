@@ -45,7 +45,54 @@
         .strike{position:relative}
         .strike::after{content:"";position:absolute;left:0;top:52%;height:2px;width:0;background:currentColor;transition:width .9s ease .5s}
         .in .strike::after{width:100%}
-        /* hikoya sahnalari */
+
+        /* ---- SVG illyustratsiyalar ---- */
+        .il-card{fill:#fff;stroke:#ece9f7}.dark .il-card{fill:#1b1a2c;stroke:#2c2a44}
+        .il-sub{fill:#f3f1fb}.dark .il-sub{fill:#26243b}
+        .il-line{fill:#e3e0f3}.dark .il-line{fill:#3a3857}
+        .il-white{fill:#fff}
+        .il-brand{fill:rgb(var(--brand-600))}.il-brand-m{fill:rgb(var(--brand-400))}.il-brand-l{fill:rgb(var(--brand-100))}.dark .il-brand-l{fill:rgb(var(--brand-500)/.22)}
+        .il-acc{fill:#ff8159}.il-acc-l{fill:#ffe6db}.dark .il-acc-l{fill:rgb(255 129 89/.2)}
+        .il-green{fill:#10b981}.il-green-l{fill:#d1fae5}.dark .il-green-l{fill:rgb(16 185 129/.2)}
+        .il-sky{fill:#0ea5e9}.il-sky-l{fill:#e0f2fe}.dark .il-sky-l{fill:rgb(14 165 233/.2)}
+        .il-rose{fill:#f43f5e}.il-rose-l{fill:#ffe4e6}.dark .il-rose-l{fill:rgb(244 63 94/.2)}
+        .il-flow{fill:none;stroke:rgb(var(--brand-300));stroke-width:2.5;stroke-dasharray:6 7;stroke-linecap:round}
+        .il-glyph-s{fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round}
+        .il-glyph-b{fill:none;stroke:rgb(var(--brand-600));stroke-width:4;stroke-linecap:round}
+        .il-check{fill:none;stroke:#fff;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round}
+        .il-check-g{fill:none;stroke:#10b981;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.il-check-g.big{stroke-width:6}
+        .il-x{fill:none;stroke:#f43f5e;stroke-width:3;stroke-linecap:round}
+        .il-plus{fill:none;stroke:rgb(var(--brand-600));stroke-width:3.4;stroke-linecap:round}
+        .il-sign{fill:none;stroke:rgb(var(--brand-600));stroke-width:3;stroke-linecap:round}
+        .il-dash{stroke:#d9d5ee;stroke-width:2;stroke-dasharray:5 6}.dark .il-dash{stroke:#3a3857}
+        .il-ring-bg{fill:none;stroke:#eeebf9;stroke-width:12}.dark .il-ring-bg{stroke:#2a2840}
+        .il-ring{fill:none;stroke:#10b981;stroke-width:12;stroke-linecap:round}
+        .il-ring-acc{fill:none;stroke:#ff8159;stroke-width:12;stroke-linecap:round}
+        .il-ring-sky{fill:none;stroke:rgb(var(--brand-500));stroke-width:12;stroke-linecap:round}
+        .il-trend{fill:none;stroke:#ff8159;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+        .il-trend-l{fill:none;stroke:#ff8159;stroke-width:4.5;stroke-linecap:round}
+        .il-coin{fill:#fbbf24}.il-coin-s{fill:#d99a0b}.il-coin-in{fill:#fcd34d}
+        .il-num{font:800 20px 'Plus Jakarta Sans Variable',system-ui,sans-serif;fill:rgb(var(--brand-700))}.dark .il-num{fill:#c9bfff}.il-num.il-white{fill:#fff;font-size:24px}
+        .a-pop{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(.3)}
+        .a-up{opacity:0;transform:translateY(22px)}.a-l{opacity:0;transform:translateX(-34px)}.a-r{opacity:0;transform:translateX(34px)}
+        .a-sx{transform-box:fill-box;transform-origin:left;transform:scaleX(0)}
+        .a-bar{transform-box:fill-box;transform-origin:bottom;transform:scaleY(0)}
+        .a-draw{stroke-dasharray:var(--len,300);stroke-dashoffset:var(--len,300)}
+        .on .a-pop,.in .a-pop{animation:aPop .6s cubic-bezier(.3,1.5,.5,1) forwards;animation-delay:calc(var(--i,0)*.1s + .1s)}
+        .on .a-up,.in .a-up,.on .a-l,.in .a-l,.on .a-r,.in .a-r{animation:aMove .7s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--i,0)*.1s + .05s)}
+        .on .a-sx,.in .a-sx{animation:aSx .8s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--i,0)*.12s + .15s)}
+        .on .a-bar,.in .a-bar{animation:aBar .9s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--i,0)*.07s + .1s)}
+        .on .a-draw,.in .a-draw{animation:aDraw 1.3s ease forwards;animation-delay:calc(var(--i,0)*.1s + .2s)}
+        .a-float{animation:aFloat 3.6s ease-in-out infinite}
+        .a-pulse{transform-box:fill-box;transform-origin:center;animation:aPulse 2.4s ease-out infinite}
+        @keyframes aPop{to{opacity:1;transform:scale(1)}}
+        @keyframes aMove{to{opacity:1;transform:none}}
+        @keyframes aSx{to{transform:scaleX(1)}}
+        @keyframes aBar{to{transform:scaleY(1)}}
+        @keyframes aDraw{to{stroke-dashoffset:var(--off,0)}}
+        @keyframes aFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+        @keyframes aPulse{0%{transform:scale(.8);opacity:.9}100%{transform:scale(1.7);opacity:0}}
+        /* eski sahnalar (ishlatilmaydi) */
         .sc-pop{opacity:0;transform:scale(.5)}
         .on .sc-pop,.in .sc-pop{animation:scPop .55s cubic-bezier(.3,1.5,.5,1) forwards;animation-delay:calc(var(--i,0)*.12s + .1s)}
         @keyframes scPop{to{opacity:1;transform:scale(1)}}
@@ -71,6 +118,9 @@
             .sc-fill{width:var(--w)!important;animation:none!important}.sc-bar{height:var(--h)!important;animation:none!important}
             .draw-line{transform:none}.strike::after{width:100%;transition:none}
             .orb{transform:none!important}
+            .a-pop,.a-up,.a-l,.a-r,.a-sx,.a-bar{opacity:1!important;transform:none!important;animation:none!important}
+            .a-draw{stroke-dashoffset:var(--off,0)!important;animation:none!important}
+            .a-float,.a-pulse{animation:none!important}
         }
     </style>
     <script>
@@ -93,15 +143,16 @@
                             const d = document.getElementById('demo');
                             const top = d ? d.getBoundingClientRect().top : 9999;
                             this.showCta = scrollY > innerHeight * 0.6 && top > innerHeight * 0.55;
+                            const mid = innerHeight / 2; let best = this.scene, bd = Infinity;
+                            document.querySelectorAll('[data-scene]').forEach((el) => { const r = el.getBoundingClientRect(); const d = Math.abs(r.top + r.height / 2 - mid); if (d < bd) { bd = d; best = Number(el.dataset.scene); } });
+                            if (best !== this.scene) this.scene = best;
                         });
                     };
                     addEventListener('scroll', onScroll, { passive: true }); onScroll();
                     // ko'rinishga kirganda paydo bo'lish
                     const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.14, rootMargin: '0px 0px -6% 0px' });
                     document.querySelectorAll('.rv, [data-in]').forEach((el) => io.observe(el));
-                    // hikoya: qaysi qadam o'rtada bo'lsa, o'sha sahna yoqiladi
-                    const so = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) this.scene = Number(e.target.dataset.scene); }), { rootMargin: '-42% 0px -42% 0px' });
-                    document.querySelectorAll('[data-scene]').forEach((el) => so.observe(el));
+                    // hikoya: ekran o'rtasiga eng yaqin qadam = faol sahna (scroll paytida hisoblanadi)
                     // so'zlar va bildirishnoma almashinuvi
                     if (!reduce) {
                         setInterval(() => { this.wordI = (this.wordI + 1) % this.words.length; }, 2300);
@@ -313,21 +364,31 @@
             <div class="mt-12 grid gap-10 lg:grid-cols-2 lg:gap-16">
                 {{-- Chap: yopishib turadigan sahna (faqat katta ekranda) --}}
                 <div class="relative hidden lg:block" aria-hidden="true">
-                    <div class="sticky top-28">
+                    <div class="sticky" style="top: max(5.5rem, calc(50vh - 21rem))">
                         <div class="relative rounded-[2rem] bg-white p-5 shadow-pop ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800">
-                            <div class="mb-4 flex items-center justify-between">
+                            <div class="mb-3 flex items-center justify-between">
                                 <div class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full bg-rose-400"></span><span class="h-2.5 w-2.5 rounded-full bg-amber-400"></span><span class="h-2.5 w-2.5 rounded-full bg-emerald-400"></span></div>
                                 <div class="flex gap-1.5">@foreach ($x['story']['scenes'] as $i => $s)<span class="h-1.5 rounded-full transition-all duration-500" :class="scene === {{ $i }} ? 'w-8 bg-brand-600' : 'w-3 bg-ink-200 dark:bg-ink-700'"></span>@endforeach</div>
                             </div>
-                            <div class="relative h-[19rem]">
+                            <div class="relative aspect-[5/4] overflow-hidden rounded-2xl bg-gradient-to-br from-brand-50 to-white dark:from-brand-950/50 dark:to-ink-900">
                                 @foreach ($x['story']['scenes'] as $i => $s)
-                                    <div class="absolute inset-0 transition-all duration-500" :class="scene === {{ $i }} ? 'on translate-y-0 opacity-100' : 'pointer-events-none translate-y-5 opacity-0'">
-                                        @include('landing._scene', ['n' => $i + 1, 'chip' => $s['chip']])
+                                    <div class="absolute inset-0 transition-all duration-500" :class="scene === {{ $i }} ? 'on translate-y-0 scale-100 opacity-100' : 'pointer-events-none translate-y-4 scale-95 opacity-0'">
+                                        @include('landing._scene', ['n' => $i + 1, 'chip' => $s['chip'], 'uid' => 'd'])
+                                    </div>
+                                @endforeach
+                            </div>
+                            {{-- Sahna sarlavhasi (almashib turadi) --}}
+                            <div class="relative mt-4 h-12">
+                                @foreach ($x['story']['scenes'] as $i => $s)
+                                    <div class="absolute inset-0 flex items-center gap-3 transition-all duration-500" :class="scene === {{ $i }} ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'">
+                                        <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-brand-600 text-white shadow-glow"><x-icon :name="$toastIcons[$i]" class="h-5 w-5" /></span>
+                                        <div class="min-w-0"><div class="truncate text-sm font-extrabold text-ink-900 dark:text-white">{{ $s['title'] }}</div><div class="text-xs font-semibold text-brand-600 dark:text-brand-300">{{ $s['chip'] }}</div></div>
+                                        <span class="ml-auto text-3xl font-black text-ink-100 dark:text-ink-800">0{{ $i + 1 }}</span>
                                     </div>
                                 @endforeach
                             </div>
                         </div>
-                        <div class="absolute -bottom-5 -right-5 grid h-16 w-16 place-items-center rounded-2xl bg-gradient-to-br from-accent-300 to-accent-500 text-white shadow-pop"><x-icon name="sparkles" class="h-8 w-8" /></div>
+                        <div class="float-a absolute -right-5 -top-5 grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-accent-300 to-accent-500 text-white shadow-pop"><x-icon name="sparkles" class="h-7 w-7" /></div>
                     </div>
                 </div>
 
@@ -341,7 +402,7 @@
                                 <h3 class="text-2xl font-extrabold tracking-tight text-ink-900 dark:text-white sm:text-3xl"><span class="mr-2 text-brand-600 sm:hidden">{{ $s['tag'] }}.</span>{{ $s['title'] }}</h3>
                                 <p class="mt-3 text-lg leading-relaxed text-ink-600 dark:text-ink-300">{{ $s['text'] }}</p>
                                 <div data-in class="mt-6 rounded-[1.5rem] bg-white p-4 shadow-card ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800 lg:hidden" aria-hidden="true">
-                                    @include('landing._scene', ['n' => $i + 1, 'chip' => $s['chip']])
+                                    <div class="aspect-[5/4] overflow-hidden rounded-xl bg-gradient-to-br from-brand-50 to-white dark:from-brand-950/50 dark:to-ink-900">@include('landing._scene', ['n' => $i + 1, 'chip' => $s['chip'], 'uid' => 'm'])</div>
                                 </div>
                             </div>
                         </li>
