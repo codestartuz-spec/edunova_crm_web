@@ -11,8 +11,7 @@ use Illuminate\Validation\Rule;
 
 /**
  * v24: «Video darslar».
- *  - ko'rish (index, show): tizimning HAMMA foydalanuvchilari (xodim ham, o'quvchi ham);
- *  - boshqarish (admin, store, update, ...): faqat sAdmin (marshrutda `role:sadmin`), «Sozlamalar» bo'limida.
+ *  v26: ko'rish ham, boshqarish ham FAQAT sAdmin (marshrutda `role:sadmin`); boshqa foydalanuvchilarga menyuda ko'rinmaydi.
  */
 class TutorialController extends Controller
 {

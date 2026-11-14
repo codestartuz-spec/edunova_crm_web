@@ -16,10 +16,10 @@
         <div class="login-orb absolute -right-24 -top-24 h-96 w-96 rounded-full bg-white/10"></div>
         <div class="login-orb login-orb-2 absolute -bottom-32 -left-16 h-[28rem] w-[28rem] rounded-full bg-black/15"></div>
 
-        <div class="relative flex items-center gap-3 text-white">
-            <span class="inline-flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl bg-white text-xl font-black text-brand-600 shadow-lg">@if ($logo = \App\Support\Brand::logoUrl())<img src="{{ $logo }}" alt="" class="h-full w-full object-contain">@else{{ \App\Support\Brand::initial() }}@endif</span>
+        <a href="{{ url('/') }}" class="group relative flex w-fit items-center gap-3 text-white" title="Tizim haqida: sotuv sahifasi" aria-label="Sotuv sahifasini ochish">
+            <span class="inline-flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl bg-white text-xl font-black text-brand-600 shadow-lg transition duration-300 group-hover:-rotate-6 group-hover:scale-110">@if ($logo = \App\Support\Brand::logoUrl())<img src="{{ $logo }}" alt="" class="h-full w-full object-contain">@else{{ \App\Support\Brand::initial() }}@endif</span>
             <span class="text-2xl font-extrabold tracking-tight">{{ \App\Support\Brand::short() }}</span>
-        </div>
+        </a>
 
         <div class="relative my-10">
             <div class="relative mx-auto h-72 max-w-md">
@@ -63,7 +63,7 @@
         </button>
 
         <div class="login-rise relative w-full max-w-sm">
-            <x-brand-mark class="mb-8 lg:hidden" />
+            <a href="{{ url('/') }}" class="mb-8 block w-fit lg:hidden" aria-label="Sotuv sahifasini ochish"><x-brand-mark class="!mb-0" /></a>
 
             <span class="brand-chip mb-5 grid h-12 w-12 place-items-center rounded-2xl"><x-icon name="lock" class="h-6 w-6" /></span>
             <h1 class="text-3xl font-extrabold tracking-tight text-ink-900 dark:text-white">Tizimga kirish</h1>

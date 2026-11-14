@@ -4,4 +4,3 @@
 <x-nav-link :href="route('student.payments')" icon="banknote" :active="request()->routeIs('student.payments')">To'lovlar va balans</x-nav-link>
 <x-nav-link :href="route('student.attendance')" icon="calendar" :active="request()->routeIs('student.attendance')">Davomad</x-nav-link>
 <x-nav-link :href="route('student.courses')" icon="book" :active="request()->routeIs('student.courses', 'student.courses.*', 'student.tests.*')">Kurs materiallari</x-nav-link>
-<x-nav-link :href="route('tutorials.index')" icon="play" :active="request()->routeIs('tutorials.index', 'tutorials.show')">Video darslar</x-nav-link>

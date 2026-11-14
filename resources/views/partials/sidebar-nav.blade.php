@@ -68,7 +68,9 @@
 @endphp
 
 <x-nav-link :href="route('dashboard')" icon="home" :active="request()->routeIs('dashboard')">Bosh sahifa</x-nav-link>
-<x-nav-link :href="route('tutorials.index')" icon="play" :active="request()->routeIs('tutorials.index', 'tutorials.show')">Video darslar</x-nav-link>
+@if ($me->isSuperAdmin())
+    <x-nav-link :href="route('tutorials.index')" icon="play" :active="request()->routeIs('tutorials.index', 'tutorials.show')">Video darslar</x-nav-link>
+@endif
 
 @foreach ($groups as $group)
     @php

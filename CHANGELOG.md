@@ -1,3 +1,11 @@
+## v26.1 — 3D sotuv sahifasi, login logotipi, Video darslar yopildi
+- **Sotuv sahifasi 3D:** bosh blokdagi tizim oynasi endi qatlamli 3D sahna (orqada rangli plitalar, oldinga chiqib turgan bildirishnomalar, Telegram, 92% davomat halqasi, aylanuvchi tanga va kublar). U sichqoncha bilan burilib, o'zi ham asta chayqaladi (sensorli qurilmada), pastga aylantirilganda orqaga ketib so'nadi. Orqa fonda harakatlanuvchi perspektiv setka (pol) va chuqurlikda siljiydigan 3D kublar.
+- **Imkoniyatlar, rollar, «Qanday ishlaydi» kartalari:** pastdan 3D burilib chiqadi, sichqoncha ostida qiyshayadi, yaltiroq nur tushadi, ikonka va matn turli chuqurlikda ko'tarilib turadi.
+- **«Bir kun CRM ichida»:** sahnalar 3D burilib almashadi, panel orqasida chuqurlik plitalari bor. **Demo bloki:** scroll bilan aylanadigan kublar.
+- `prefers-reduced-motion` yoqilgan bo'lsa 3D animatsiyalar o'chadi; telefonlarda og'ir effektlar yengillashtirilgan.
+- **Login sahifasi:** logotip (chapdagi katta va telefondagi) bosilsa sotuv sahifasi ochiladi.
+- **Video darslar** endi faqat sAdmin'ga ko'rinadi: menyuda ham (xodim va o'quvchi menyusidan olib tashlandi), havola orqali ham (boshqalarga 403).
+
 ## v26 — Direktorga Telegram va shaxsiy kunlik hisobot
 - **Direktorni qo'shish/tahrirlash** formasida yangi blok «Telegram va kunlik hisobot»: **Telegram ID**, **hisobot yuborish vaqti** (soat:daqiqa, 5 daqiqa qadam, tezkor 18/20/21/22), «Kunlik hisobotni yuborish» kaliti.
 - Telegram ID saqlanayotganda bot unga tasdiq xabari yuboradi; direktor botga /start yozmagan yoki ID noto'g'ri bo'lsa, xato ko'rsatiladi. Bir ID ikki direktorga berilmaydi. Maydonni bo'shatib saqlash Telegramni uzadi.

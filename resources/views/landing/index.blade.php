@@ -46,6 +46,52 @@
         .strike::after{content:"";position:absolute;left:0;top:52%;height:2px;width:0;background:currentColor;transition:width .9s ease .5s}
         .in .strike::after{width:100%}
 
+
+        /* ---- 3D ---- */
+        .persp3d{perspective:1500px;perspective-origin:50% 38%}
+        .stage3d{transform-style:preserve-3d;will-change:transform;transform:rotateX(4deg) rotateY(-10deg)}
+        .main3d{transform-style:preserve-3d}
+        .plate3d{position:absolute;inset:16px -8px -16px 20px;border-radius:1.75rem;background:linear-gradient(135deg,rgb(var(--brand-400)/.6),rgb(255 129 89/.5));transform:translateZ(-60px);box-shadow:0 50px 90px -24px rgb(var(--brand-600)/.55)}
+        .plate3d.p2{inset:34px -26px -34px 44px;opacity:.5;transform:translateZ(-130px)}
+        .lay{position:absolute;transform-style:preserve-3d}
+        .z1{transform:translateZ(22px)}.z2{transform:translateZ(44px)}.z3{transform:translateZ(70px)}
+        .tilt{transform-style:preserve-3d}
+        .glare{position:relative}
+        .glare::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(260px circle at var(--gx,50%) var(--gy,50%),rgba(255,255,255,.55),transparent 62%);mix-blend-mode:soft-light}
+        .glare:hover::after{opacity:1}
+        .js .rv-3d{transform:perspective(1100px) rotateX(26deg) translateY(54px) scale(.95);transform-origin:50% 100%}
+        .js .rv-3d.in{transform:none}
+        .px{transform:translate3d(calc(var(--mx,0)*var(--dx,0)*1px),calc(var(--my,0)*var(--dy,0)*1px),0)}
+        /* kub */
+        .cube{--c1:rgb(var(--brand-300));--c2:rgb(var(--brand-600));position:relative;width:var(--s);height:var(--s);transform-style:preserve-3d;animation:cubeSpin var(--t,16s) linear infinite}
+        .cube-accent{--c1:#ffc2ab;--c2:#ff7a4d}.cube-sky{--c1:#7dd3fc;--c2:#0284c7}.cube-green{--c1:#6ee7b7;--c2:#059669}
+        .cube i{position:absolute;inset:0;border-radius:14%;border:1px solid rgb(255 255 255/.45);background:linear-gradient(135deg,var(--c1),var(--c2));opacity:.93;box-shadow:inset 0 0 18px rgb(255 255 255/.25)}
+        .cube i:nth-child(1){transform:translateZ(calc(var(--s)/2))}
+        .cube i:nth-child(2){transform:rotateY(180deg) translateZ(calc(var(--s)/2))}
+        .cube i:nth-child(3){transform:rotateY(90deg) translateZ(calc(var(--s)/2))}
+        .cube i:nth-child(4){transform:rotateY(-90deg) translateZ(calc(var(--s)/2))}
+        .cube i:nth-child(5){transform:rotateX(90deg) translateZ(calc(var(--s)/2));background:linear-gradient(135deg,#fff,var(--c1))}
+        .cube i:nth-child(6){transform:rotateX(-90deg) translateZ(calc(var(--s)/2));background:linear-gradient(135deg,var(--c2),#1e1b4b)}
+        .cube-sy{animation:none;transform:rotateX(-22deg) rotateY(calc(var(--sy,0)*.22deg + var(--r0,0)*1deg))}
+        @keyframes cubeSpin{from{transform:rotateX(-22deg) rotateY(0)}to{transform:rotateX(-22deg) rotateY(360deg)}}
+        .cube-wrap{perspective:700px;animation:cubeFloat 7s ease-in-out infinite}
+        @keyframes cubeFloat{0%,100%{translate:0 0}50%{translate:0 -16px}}
+        /* tanga */
+        .coin3d{position:relative;width:var(--s);height:var(--s);transform-style:preserve-3d;animation:coinSpin 5.5s linear infinite}
+        .coin3d i{position:absolute;inset:0;border-radius:50%;display:grid;place-items:center;font:800 calc(var(--s)*.46) 'Plus Jakarta Sans Variable',system-ui,sans-serif;color:#a16207;transform:translateZ(var(--zz));background:radial-gradient(circle at 34% 28%,#fef3c7,#fbbf24 52%,#d99a0b);border:2px solid #d99a0b}
+        .coin3d i.ce{background:#c98a08;border-color:#b87a05}
+        .coin3d i.cb{transform:translateZ(var(--zz)) rotateY(180deg)}
+        @keyframes coinSpin{to{transform:rotateY(360deg)}}
+        /* pol (perspektiv setka) */
+        .floor3d{position:absolute;left:-25%;right:-25%;bottom:0;height:52%;pointer-events:none;perspective:520px;overflow:hidden;-webkit-mask-image:linear-gradient(to top,#000 5%,transparent 88%);mask-image:linear-gradient(to top,#000 5%,transparent 88%)}
+        .floor3d::before{content:"";position:absolute;left:0;right:0;top:-40%;bottom:0;transform:rotateX(66deg);transform-origin:50% 100%;background-image:linear-gradient(rgb(var(--brand-500)/.3) 1.5px,transparent 1.5px),linear-gradient(90deg,rgb(var(--brand-500)/.3) 1.5px,transparent 1.5px);background-size:68px 68px;animation:floorMove 3.2s linear infinite}
+        @keyframes floorMove{to{background-position:0 68px}}
+        /* hikoya sahnalari: 3D almashish */
+        .scn{transition:transform .85s cubic-bezier(.2,.8,.2,1),opacity .6s ease;transform-origin:50% 60%;backface-visibility:hidden}
+        .scn-on{opacity:1;transform:none}
+        .scn-off{opacity:0;pointer-events:none;transform:perspective(1100px) rotateY(34deg) rotateX(8deg) translate3d(46px,0,-140px)}
+        .scn-off.prev{transform:perspective(1100px) rotateY(-34deg) rotateX(8deg) translate3d(-46px,0,-140px)}
+
         /* ---- SVG illyustratsiyalar ---- */
         .il-card{fill:#fff;stroke:#ece9f7}.dark .il-card{fill:#1b1a2c;stroke:#2c2a44}
         .il-sub{fill:#f3f1fb}.dark .il-sub{fill:#26243b}
@@ -121,6 +167,9 @@
             .a-pop,.a-up,.a-l,.a-r,.a-sx,.a-bar{opacity:1!important;transform:none!important;animation:none!important}
             .a-draw{stroke-dashoffset:var(--off,0)!important;animation:none!important}
             .a-float,.a-pulse{animation:none!important}
+            .cube,.coin3d,.cube-wrap,.floor3d::before{animation:none!important}
+            .js .rv-3d{transform:none!important}
+            .scn,.scn-off{transition:none}
         }
     </style>
     <script>
@@ -150,7 +199,7 @@
                     };
                     addEventListener('scroll', onScroll, { passive: true }); onScroll();
                     // ko'rinishga kirganda paydo bo'lish
-                    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.14, rootMargin: '0px 0px -6% 0px' });
+                    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { const t = e.target; t.classList.add('in'); io.unobserve(t); if (t.matches('[data-tilt]')) setTimeout(() => t.classList.remove('rv', 'rv-3d', 'rv-s'), 1500); } }), { threshold: 0.14, rootMargin: '0px 0px -6% 0px' });
                     document.querySelectorAll('.rv, [data-in]').forEach((el) => io.observe(el));
                     // hikoya: ekran o'rtasiga eng yaqin qadam = faol sahna (scroll paytida hisoblanadi)
                     // so'zlar va bildirishnoma almashinuvi
@@ -158,12 +207,35 @@
                         setInterval(() => { this.wordI = (this.wordI + 1) % this.words.length; }, 2300);
                         setInterval(() => { this.toastI = (this.toastI + 1) % this.chips.length; }, 3000);
                     }
-                    // sichqoncha bilan engil qiyshayish
-                    if (!reduce && matchMedia('(hover: hover)').matches) {
+                    // 3D: kartalar sichqoncha ostida qiyshayadi (+ yaltiroq nur)
+                    const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+                    if (!reduce && fine) {
                         document.querySelectorAll('[data-tilt]').forEach((el) => {
-                            el.addEventListener('mousemove', (ev) => { const r = el.getBoundingClientRect(); const px = (ev.clientX - r.left) / r.width - .5; const py = (ev.clientY - r.top) / r.height - .5; el.style.transform = `perspective(900px) rotateY(${px * 7}deg) rotateX(${-py * 7}deg)`; });
-                            el.addEventListener('mouseleave', () => { el.style.transform = ''; });
+                            const k = Number(el.dataset.tilt) || 7;
+                            el.addEventListener('mousemove', (ev) => { const r = el.getBoundingClientRect(); const px = (ev.clientX - r.left) / r.width - .5; const py = (ev.clientY - r.top) / r.height - .5; el.style.transition = 'transform .12s ease-out'; el.style.transform = `perspective(900px) rotateY(${px * k * 2}deg) rotateX(${-py * k * 2}deg) translateZ(8px)`; el.style.setProperty('--gx', (px + .5) * 100 + '%'); el.style.setProperty('--gy', (py + .5) * 100 + '%'); });
+                            el.addEventListener('mouseleave', () => { el.style.transition = 'transform .5s cubic-bezier(.2,.8,.2,1)'; el.style.transform = ''; });
                         });
+                    }
+                    // 3D bosh blok: sichqoncha (yoki o'zi chayqalib) + scroll bilan chiqib ketishi
+                    const heroSec = document.getElementById('hero'), stage = document.getElementById('stage'), hero3d = document.getElementById('hero3d');
+                    if (heroSec && stage && !reduce) {
+                        let tx = 0, ty = 0, cx = 0, cy = 0, hover = false, vis = true, raf = 0;
+                        const clamp = (v) => Math.max(-1, Math.min(1, v));
+                        if (fine) {
+                            heroSec.addEventListener('pointermove', (e) => { const r = hero3d.getBoundingClientRect(); tx = clamp((e.clientX - (r.left + r.width / 2)) / (innerWidth * .5)); ty = clamp((e.clientY - (r.top + r.height / 2)) / (innerHeight * .5)); hover = true; });
+                            heroSec.addEventListener('pointerleave', () => { hover = false; });
+                        }
+                        const loop = (t) => {
+                            if (!hover) { tx = Math.sin(t / 2700) * .6; ty = Math.cos(t / 3400) * .4; }
+                            cx += (tx - cx) * .07; cy += (ty - cy) * .07;
+                            const sp = Math.min(1, Math.max(0, scrollY / (heroSec.offsetHeight * .9)));
+                            stage.style.transform = `rotateX(${(4 - cy * 9 + sp * 24).toFixed(2)}deg) rotateY(${(-10 + cx * 16).toFixed(2)}deg) translateZ(${(-sp * 160).toFixed(1)}px)`;
+                            stage.style.opacity = (1 - sp * .7).toFixed(3);
+                            heroSec.style.setProperty('--mx', cx.toFixed(3)); heroSec.style.setProperty('--my', cy.toFixed(3));
+                            raf = vis ? requestAnimationFrame(loop) : 0;
+                        };
+                        new IntersectionObserver((es) => { vis = es[0].isIntersecting; if (vis && !raf) raf = requestAnimationFrame(loop); }, { threshold: 0 }).observe(heroSec);
+                        raf = requestAnimationFrame(loop);
                     }
                 },
             }));
@@ -232,7 +304,15 @@
 
 <main>
     {{-- ============ Bosh blok ============ --}}
-    <section class="relative overflow-hidden">
+    <section id="hero" class="relative overflow-hidden">
+        <div class="floor3d" aria-hidden="true"></div>
+        {{-- 3D kublar (faqat bezak): sichqoncha bilan turli chuqurlikda siljiydi --}}
+        <div class="pointer-events-none absolute inset-0 hidden md:block" aria-hidden="true">
+            <div class="px absolute left-[46%] top-[12%]" style="--dx:-26;--dy:-18"><div class="cube-wrap">@include('landing._cube', ['s' => 34, 't' => 11, 'tone' => 'accent', 'd' => 2])</div></div>
+            <div class="px absolute bottom-[22%] left-[3%]" style="--dx:30;--dy:22"><div class="cube-wrap" style="animation-delay:-3s">@include('landing._cube', ['s' => 46, 't' => 18, 'tone' => 'brand', 'd' => 5])</div></div>
+            <div class="px absolute right-[2%] top-[60%]" style="--dx:-34;--dy:-24"><div class="cube-wrap" style="animation-delay:-1s">@include('landing._cube', ['s' => 58, 't' => 14, 'tone' => 'sky', 'd' => 8])</div></div>
+            <div class="px absolute left-[40%] bottom-[14%]" style="--dx:20;--dy:14"><div class="cube-wrap" style="animation-delay:-5s">@include('landing._cube', ['s' => 24, 't' => 9, 'tone' => 'green', 'd' => 1])</div></div>
+        </div>
         <div class="orb pointer-events-none absolute -right-32 -top-32 h-[34rem] w-[34rem] rounded-full bg-brand-400/25 blur-3xl" style="--k:-.10" aria-hidden="true"></div>
         <div class="orb pointer-events-none absolute -bottom-40 -left-32 h-[30rem] w-[30rem] rounded-full bg-accent-300/30 blur-3xl" style="--k:-.18" aria-hidden="true"></div>
         <div class="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[1.05fr_1fr] lg:py-24">
@@ -259,54 +339,65 @@
                 </ul>
             </div>
 
-            {{-- Jonli tizim ko'rinishi (faqat bezak) --}}
+            {{-- Jonli 3D tizim ko'rinishi (faqat bezak): qatlamlar turli chuqurlikda --}}
             <div class="login-rise login-rise-2 relative mx-auto w-full max-w-lg" aria-hidden="true">
-                <div data-tilt class="tilt rounded-[1.75rem] bg-white p-4 shadow-pop ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800">
-                    <div class="mb-4 flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full bg-rose-400"></span><span class="h-2.5 w-2.5 rounded-full bg-amber-400"></span><span class="h-2.5 w-2.5 rounded-full bg-emerald-400"></span></div>
-                    <div class="grid grid-cols-3 gap-3">
-                        @foreach ([['users', 'brand'], ['banknote', 'accent'], ['calendar', 'brand']] as [$ic, $tone])
-                            <div class="rounded-2xl bg-ink-50 p-3 dark:bg-ink-800/60">
-                                <span class="grid h-9 w-9 place-items-center rounded-xl {{ $tone === 'accent' ? 'bg-accent-100 text-accent-600 dark:bg-accent-500/15 dark:text-accent-300' : 'bg-brand-100 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300' }}"><x-icon :name="$ic" class="h-5 w-5" /></span>
-                                <div class="mt-3 h-2.5 w-14 rounded-full bg-ink-200 dark:bg-ink-700"></div>
-                                <div class="mt-2 h-4 w-20 rounded-full {{ $tone === 'accent' ? 'bg-accent-300 dark:bg-accent-500/60' : 'bg-brand-300 dark:bg-brand-500/60' }}"></div>
+              <div id="hero3d" class="persp3d relative">
+                <div id="stage" class="stage3d relative">
+                    <div class="plate3d"></div><div class="plate3d p2"></div>
+                    <div class="main3d relative rounded-[1.75rem] bg-white p-4 shadow-pop ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800">
+                        <div class="mb-4 flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full bg-rose-400"></span><span class="h-2.5 w-2.5 rounded-full bg-amber-400"></span><span class="h-2.5 w-2.5 rounded-full bg-emerald-400"></span></div>
+                        <div class="grid grid-cols-3 gap-3 z1">
+                            @foreach ([['users', 'brand'], ['banknote', 'accent'], ['calendar', 'brand']] as [$ic, $tone])
+                                <div class="rounded-2xl bg-ink-50 p-3 shadow-sm dark:bg-ink-800/60">
+                                    <span class="grid h-9 w-9 place-items-center rounded-xl {{ $tone === 'accent' ? 'bg-accent-100 text-accent-600 dark:bg-accent-500/15 dark:text-accent-300' : 'bg-brand-100 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300' }}"><x-icon :name="$ic" class="h-5 w-5" /></span>
+                                    <div class="mt-3 h-2.5 w-14 rounded-full bg-ink-200 dark:bg-ink-700"></div>
+                                    <div class="mt-2 h-4 w-20 rounded-full {{ $tone === 'accent' ? 'bg-accent-300 dark:bg-accent-500/60' : 'bg-brand-300 dark:bg-brand-500/60' }}"></div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div class="mt-3 rounded-2xl bg-ink-50 p-4 shadow-sm dark:bg-ink-800/60 z2" style="transform-style:preserve-3d">
+                            <div class="mb-3 flex items-center justify-between"><div class="h-3 w-24 rounded-full bg-ink-200 dark:bg-ink-700"></div><div class="h-3 w-12 rounded-full bg-brand-200 dark:bg-brand-500/40"></div></div>
+                            <div class="flex h-28 items-end gap-2.5" style="transform-style:preserve-3d">
+                                @foreach ([40, 62, 48, 78, 58, 92, 70, 84] as $h)
+                                    <span class="bar-grow flex-1 rounded-t-lg bg-gradient-to-t from-brand-600 to-brand-400 shadow-lg" style="height: {{ $h }}%; animation-delay: {{ 0.2 + $loop->index * 0.07 }}s"></span>
+                                @endforeach
                             </div>
-                        @endforeach
-                    </div>
-                    <div class="mt-3 rounded-2xl bg-ink-50 p-4 dark:bg-ink-800/60">
-                        <div class="mb-3 flex items-center justify-between"><div class="h-3 w-24 rounded-full bg-ink-200 dark:bg-ink-700"></div><div class="h-3 w-12 rounded-full bg-brand-200 dark:bg-brand-500/40"></div></div>
-                        <div class="flex h-28 items-end gap-2.5">
-                            @foreach ([40, 62, 48, 78, 58, 92, 70, 84] as $h)
-                                <span class="bar-grow flex-1 rounded-t-lg bg-gradient-to-t from-brand-600 to-brand-400" style="height: {{ $h }}%; animation-delay: {{ 0.2 + $loop->index * 0.07 }}s"></span>
+                        </div>
+                        <div class="mt-3 space-y-2 z1">
+                            @foreach ([78, 56, 66] as $w)
+                                <div class="flex items-center gap-3 rounded-xl bg-ink-50 px-3 py-2.5 shadow-sm dark:bg-ink-800/60">
+                                    <span class="h-8 w-8 shrink-0 rounded-full bg-gradient-to-br from-brand-400 to-accent-400"></span>
+                                    <div class="min-w-0 flex-1"><div class="h-2.5 rounded-full bg-ink-200 dark:bg-ink-700" style="width: {{ $w }}%"></div><div class="mt-1.5 h-2 w-1/3 rounded-full bg-ink-100 dark:bg-ink-800"></div></div>
+                                    <span class="grid h-6 w-6 place-items-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400"><x-icon name="check" class="h-3.5 w-3.5" /></span>
+                                </div>
                             @endforeach
                         </div>
                     </div>
-                    <div class="mt-3 space-y-2">
-                        @foreach ([78, 56, 66] as $w)
-                            <div class="flex items-center gap-3 rounded-xl bg-ink-50 px-3 py-2.5 dark:bg-ink-800/60">
-                                <span class="h-8 w-8 shrink-0 rounded-full bg-gradient-to-br from-brand-400 to-accent-400"></span>
-                                <div class="min-w-0 flex-1"><div class="h-2.5 rounded-full bg-ink-200 dark:bg-ink-700" style="width: {{ $w }}%"></div><div class="mt-1.5 h-2 w-1/3 rounded-full bg-ink-100 dark:bg-ink-800"></div></div>
-                                <span class="grid h-6 w-6 place-items-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400"><x-icon name="check" class="h-3.5 w-3.5" /></span>
+                    {{-- Suzuvchi qatlamlar (har biri o'z chuqurligida) --}}
+                    <div class="lay -top-5 right-1 sm:-right-5" style="transform:translateZ(120px)">
+                        @foreach ($chips as $i => $chip)
+                            <div x-show="toastI === {{ $i }}" x-cloak class="toast-in flex items-center gap-2.5 rounded-2xl bg-white p-3 pr-4 shadow-pop ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800">
+                                <span class="grid h-9 w-9 place-items-center rounded-xl bg-brand-100 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300"><x-icon :name="$toastIcons[$i]" class="h-5 w-5" /></span>
+                                <span class="text-sm font-bold text-ink-800 dark:text-ink-100">{{ $chip }}</span>
                             </div>
                         @endforeach
                     </div>
+                    <div class="lay -left-6 top-24 hidden sm:block" style="transform:translateZ(90px)"><div class="float-a flex items-center gap-2.5 rounded-2xl bg-white p-3 shadow-pop ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800">
+                        <span class="grid h-10 w-10 place-items-center rounded-xl bg-sky-100 text-sky-600 dark:bg-sky-500/15 dark:text-sky-300"><x-icon name="send" class="h-5 w-5" /></span>
+                        <div><div class="h-2.5 w-20 rounded-full bg-ink-200 dark:bg-ink-700"></div><div class="mt-1.5 h-2 w-12 rounded-full bg-ink-100 dark:bg-ink-800"></div></div>
+                    </div></div>
+                    <div class="lay -right-5 bottom-14 hidden sm:block" style="transform:translateZ(130px)"><div class="float-b flex items-center gap-2.5 rounded-2xl bg-white p-3 shadow-pop ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800">
+                        <span class="grid h-10 w-10 place-items-center rounded-xl bg-accent-100 text-accent-600 dark:bg-accent-500/15 dark:text-accent-300"><x-icon name="award" class="h-5 w-5" /></span>
+                        <div><div class="h-2.5 w-16 rounded-full bg-ink-200 dark:bg-ink-700"></div><div class="mt-1.5 h-2 w-10 rounded-full bg-ink-100 dark:bg-ink-800"></div></div>
+                    </div></div>
+                    <div class="lay -bottom-7 left-4 hidden sm:block" style="transform:translateZ(150px)"><div class="float-c flex items-center gap-3 rounded-2xl bg-white p-3 pr-5 shadow-pop ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800">
+                        <svg viewBox="0 0 44 44" class="h-11 w-11 -rotate-90"><circle cx="22" cy="22" r="17" fill="none" class="stroke-ink-100 dark:stroke-ink-700" stroke-width="6"/><circle cx="22" cy="22" r="17" fill="none" stroke="#10b981" stroke-width="6" stroke-linecap="round" stroke-dasharray="107" stroke-dashoffset="9"/></svg>
+                        <div class="text-xl font-black text-ink-900 dark:text-white">92%</div>
+                    </div></div>
+                    <div class="lay left-1 -top-8 sm:-left-7" style="transform:translateZ(110px)"><div class="float-c">@include('landing._coin', ['s' => 56])</div></div>
+                    <div class="lay -right-3 top-[46%] hidden sm:block" style="transform:translateZ(60px)"><div class="cube-wrap" style="animation-delay:-2s">@include('landing._cube', ['s' => 30, 't' => 9, 'tone' => 'accent'])</div></div>
                 </div>
-                {{-- Almashib turuvchi bildirishnoma --}}
-                <div class="absolute -top-4 right-2 z-10 sm:-right-4">
-                    @foreach ($chips as $i => $chip)
-                        <div x-show="toastI === {{ $i }}" x-cloak class="toast-in flex items-center gap-2.5 rounded-2xl bg-white p-3 pr-4 shadow-pop ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800">
-                            <span class="grid h-9 w-9 place-items-center rounded-xl bg-brand-100 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300"><x-icon :name="$toastIcons[$i]" class="h-5 w-5" /></span>
-                            <span class="text-sm font-bold text-ink-800 dark:text-ink-100">{{ $chip }}</span>
-                        </div>
-                    @endforeach
-                </div>
-                <div class="float-a absolute -left-4 top-24 hidden items-center gap-2.5 rounded-2xl bg-white p-3 shadow-pop ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800 sm:flex">
-                    <span class="grid h-10 w-10 place-items-center rounded-xl bg-sky-100 text-sky-600 dark:bg-sky-500/15 dark:text-sky-300"><x-icon name="send" class="h-5 w-5" /></span>
-                    <div><div class="h-2.5 w-20 rounded-full bg-ink-200 dark:bg-ink-700"></div><div class="mt-1.5 h-2 w-12 rounded-full bg-ink-100 dark:bg-ink-800"></div></div>
-                </div>
-                <div class="float-b absolute -right-3 bottom-10 hidden items-center gap-2.5 rounded-2xl bg-white p-3 shadow-pop ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800 sm:flex">
-                    <span class="grid h-10 w-10 place-items-center rounded-xl bg-accent-100 text-accent-600 dark:bg-accent-500/15 dark:text-accent-300"><x-icon name="award" class="h-5 w-5" /></span>
-                    <div><div class="h-2.5 w-16 rounded-full bg-ink-200 dark:bg-ink-700"></div><div class="mt-1.5 h-2 w-10 rounded-full bg-ink-100 dark:bg-ink-800"></div></div>
-                </div>
+              </div>
             </div>
         </div>
         <a href="#story" class="relative mx-auto mb-6 flex w-fit flex-col items-center gap-2 text-sm font-semibold text-ink-500 transition hover:text-brand-600 dark:text-ink-400">
@@ -365,20 +456,22 @@
                 {{-- Chap: yopishib turadigan sahna (faqat katta ekranda) --}}
                 <div class="relative hidden lg:block" aria-hidden="true">
                     <div class="sticky" style="top: max(5.5rem, calc(50vh - 21rem))">
-                        <div class="relative rounded-[2rem] bg-white p-5 shadow-pop ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800">
+                        <div data-tilt="5" class="tilt relative rounded-[2rem] bg-white p-5 shadow-pop ring-1 ring-ink-100 dark:bg-ink-900 dark:ring-ink-800">
+                            <div class="absolute inset-0 rounded-[2rem] bg-brand-200/70 dark:bg-brand-500/20" style="transform:translate3d(16px,18px,-36px)"></div>
+                            <div class="absolute inset-0 rounded-[2rem] bg-accent-200/60 dark:bg-accent-500/15" style="transform:translate3d(32px,36px,-72px)"></div>
                             <div class="mb-3 flex items-center justify-between">
                                 <div class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full bg-rose-400"></span><span class="h-2.5 w-2.5 rounded-full bg-amber-400"></span><span class="h-2.5 w-2.5 rounded-full bg-emerald-400"></span></div>
                                 <div class="flex gap-1.5">@foreach ($x['story']['scenes'] as $i => $s)<span class="h-1.5 rounded-full transition-all duration-500" :class="scene === {{ $i }} ? 'w-8 bg-brand-600' : 'w-3 bg-ink-200 dark:bg-ink-700'"></span>@endforeach</div>
                             </div>
-                            <div class="relative aspect-[5/4] overflow-hidden rounded-2xl bg-gradient-to-br from-brand-50 to-white dark:from-brand-950/50 dark:to-ink-900">
+                            <div class="relative aspect-[5/4] overflow-hidden rounded-2xl bg-gradient-to-br from-brand-50 to-white dark:from-brand-950/50 dark:to-ink-900" style="transform:translateZ(26px)">
                                 @foreach ($x['story']['scenes'] as $i => $s)
-                                    <div class="absolute inset-0 transition-all duration-500" :class="scene === {{ $i }} ? 'on translate-y-0 scale-100 opacity-100' : 'pointer-events-none translate-y-4 scale-95 opacity-0'">
+                                    <div class="scn absolute inset-0" :class="scene === {{ $i }} ? 'on scn-on' : (scene > {{ $i }} ? 'scn-off prev' : 'scn-off')">
                                         @include('landing._scene', ['n' => $i + 1, 'chip' => $s['chip'], 'uid' => 'd'])
                                     </div>
                                 @endforeach
                             </div>
                             {{-- Sahna sarlavhasi (almashib turadi) --}}
-                            <div class="relative mt-4 h-12">
+                            <div class="relative mt-4 h-12" style="transform:translateZ(40px)">
                                 @foreach ($x['story']['scenes'] as $i => $s)
                                     <div class="absolute inset-0 flex items-center gap-3 transition-all duration-500" :class="scene === {{ $i }} ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'">
                                         <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-brand-600 text-white shadow-glow"><x-icon :name="$toastIcons[$i]" class="h-5 w-5" /></span>
@@ -421,10 +514,10 @@
             </div>
             <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 @foreach ($c['features'] as $f)
-                    <article class="rv rv-s card card-hover card-body group" style="--d: {{ ($loop->index % 3) * .1 }}s">
-                        <span class="grid h-12 w-12 place-items-center rounded-2xl bg-brand-50 text-brand-600 transition duration-300 group-hover:-rotate-6 group-hover:scale-110 group-hover:bg-brand-600 group-hover:text-white dark:bg-brand-500/15 dark:text-brand-300"><x-icon :name="$f['icon']" class="h-6 w-6" /></span>
-                        <h3 class="mt-4 text-lg font-bold text-ink-900 dark:text-white">{{ $f['title'] }}</h3>
-                        <p class="mt-2 text-sm leading-relaxed text-ink-600 dark:text-ink-300">{{ $f['text'] }}</p>
+                    <article data-tilt="6" class="rv rv-3d tilt glare card card-body group" style="--d: {{ ($loop->index % 3) * .1 }}s">
+                        <div class="z3 w-fit"><span class="grid h-12 w-12 place-items-center rounded-2xl bg-brand-50 text-brand-600 shadow-lg shadow-brand-500/20 transition duration-300 group-hover:-rotate-6 group-hover:scale-110 group-hover:bg-brand-600 group-hover:text-white dark:bg-brand-500/15 dark:text-brand-300"><x-icon :name="$f['icon']" class="h-6 w-6" /></span></div>
+                        <h3 class="z2 mt-4 text-lg font-bold text-ink-900 dark:text-white">{{ $f['title'] }}</h3>
+                        <p class="z1 mt-2 text-sm leading-relaxed text-ink-600 dark:text-ink-300">{{ $f['text'] }}</p>
                     </article>
                 @endforeach
             </div>
@@ -440,9 +533,9 @@
             </div>
             <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 @foreach ($c['roles'] as $r)
-                    <div class="rv flex items-start gap-4 rounded-2xl border border-ink-100 bg-white p-5 transition duration-300 hover:-translate-y-1 hover:border-brand-300 hover:shadow-card dark:border-ink-800 dark:bg-ink-900 dark:hover:border-brand-500/50" style="--d: {{ ($loop->index % 3) * .1 }}s">
-                        <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-accent-100 text-accent-600 dark:bg-accent-500/15 dark:text-accent-300"><x-icon :name="$r['icon']" class="h-5 w-5" /></span>
-                        <div><h3 class="font-bold text-ink-900 dark:text-white">{{ $r['title'] }}</h3><p class="mt-1 text-sm leading-relaxed text-ink-600 dark:text-ink-300">{{ $r['text'] }}</p></div>
+                    <div data-tilt="6" class="rv rv-3d tilt glare flex items-start gap-4 rounded-2xl border border-ink-100 bg-white p-5 transition-colors duration-300 hover:border-brand-300 hover:shadow-card dark:border-ink-800 dark:bg-ink-900 dark:hover:border-brand-500/50" style="--d: {{ ($loop->index % 3) * .1 }}s">
+                        <span class="z3 grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-accent-100 text-accent-600 shadow-lg shadow-accent-500/20 dark:bg-accent-500/15 dark:text-accent-300"><x-icon :name="$r['icon']" class="h-5 w-5" /></span>
+                        <div class="z1"><h3 class="font-bold text-ink-900 dark:text-white">{{ $r['title'] }}</h3><p class="mt-1 text-sm leading-relaxed text-ink-600 dark:text-ink-300">{{ $r['text'] }}</p></div>
                     </div>
                 @endforeach
             </div>
@@ -456,8 +549,8 @@
             <h2 class="rv mx-auto max-w-2xl text-center text-3xl font-extrabold tracking-tight sm:text-4xl">{{ $c['how_title'] }}</h2>
             <ol class="mt-12 grid gap-5 md:grid-cols-3">
                 @foreach ($c['how'] as $s)
-                    <li class="rv rv-s glass rounded-3xl p-6" style="--d: {{ $loop->index * .15 }}s">
-                        <span class="grid h-11 w-11 place-items-center rounded-2xl bg-white text-lg font-black text-brand-600">{{ $loop->iteration }}</span>
+                    <li data-tilt="6" class="rv rv-3d tilt glare glass rounded-3xl p-6" style="--d: {{ $loop->index * .15 }}s">
+                        <span class="z3 grid h-11 w-11 place-items-center rounded-2xl bg-white text-lg font-black text-brand-600 shadow-xl">{{ $loop->iteration }}</span>
                         <h3 class="mt-4 text-xl font-bold">{{ $s['title'] }}</h3>
                         <p class="mt-2 leading-relaxed text-white/80">{{ $s['text'] }}</p>
                     </li>
@@ -488,6 +581,12 @@
     <section id="demo" class="relative scroll-mt-16 overflow-hidden bg-gradient-to-br from-brand-700 via-brand-800 to-brand-950 py-16 text-white sm:py-24">
         <div class="orb pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-accent-400/25 blur-3xl" style="--k:-.08" aria-hidden="true"></div>
         <div class="orb pointer-events-none absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-brand-400/25 blur-3xl" style="--k:-.14" aria-hidden="true"></div>
+        <div class="pointer-events-none absolute inset-0 hidden md:block" aria-hidden="true">
+            <div class="absolute left-[4%] top-[10%]" style="perspective:700px">@include('landing._cube', ['s' => 52, 'tone' => 'accent', 'sy' => true, 'r0' => 20])</div>
+            <div class="absolute bottom-[12%] left-[42%]" style="perspective:700px">@include('landing._cube', ['s' => 36, 'tone' => 'sky', 'sy' => true, 'r0' => 70])</div>
+            <div class="absolute right-[3%] top-[8%]" style="perspective:700px">@include('landing._cube', ['s' => 64, 'tone' => 'brand', 'sy' => true, 'r0' => 120])</div>
+            <div class="absolute bottom-[6%] right-[8%]" style="perspective:700px">@include('landing._cube', ['s' => 28, 'tone' => 'green', 'sy' => true, 'r0' => 200])</div>
+        </div>
         <div class="relative mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_1.05fr]">
             <div class="rv rv-l">
                 <h2 class="text-3xl font-extrabold leading-tight tracking-tight sm:text-5xl">{{ $demo['title'] }}</h2>
