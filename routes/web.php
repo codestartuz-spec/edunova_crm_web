@@ -49,6 +49,7 @@ Route::get('robots.txt', [\App\Http\Controllers\LandingController::class, 'robot
 Route::get('sitemap.xml', [\App\Http\Controllers\LandingController::class, 'sitemap'])->name('seo.sitemap');
 Route::get('ru', [\App\Http\Controllers\LandingController::class, 'ru'])->name('landing.ru');
 Route::get('uz', [\App\Http\Controllers\LandingController::class, 'uz'])->name('landing.uz');
+Route::post('demo-request', [\App\Http\Controllers\DemoRequestController::class, 'store'])->middleware('throttle:5,10')->name('demo.store');
 
 Route::middleware('guest')->group(function () {
     Route::get('login', [LoginController::class, 'show'])->name('login');
@@ -126,6 +127,9 @@ Route::middleware(['auth', 'active', 'legal'])->group(function () {
     });
     Route::middleware('role:sadmin')->group(function () {
         // v24: Sozlamalar -> Video darslar (faqat sAdmin boshqaradi; filial tanlash shart emas)
+        Route::get('settings/demo-requests', [\App\Http\Controllers\DemoRequestController::class, 'index'])->name('demo.index');
+        Route::put('settings/demo-requests/{demo}', [\App\Http\Controllers\DemoRequestController::class, 'update'])->whereNumber('demo')->name('demo.update');
+        Route::delete('settings/demo-requests/{demo}', [\App\Http\Controllers\DemoRequestController::class, 'destroy'])->whereNumber('demo')->name('demo.destroy');
         Route::get('settings/tutorials', [\App\Http\Controllers\TutorialController::class, 'admin'])->name('tutorials.admin');
         Route::post('settings/tutorials', [\App\Http\Controllers\TutorialController::class, 'store'])->name('tutorials.store');
         Route::put('settings/tutorials/{video}', [\App\Http\Controllers\TutorialController::class, 'update'])->whereNumber('video')->name('tutorials.update');

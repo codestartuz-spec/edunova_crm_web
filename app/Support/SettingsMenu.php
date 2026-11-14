@@ -48,6 +48,7 @@ class SettingsMenu
             ]],
             $me?->isSuperAdmin() ? ['title' => 'Yordam', 'icon' => 'play', 'items' => [
                 ['label' => 'Video darslar', 'desc' => "Tizim haqidagi video qo'llanmalar (faqat sAdmin boshqaradi)", 'url' => route('tutorials.admin'), 'active' => $is('settings/tutorials*')],
+                ['label' => "Demo so'rovlar", 'desc' => "Sotuv sahifasidan kelgan demo so'rovlar (faqat sAdmin)", 'url' => route('demo.index'), 'active' => $is('settings/demo-requests*')],
             ]] : null,
             ['title' => 'Kalendar', 'icon' => 'calendar', 'items' => [
                 ['label' => 'Dam olish kunlari', 'desc' => "Bayram va dam olish kunlari", 'url' => route('holidays.index'), 'active' => $is('settings/holidays*')],

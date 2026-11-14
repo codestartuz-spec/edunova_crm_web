@@ -94,4 +94,75 @@ class V25SeoLandingTest extends TestCase
         $this->assertSame('@edunova_uz', AppSetting::get('landing.telegram'));
         $this->get('/ru')->assertSee('https://t.me/edunova_uz', false)->assertSee('mailto:info@edunova.uz', false);
     }
+
+    // ---- Demo so'rov ----
+
+    private function demoPayload(array $over = []): array
+    {
+        return $over + [
+            'name' => 'Aziz Karimov', 'phone' => '+998 90 123 45 67', 'center' => 'Test markaz', 'size' => '101-300', 'message' => 'Salom',
+            'locale' => 'uz', 't' => \Illuminate\Support\Facades\Crypt::encryptString((string) (time() - 10)),
+        ];
+    }
+
+    public function test_demo_request_is_saved_and_admins_get_telegram(): void
+    {
+        \App\Models\AppSetting::put('telegram.token', '123:abc', true);
+        app(\App\Services\Telegram\TelegramService::class)->addAdmin(111, 'Elshod');
+        app(\App\Services\Telegram\TelegramService::class)->addAdmin(222, 'Boshqa');
+        \Illuminate\Support\Facades\Http::fake(['api.telegram.org/*' => \Illuminate\Support\Facades\Http::response(['ok' => true, 'result' => []])]);
+
+        $this->postJson(route('demo.store'), $this->demoPayload())->assertOk()->assertJson(['ok' => true]);
+
+        $d = \App\Models\DemoRequest::firstOrFail();
+        $this->assertSame('998901234567', $d->phone);
+        $this->assertSame('new', $d->status);
+        $this->assertNotSame('127.0.0.1', $d->ip_hash);
+        \Illuminate\Support\Facades\Http::assertSentCount(2);
+        \Illuminate\Support\Facades\Http::assertSent(fn ($r) => str_contains($r->url(), 'sendMessage') && $r['chat_id'] === 111 && str_contains($r['text'], 'Aziz Karimov') && str_contains($r['text'], '+998901234567'));
+        $this->assertTrue($d->fresh()->telegram_sent);
+    }
+
+    public function test_demo_request_validation_and_spam_protection(): void
+    {
+        $this->withoutMiddleware(\Illuminate\Routing\Middleware\ThrottleRequests::class);
+        $this->postJson(route('demo.store'), $this->demoPayload(['phone' => '123']))->assertStatus(422)->assertJsonValidationErrors('phone');
+        $this->postJson(route('demo.store'), $this->demoPayload(['name' => '']))->assertStatus(422)->assertJsonValidationErrors('name');
+        $this->postJson(route('demo.store'), $this->demoPayload(['size' => 'xxx']))->assertStatus(422)->assertJsonValidationErrors('size');
+
+        // robot: yashirin maydon to'ldirilgan, yoki forma juda tez yuborilgan -> "muvaffaqiyat", lekin saqlanmaydi
+        $this->postJson(route('demo.store'), $this->demoPayload(['website' => 'http://spam']))->assertOk();
+        $this->postJson(route('demo.store'), $this->demoPayload(['t' => \Illuminate\Support\Facades\Crypt::encryptString((string) time())]))->assertOk();
+        $this->postJson(route('demo.store'), $this->demoPayload(['t' => 'buzilgan']))->assertOk();
+        $this->assertSame(0, \App\Models\DemoRequest::count());
+
+        // takroriy so'rov (bir xil raqam, 30 daqiqa) ikkinchi yozuv ochmaydi
+        $this->postJson(route('demo.store'), $this->demoPayload())->assertOk();
+        $this->postJson(route('demo.store'), $this->demoPayload(['name' => 'Boshqa']))->assertOk();
+        $this->assertSame(1, \App\Models\DemoRequest::count());
+    }
+
+    public function test_demo_request_is_throttled(): void
+    {
+        for ($i = 0; $i < 5; $i++) {
+            $this->postJson(route('demo.store'), $this->demoPayload(['phone' => '+998 90 123 45 '.sprintf('%02d', $i)]))->assertOk();
+        }
+        $this->postJson(route('demo.store'), $this->demoPayload(['phone' => '+998 91 000 00 00']))->assertStatus(429);
+    }
+
+    public function test_demo_requests_page_is_sadmin_only(): void
+    {
+        \App\Models\DemoRequest::create(['name' => 'Aziz', 'phone' => '998901234567', 'locale' => 'uz']);
+        $this->get(route('demo.index'))->assertRedirect(route('login'));
+        foreach ([Role::Director, Role::Admin, Role::Manager] as $role) {
+            $this->actingAs($this->user($role, $this->branch()))->get(route('demo.index'))->assertForbidden();
+        }
+        $this->actingAs($this->user(Role::SAdmin));
+        $this->get(route('demo.index'))->assertOk()->assertSee('Aziz')->assertSee('+998901234567');
+        $d = \App\Models\DemoRequest::first();
+        $this->put(route('demo.update', $d), ['status' => 'contacted', 'note' => 'ertaga'])->assertSessionHasNoErrors();
+        $this->assertSame('contacted', $d->fresh()->status);
+        $this->delete(route('demo.destroy', $d))->assertSessionHasNoErrors();
+        $this->assertSame(0, \App\Models\DemoRequest::count());
+    }
 }

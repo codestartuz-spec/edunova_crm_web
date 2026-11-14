@@ -5,6 +5,9 @@
 - **Himoya:** landingdan boshqa barcha sahifa (panel, login, o'quvchi kabineti, hujjatlar, ariza shakllari, xatolar) `X-Robots-Tag: noindex, nofollow` oladi.
 - Brend sahifasida «Ochiq sahifadagi aloqa» (Telegram, Instagram, telefon, e-pochta). Bo'sh maydon landingda ko'rinmaydi.
 - `.env`: `SEO_GOOGLE_VERIFICATION`, `SEO_YANDEX_VERIFICATION`, `SEO_BING_VERIFICATION` (Search Console / Yandex Webmaster tasdiqlash kodi).
+- **Sotuv sahifasi animatsion qayta ishlandi:** sahifa bo'ylab o'tish chizig'i, jonli bosh blok (so'zlar almashinuvi, bildirishnomalar, sichqonchaga javob beruvchi oyna), kalit so'zlar lentasi, "Excel va CRM bilan" taqqoslash, **scroll bilan almashadigan "Bir kun CRM ichida" hikoyasi** (5 sahna), ko'rinishda paydo bo'ladigan bloklar, suzuvchi "Demo so'rash" tugmasi (o'tilgan yo'lni halqada ko'rsatadi). `prefers-reduced-motion` yoqilgan bo'lsa animatsiyalar o'chadi.
+- **Demo so'rov:** landing oxiridagi forma (ism, telefon, markaz, o'quvchilar soni, izoh). So'rov bazaga (`demo_requests`) yoziladi va **barcha sAdmin Telegram ID lariga xabar ketadi**. Spamdan himoya: yashirin maydon, vaqt tuzog'i, 10 daqiqada 5 ta so'rov chegarasi, bir raqamdan 30 daqiqada takror so'rov yangi yozuv ochmaydi. IP saqlanmaydi (faqat xeshi).
+- **Sozlamalar → Yordam → Demo so'rovlar** (faqat sAdmin): ro'yxat, holat (Yangi / Bog'lanildi / Yakunlandi / Spam), izoh, o'chirish. Migratsiya: `demo_requests`.
 - PWA `start_url` endi `/login` (o'rnatilgan ilova landingni emas, kirish oynasini ochadi).
 
 ## v24 — Yangi dizayn va Video darslar

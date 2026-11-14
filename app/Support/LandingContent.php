@@ -10,7 +10,10 @@ class LandingContent
 {
     public static function get(string $locale): array
     {
-        return $locale === 'ru' ? self::ru(Brand::name()) : self::uz(Brand::name());
+        $base = $locale === 'ru' ? self::ru(Brand::name()) : self::uz(Brand::name());
+
+        // animatsion bloklar (sotuv hikoyasi, demo forma) alohida faylda
+        return $base + ['x' => LandingExtra::get($locale)];
     }
 
     private static function uz(string $n): array

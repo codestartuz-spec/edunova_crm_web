@@ -30,6 +30,8 @@ class LandingController extends Controller
             'alternates' => Seo::alternates(),
             'jsonLd' => Seo::jsonLd($locale, $content),
             'contact' => $this->contact(),
+            'demoToken' => \Illuminate\Support\Facades\Crypt::encryptString((string) time()),
+            'sizes' => \App\Models\DemoRequest::SIZES,
         ])->render();
 
         return response($html)->header('Content-Language', $locale);
