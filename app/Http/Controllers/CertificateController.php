@@ -231,6 +231,11 @@ class CertificateController extends Controller
             'v' => ['title' => $get('title', 'SERTIFIKAT'), 'body' => $get('body', "ushbu sertifikat egasi o'quv kursini muvaffaqiyatli tamomlaganini tasdiqlaydi."), 'signer_name' => $get('signer_name'), 'signer_title' => $get('signer_title', 'Direktor')],
             'signature' => $this->svc->imageData($get('signature', null)),
             'logo' => $this->svc->imageData($get('logo', null)),
+            // Jonli ko'rinish uchun (faqat ko'rsatish): zaxira logo, filial nomi/rangi va namunaviy QR
+            'fallbackLogo' => $this->svc->logoDataUri(),
+            'branchName' => $b ? (string) \App\Models\Branch::withoutGlobalScopes()->whereKey($b)->value('name') : '',
+            'accent' => ($br = $b ? \App\Models\Branch::withoutGlobalScopes()->find($b) : null) && preg_match('/^#[0-9a-fA-F]{6}$/', (string) $br->effectiveBrandColor()) ? $br->effectiveBrandColor() : '#e11d34',
+            'sampleQr' => 'data:image/svg+xml;base64,'.base64_encode($this->svc->qrSvg(url('/verify/NAMUNA'))),
         ]);
     }
 
