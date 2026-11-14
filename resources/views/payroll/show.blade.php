@@ -49,7 +49,7 @@
                             <td class="text-right font-medium">{{ $fmU($a['accrued_total']) }}</td>
                             <td class="text-right">{{ $fmU($a['accrued_by_attendance']) }}</td>
                             <td class="text-right">{{ $fmU($a['paid']) }}</td>
-                            <td class="text-right font-semibold {{ $a['remaining'] > 0 ? 'text-brand-600' : 'text-emerald-600' }}">{{ $fmU($a['remaining']) }}</td>
+                            <td class="text-right font-semibold {{ $a['remaining'] > 0 ? 'text-danger-600' : 'text-emerald-600' }}">{{ $fmU($a['remaining']) }}</td>
                         </tr>
                     @empty
                         <tr><td colspan="11" class="py-8 text-center text-ink-500">So'nggi 31 kunda guruh yo'q.</td></tr>

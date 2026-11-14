@@ -1,3 +1,4 @@
+import '@fontsource-variable/plus-jakarta-sans';
 import Alpine from 'alpinejs';
 import './confirm';
 import './motion';
@@ -214,3 +215,51 @@ document.addEventListener('click', async (e) => {
     document.querySelectorAll('[data-pwa-install]').forEach((x) => x.classList.add('hidden'));
 });
 window.addEventListener('appinstalled', () => document.querySelectorAll('[data-pwa-install]').forEach((x) => x.classList.add('hidden')));
+
+
+/*
+ * Dizayn jilolari: tugmalarda "to'lqin" effekti, kartalarda kursor ostidagi yorug'lik,
+ * qurilma rejimi (yorug'/tungi) o'zgarsa va foydalanuvchi qo'lda tanlamagan bo'lsa avtomatik moslashish.
+ * Harakatni kamaytirish (prefers-reduced-motion) yoqilgan bo'lsa, bularning hammasi o'chiq.
+ */
+(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    if (!reduce) {
+        document.addEventListener('pointerdown', (e) => {
+            const b = e.target.closest?.('.btn');
+            if (!b || b.disabled) return;
+            const r = b.getBoundingClientRect();
+            const d = Math.max(r.width, r.height);
+            const s = document.createElement('span');
+            s.className = 'ripple';
+            s.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX - r.left - d / 2}px;top:${e.clientY - r.top - d / 2}px`;
+            b.appendChild(s);
+            setTimeout(() => s.remove(), 650);
+        }, { passive: true });
+    }
+
+    if (fine && !reduce) {
+        let raf = 0;
+        document.addEventListener('pointermove', (e) => {
+            if (raf) return;
+            raf = requestAnimationFrame(() => {
+                raf = 0;
+                const c = e.target.closest?.('.card-hover');
+                if (!c) return;
+                const r = c.getBoundingClientRect();
+                c.style.setProperty('--mx', `${e.clientX - r.left}px`);
+                c.style.setProperty('--my', `${e.clientY - r.top}px`);
+            });
+        }, { passive: true });
+    }
+
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    mq.addEventListener?.('change', (e) => {
+        try { if (localStorage.getItem('theme')) return; } catch (_) {}
+        document.documentElement.classList.toggle('dark', e.matches);
+        try { window.Alpine.store('theme').dark = e.matches; } catch (_) {}
+        window.dispatchEvent(new Event('themechange'));
+    });
+})();

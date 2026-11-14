@@ -20,7 +20,7 @@
         @keyframes br-in { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: none; } }
         @keyframes br-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
         @keyframes br-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
-        .br-card { --bc: #dc2626; animation: br-in .55s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i, 0) * 70ms); transition: transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s; }
+        .br-card { --bc: #5d46e2; animation: br-in .55s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i, 0) * 70ms); transition: transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s; }
         .br-card:hover { transform: translateY(-5px); box-shadow: 0 18px 40px -18px color-mix(in srgb, var(--bc) 55%, transparent), 0 6px 14px -8px rgba(15,23,42,.18); }
         .br-card:active { transform: translateY(-2px) scale(.995); }
         .br-bar { position: absolute; inset: 0 0 auto 0; height: 4px; background: linear-gradient(90deg, var(--bc), color-mix(in srgb, var(--bc) 40%, white)); transform-origin: left; animation: br-fill .8s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i, 0) * 70ms + 150ms); }
@@ -91,7 +91,7 @@
                     @php $subLeft = $branch->subscriptionDaysLeft(); @endphp
                     <div class="flex items-center justify-between text-xs text-ink-500">
                         <span class="inline-flex items-center gap-1.5">{!! $svg($ic['wallet'], 'h-3.5 w-3.5') !!} Obuna</span>
-                        <span class="font-medium {{ $branch->subscriptionExpired() ? 'text-brand-600' : 'text-ink-700 dark:text-ink-200' }}">
+                        <span class="font-medium {{ $branch->subscriptionExpired() ? 'text-danger-600' : 'text-ink-700 dark:text-ink-200' }}">
                             @if ($branch->subscription_exempt) Obunasiz (doim faol)
                             @elseif ($branch->subscriptionExpired()) Tugagan · faqat ko'rish ({{ $branch->subscriptionLastDay()?->format('d.m.Y') }} dan keyin)
                             @elseif ($subLeft !== null) {{ $branch->subscriptionLastDay()?->format('d.m.Y') }} kunigacha · {{ $subLeft }} kun

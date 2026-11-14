@@ -13,7 +13,7 @@
 @endphp
 <div x-data="notesBell(@js((int) $count), @js($urls))" @keydown.escape.window="open = false" @click.outside="open = false" class="relative">
     <button type="button" @click="toggle()" class="btn-ghost relative p-2" aria-label="Eslatmalar" title="Eslatmalar">
-        <x-icon name="bell" />
+        <x-icon name="note" />
         <span x-show="count > 0" x-cloak x-text="count > 99 ? '99+' : count"
               class="absolute -right-0.5 -top-0.5 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-brand-600 px-1 text-[10px] font-bold leading-none text-white"></span>
     </button>
@@ -30,7 +30,7 @@
 
         <div class="max-h-[26rem] overflow-y-auto">
             <div x-show="loading && items.length === 0" class="px-4 py-8 text-center text-sm text-ink-500">Yuklanmoqda...</div>
-            <div x-show="error" class="px-4 py-3 text-center text-xs text-brand-600">Ma'lumotni yangilab bo'lmadi, qayta urinilmoqda.</div>
+            <div x-show="error" class="px-4 py-3 text-center text-xs text-danger-600">Ma'lumotni yangilab bo'lmadi, qayta urinilmoqda.</div>
             <div x-show="!loading && items.length === 0" class="px-4 py-8 text-center text-sm text-ink-500"
                  x-text="tab === 'active' ? 'Faol eslatma yo\'q.' : 'Yopilgan eslatma yo\'q.'"></div>
 

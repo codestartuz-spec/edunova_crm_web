@@ -1,5 +1,5 @@
 <link rel="manifest" href="{{ route('pwa.manifest') }}">
-<meta name="theme-color" content="{{ \App\Support\BrandTheme::currentHex() ?? '#e11d48' }}">
+<meta name="theme-color" content="{{ \App\Support\BrandTheme::currentHex() ?? '#5d46e2' }}">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="{{ \App\Support\Brand::short() }}">

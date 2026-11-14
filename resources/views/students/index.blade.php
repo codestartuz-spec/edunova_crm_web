@@ -42,7 +42,7 @@
                         @if (auth()->user()->isGlobal())<td>{{ $s->branch?->name }}</td>@endif
                         <td>{{ $s->phone }}</td>
                         <td>{{ $s->active_groups_count }}</td>
-                        <td class="text-right font-semibold {{ $s->balance < 0 ? 'text-brand-600' : 'text-emerald-600' }}">{{ \App\Support\Format::money($s->balance) }}</td>
+                        <td class="text-right font-semibold {{ $s->balance < 0 ? 'text-danger-600' : 'text-emerald-600' }}">{{ \App\Support\Format::money($s->balance) }}</td>
                     </tr>
                 @empty
                     <tr><td colspan="6"><x-empty icon="cap" title="O'quvchi topilmadi" text="Qidiruv yoki filtrni o'zgartirib ko'ring." /></td></tr>

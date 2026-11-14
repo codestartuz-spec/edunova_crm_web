@@ -23,7 +23,7 @@
             @if ($configured)
                 <div class="border-t border-ink-100 pt-4 dark:border-ink-800">
                     <div class="text-sm">Webhook: <b>{{ $hook['url'] ?? "o'rnatilmagan" }}</b></div>
-                    @if (! empty($hook['last_error_message']))<div class="mt-1 text-xs text-brand-600">Oxirgi xato: {{ $hook['last_error_message'] }}</div>@endif
+                    @if (! empty($hook['last_error_message']))<div class="mt-1 text-xs text-danger-600">Oxirgi xato: {{ $hook['last_error_message'] }}</div>@endif
                     <div class="mt-1 text-xs text-ink-500">Kerakli manzil: {{ $webhookUrl }}</div>
                     <div class="mt-3 flex flex-wrap gap-2">
                         <form method="POST" action="{{ route('telegram.webhook.set') }}">@csrf<button class="btn-secondary">Webhook o'rnatish</button></form>

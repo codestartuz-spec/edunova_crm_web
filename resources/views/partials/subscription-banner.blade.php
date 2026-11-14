@@ -23,7 +23,7 @@
     }
 @endphp
 @if ($__banner)
-    <div class="mb-5 flex flex-wrap items-center gap-3 rounded-xl border px-4 py-3 text-sm {{ $__banner['tone'] === 'red' ? 'border-brand-200 bg-brand-50 text-brand-800 dark:border-brand-900 dark:bg-brand-950/50 dark:text-brand-200' : 'border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200' }}">
+    <div class="mb-5 flex flex-wrap items-center gap-3 rounded-xl border px-4 py-3 text-sm {{ $__banner['tone'] === 'red' ? 'border-danger-200 bg-danger-50 text-danger-800 dark:border-danger-900 dark:bg-danger-950/50 dark:text-danger-200' : 'border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200' }}">
         <x-icon name="alert" class="h-5 w-5 shrink-0" />
         <div class="min-w-0 flex-1">{{ $__banner['text'] }}</div>
         @if ($__banner['href'])<a href="{{ $__banner['href'] }}" class="btn-secondary btn-sm">{{ $__banner['cta'] }}</a>@endif

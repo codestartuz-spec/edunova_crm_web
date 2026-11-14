@@ -7,7 +7,7 @@
     <div class="mb-6 grid gap-4 sm:grid-cols-2">
         <div class="card card-body">
             <div class="text-sm text-ink-500">Joriy balans</div>
-            <div class="mt-1 text-2xl font-bold {{ $student->balance < 0 ? 'text-brand-600' : 'text-emerald-600' }}">{{ \App\Support\Format::money($student->balance) }}</div>
+            <div class="mt-1 text-2xl font-bold {{ $student->balance < 0 ? 'text-danger-600' : 'text-emerald-600' }}">{{ \App\Support\Format::money($student->balance) }}</div>
         </div>
         <div class="card card-body">
             <div class="text-sm text-ink-500">Qarzdorlik</div>
@@ -24,7 +24,7 @@
                     <td class="whitespace-nowrap">{{ $t->created_at->format('d.m.Y H:i') }}</td>
                     <td>{{ $t->typeLabel() }}</td>
                     <td>{{ $t->group?->name ?? '—' }}</td>
-                    <td class="text-right font-semibold {{ $t->amount < 0 ? 'text-brand-600' : 'text-emerald-600' }}">{{ $t->amount > 0 ? '+' : '' }}{{ \App\Support\Format::money($t->amount) }}</td>
+                    <td class="text-right font-semibold {{ $t->amount < 0 ? 'text-danger-600' : 'text-emerald-600' }}">{{ $t->amount > 0 ? '+' : '' }}{{ \App\Support\Format::money($t->amount) }}</td>
                     <td class="text-right">{{ \App\Support\Format::money($t->balance_after) }}</td>
                     <td class="text-xs text-ink-500">{{ $t->note }}</td>
                 </tr>

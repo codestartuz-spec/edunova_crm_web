@@ -27,7 +27,7 @@
         @forelse ($backups as $b)
             <tr>
                 <td class="whitespace-nowrap">{{ $b->created_at->format('d.m.Y H:i') }}</td>
-                <td><span class="{{ $b->status === 'ok' ? 'badge-green' : ($b->status === 'failed' ? 'badge-red' : 'badge-gray') }}">{{ ['ok' => 'Tayyor', 'failed' => 'Xato', 'running' => 'Bajarilmoqda'][$b->status] ?? $b->status }}</span>@if ($b->error)<div class="max-w-xs text-xs text-brand-600">{{ $b->error }}</div>@endif</td>
+                <td><span class="{{ $b->status === 'ok' ? 'badge-green' : ($b->status === 'failed' ? 'badge-red' : 'badge-gray') }}">{{ ['ok' => 'Tayyor', 'failed' => 'Xato', 'running' => 'Bajarilmoqda'][$b->status] ?? $b->status }}</span>@if ($b->error)<div class="max-w-xs text-xs text-danger-600">{{ $b->error }}</div>@endif</td>
                 <td>{{ $b->trigger === 'manual' ? "Qo'lda" : 'Jadval' }}</td>
                 <td class="text-right">{{ $b->size ? round($b->size / 1048576, 2).' MB' : '—' }}</td>
                 <td class="font-mono text-xs">{{ $b->sha256 ? substr($b->sha256, 0, 12).'…' : '—' }}</td>

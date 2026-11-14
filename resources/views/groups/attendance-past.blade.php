@@ -56,7 +56,7 @@
                                 <input type="checkbox" name="present[]" value="{{ $m->student_id }}" class="checkbox" @checked($existing[$m->student_id] ?? false)>
                                 <span class="font-medium">{{ $loop->iteration }}. {{ $m->student->name }}</span>
                                 @unless (auth()->user()->role === \App\Enums\Role::Teacher)
-                                    <span class="ml-auto whitespace-nowrap text-xs font-semibold {{ $m->student->balance < 0 ? 'text-brand-600' : 'text-emerald-600' }}">{{ \App\Support\Format::money($m->student->balance) }}</span>
+                                    <span class="ml-auto whitespace-nowrap text-xs font-semibold {{ $m->student->balance < 0 ? 'text-danger-600' : 'text-emerald-600' }}">{{ \App\Support\Format::money($m->student->balance) }}</span>
                                 @endunless
                             </label>
                         @empty

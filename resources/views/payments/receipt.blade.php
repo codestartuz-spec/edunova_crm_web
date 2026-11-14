@@ -58,7 +58,7 @@
         @if ($payment->student)
             <div class="mt-1 flex items-baseline justify-between text-xs text-ink-500">
                 <span>Joriy balans</span>
-                <span class="font-medium {{ $payment->student->balance < 0 ? 'text-brand-600' : '' }}">{{ \App\Support\Format::money($payment->student->balance) }}</span>
+                <span class="font-medium {{ $payment->student->balance < 0 ? 'text-danger-600' : '' }}">{{ \App\Support\Format::money($payment->student->balance) }}</span>
             </div>
         @endif
 

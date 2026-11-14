@@ -24,7 +24,7 @@
         </p>
 
         @if ($errors->any())
-            <div class="mt-4 rounded-xl bg-brand-50 px-4 py-3 text-sm text-brand-700 dark:bg-brand-950/60 dark:text-brand-300" role="alert">{{ $errors->first() }}</div>
+            <div class="mt-4 rounded-xl bg-danger-50 px-4 py-3 text-sm text-danger-700 dark:bg-danger-950/60 dark:text-danger-300" role="alert">{{ $errors->first() }}</div>
         @endif
 
         <form method="POST" action="{{ route('legal.accept') }}" class="mt-5">

@@ -8,7 +8,7 @@
     </x-page-header>
 
     <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        @foreach ([['Jami qator', $s['total'], ''], ["Qo'shiladi", $s['ok'], 'text-emerald-600'], ["O'tkazib yuboriladi (takror)", $s['duplicates'], 'text-amber-600'], ['Xato', $s['errors'], 'text-brand-600']] as [$l, $v, $c])
+        @foreach ([['Jami qator', $s['total'], ''], ["Qo'shiladi", $s['ok'], 'text-emerald-600'], ["O'tkazib yuboriladi (takror)", $s['duplicates'], 'text-amber-600'], ['Xato', $s['errors'], 'text-danger-600']] as [$l, $v, $c])
             <div class="card card-body"><div class="text-sm text-ink-500">{{ $l }}</div><div class="mt-1 text-2xl font-bold {{ $c ?: 'text-ink-900 dark:text-white' }}">{{ $v }}</div></div>
         @endforeach
     </div>

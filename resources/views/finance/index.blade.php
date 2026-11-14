@@ -15,7 +15,7 @@
                 <div class="rounded-lg bg-ink-50 px-3 py-2 dark:bg-ink-800/60"><div class="text-ink-500">Naqt ehson</div><div class="mt-0.5 text-sm font-semibold tabular-nums text-ink-900 dark:text-white" data-countup="{{ (int) $balances['treasury_charity_cash'] }}" data-unit="money">{{ $m($balances['treasury_charity_cash']) }}</div></div>
                 <div class="rounded-lg bg-ink-50 px-3 py-2 dark:bg-ink-800/60"><div class="text-ink-500">Plastik ehson</div><div class="mt-0.5 text-sm font-semibold tabular-nums text-ink-900 dark:text-white" data-countup="{{ (int) $balances['treasury_charity_card'] }}" data-unit="money">{{ $m($balances['treasury_charity_card']) }}</div></div>
             </div>
-            @if ($balances['treasury_charity'] > 0)<div class="mt-2 text-xs text-brand-600">Taqsimlanmagan (eski) ehson: {{ $m($balances['treasury_charity']) }}</div>@endif
+            @if ($balances['treasury_charity'] > 0)<div class="mt-2 text-xs text-amber-600">Taqsimlanmagan (eski) ehson: {{ $m($balances['treasury_charity']) }}</div>@endif
         </div>
     </div>
 
@@ -125,7 +125,7 @@
                     <tr>
                         <td class="whitespace-nowrap">{{ $t->created_at->format('d.m.Y H:i') }}</td>
                         <td>{{ $t->walletLabel() }}</td><td>{{ $t->typeLabel() }}</td>
-                        <td class="text-right font-medium {{ $t->amount < 0 ? 'text-brand-600' : 'text-emerald-600' }}">{{ $t->amount > 0 ? '+' : '' }}<span data-countup="{{ (int) $t->amount }}" data-unit="num">{{ \App\Support\Format::money($t->amount, false) }}</span></td>
+                        <td class="text-right font-medium {{ $t->amount < 0 ? 'text-danger-600' : 'text-emerald-600' }}">{{ $t->amount > 0 ? '+' : '' }}<span data-countup="{{ (int) $t->amount }}" data-unit="num">{{ \App\Support\Format::money($t->amount, false) }}</span></td>
                         <td class="text-right"><span data-countup="{{ (int) $t->balance_after }}" data-unit="num">{{ \App\Support\Format::money($t->balance_after, false) }}</span></td>
                         <td class="max-w-xs truncate" title="{{ $t->description }}">{{ $t->description }}@if ($t->category) <span class="text-xs text-ink-400">· {{ $t->category->name }}</span>@endif</td>
                         <td>{{ $t->creator?->name }}</td>

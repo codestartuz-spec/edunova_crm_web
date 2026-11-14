@@ -15,8 +15,8 @@ let pending = null;
 const modal = () => document.getElementById('confirm-modal');
 let lastFocus = null;
 const TONES = {
-    danger: { icon: 'bg-brand-50 text-brand-600 dark:bg-brand-950/60 dark:text-brand-300', ok: 'btn-primary' },
-    info: { icon: 'bg-ink-100 text-ink-700 dark:bg-ink-800 dark:text-ink-200', ok: 'btn-danger' },
+    danger: { icon: 'bg-amber-50 text-amber-600 dark:bg-amber-950/60 dark:text-amber-300', ok: 'btn-primary' },
+    info: { icon: 'bg-brand-50 text-brand-600 dark:bg-brand-950/60 dark:text-brand-300', ok: 'btn-primary' },
     success: { icon: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-300', ok: 'btn-primary' },
 };
 

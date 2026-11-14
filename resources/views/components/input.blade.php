@@ -12,7 +12,7 @@
     }
 @endphp
 <div {{ $attributes->only('class') }}>
-    <label for="{{ $name }}" class="label">{{ $label }} @if ($required)<span class="text-brand-600">*</span>@endif</label>
+    <label for="{{ $name }}" class="label">{{ $label }} @if ($required)<span class="text-danger-600">*</span>@endif</label>
     <input id="{{ $name }}" name="{{ $name }}" type="{{ $type }}"
            @if ($type !== 'password') value="{{ $current }}" @endif
            @if ($money) inputmode="numeric" data-money autocomplete="off" @endif

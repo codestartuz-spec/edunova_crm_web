@@ -31,7 +31,7 @@
             @forelse ($transactions as $t)
                 <div class="todo-row -mx-2 flex items-center justify-between rounded-lg border-b border-ink-100 px-2 py-2 text-sm last:border-0 dark:border-ink-800">
                     <div><div class="font-medium text-ink-900 dark:text-white">{{ $t->typeLabel() }}</div><div class="text-xs text-ink-500">{{ $t->group?->name }} · {{ $t->created_at->format('d.m.Y H:i') }}</div></div>
-                    <div class="font-semibold {{ $t->amount < 0 ? 'text-brand-600' : 'text-emerald-600' }}">{{ $t->amount > 0 ? '+' : '' }}{{ \App\Support\Format::money($t->amount) }}</div>
+                    <div class="font-semibold {{ $t->amount < 0 ? 'text-danger-600' : 'text-emerald-600' }}">{{ $t->amount > 0 ? '+' : '' }}{{ \App\Support\Format::money($t->amount) }}</div>
                 </div>
             @empty
                 <x-empty icon="wallet" title="Hozircha harakat yo'q" />

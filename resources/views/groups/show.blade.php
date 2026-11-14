@@ -84,7 +84,7 @@
                                 <input type="checkbox" name="present[]" value="{{ $m->student_id }}" class="checkbox" @checked($takenToday ? ($todayRow[$m->student_id] ?? false) : true)>
                                 <span class="font-medium">{{ $loop->iteration }}. {{ $m->student->name }}</span>
                                 @unless ($isTeacher)
-                                    <span class="ml-auto whitespace-nowrap text-xs font-semibold {{ $m->student->balance < 0 ? 'text-brand-600' : 'text-emerald-600' }}">{{ \App\Support\Format::money($m->student->balance) }}</span>
+                                    <span class="ml-auto whitespace-nowrap text-xs font-semibold {{ $m->student->balance < 0 ? 'text-danger-600' : 'text-emerald-600' }}">{{ \App\Support\Format::money($m->student->balance) }}</span>
                                 @endunless
                             </label>
                         @empty
@@ -117,7 +117,7 @@
                         <template x-for="s in found" :key="s.id">
                             <li><button type="button" :disabled="s.balance < 0 && !canDebt" :class="s.balance < 0 && !canDebt ? 'cursor-not-allowed opacity-60' : ''" class="flex w-full items-center justify-between gap-3 px-3.5 py-2 text-left text-sm hover:bg-ink-50 dark:hover:bg-ink-800" @click="picked = s; allowDebt = false; q = s.name; found = []">
                                 <span><span x-text="s.name"></span> <span class="text-ink-400" x-text="s.phone"></span></span>
-                                <span class="whitespace-nowrap text-xs font-semibold" :class="s.balance < 0 ? 'text-brand-600' : 'text-emerald-600'" x-text="new Intl.NumberFormat('ru-RU').format(s.balance) + (s.balance < 0 ? ' · qarzi bor' : '')"></span></button></li>
+                                <span class="whitespace-nowrap text-xs font-semibold" :class="s.balance < 0 ? 'text-danger-600' : 'text-emerald-600'" x-text="new Intl.NumberFormat('ru-RU').format(s.balance) + (s.balance < 0 ? ' · qarzi bor' : '')"></span></button></li>
                         </template>
                     </ul>
                 </div>
@@ -147,7 +147,7 @@
                             @else
                                 <td><a href="{{ route('students.show', $m->student) }}" class="font-medium text-ink-900 hover:text-brand-600 dark:text-white">{{ $m->student->name }}</a></td>
                                 <td>{{ $m->student->phone }}</td>
-                                <td class="text-right font-semibold {{ $m->student->balance < 0 ? 'text-brand-600' : 'text-emerald-600' }}">{{ \App\Support\Format::money($m->student->balance) }}</td>
+                                <td class="text-right font-semibold {{ $m->student->balance < 0 ? 'text-danger-600' : 'text-emerald-600' }}">{{ \App\Support\Format::money($m->student->balance) }}</td>
                                 <td>{{ $m->created_at->format('d.m.Y') }}</td>
                                 <td class="text-right space-x-1">
                                     <a href="{{ route('students.show', $m->student) }}" class="btn-ghost btn-sm">Ochish</a>
@@ -204,7 +204,7 @@
                         @php $debt = $m->student->balance < 0; $locked = $debt && ! $canEnrollDebtor; @endphp
                         <label class="flex items-center justify-between gap-3 rounded-xl border px-3.5 py-2.5 text-sm {{ $debt ? 'border-brand-200 bg-brand-50/50 dark:border-brand-900 dark:bg-brand-950/30' : 'border-ink-200 dark:border-ink-700' }}">
                             <span class="flex items-center gap-3"><input type="checkbox" name="students[]" value="{{ $m->student_id }}" class="checkbox" @disabled($locked) @checked(! $debt)> {{ $m->student->name }}</span>
-                            <span class="whitespace-nowrap text-xs font-semibold {{ $debt ? 'text-brand-600' : 'text-emerald-600' }}">{{ \App\Support\Format::money($m->student->balance, false) }}@if ($debt) · qarz{{ $canEnrollDebtor ? ' (istisno)' : '' }} @endif</span>
+                            <span class="whitespace-nowrap text-xs font-semibold {{ $debt ? 'text-danger-600' : 'text-emerald-600' }}">{{ \App\Support\Format::money($m->student->balance, false) }}@if ($debt) · qarz{{ $canEnrollDebtor ? ' (istisno)' : '' }} @endif</span>
                         </label>
                     @endforeach
                 </div>

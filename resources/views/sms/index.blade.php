@@ -16,7 +16,7 @@
     @endif
 
     <div class="grid gap-4 sm:grid-cols-3">
-        @foreach ([['Yuborildi (30 kun)', $stats['sent'] ?? 0, 'text-emerald-600'], ['Navbatda', $stats['queued'] ?? 0, 'text-amber-600'], ['Xato', $stats['failed'] ?? 0, 'text-brand-600']] as [$l, $v, $c])
+        @foreach ([['Yuborildi (30 kun)', $stats['sent'] ?? 0, 'text-emerald-600'], ['Navbatda', $stats['queued'] ?? 0, 'text-amber-600'], ['Xato', $stats['failed'] ?? 0, 'text-danger-600']] as [$l, $v, $c])
             <div class="card card-body"><div class="text-sm text-ink-500">{{ $l }}</div><div class="mt-1 text-2xl font-bold {{ $c }}">{{ $v }}</div></div>
         @endforeach
     </div>

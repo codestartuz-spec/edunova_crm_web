@@ -38,7 +38,7 @@
     <div class="grid gap-4 md:grid-cols-3">
         <div class="card card-body">
             <div class="text-sm text-ink-500">Balans</div>
-            <div class="mt-1 text-2xl font-bold {{ $student->balance < 0 ? 'text-brand-600' : 'text-emerald-600' }}">{{ \App\Support\Format::money($student->balance) }}</div>
+            <div class="mt-1 text-2xl font-bold {{ $student->balance < 0 ? 'text-danger-600' : 'text-emerald-600' }}">{{ \App\Support\Format::money($student->balance) }}</div>
             <div class="mt-1 text-xs text-ink-400">{{ $student->balance < 0 ? 'Qarzdorlik' : "Mavjud mablag'" }}</div>
         </div>
         <div class="card card-body md:col-span-2">
@@ -62,7 +62,7 @@
         <div class="flex flex-col gap-3 px-5 pt-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
             <h2 class="text-lg font-semibold text-ink-900 dark:text-white">Guruhlar</h2>
             @if ($availableGroups->isNotEmpty() && ! $student->archived_at && $student->balance < 0 && ! auth()->user()->can('groups.enroll_debtor'))
-                <p class="rounded-xl bg-brand-50 px-3.5 py-2 text-sm text-brand-700 dark:bg-brand-950/40 dark:text-brand-300">Qarzi bor o'quvchini guruhga qo'shib bo'lmaydi. Avval to'lov qabul qiling.</p>
+                <p class="rounded-xl bg-danger-50 px-3.5 py-2 text-sm text-danger-700 dark:bg-danger-950/40 dark:text-danger-300">Qarzi bor o'quvchini guruhga qo'shib bo'lmaydi. Avval to'lov qabul qiling.</p>
             @elseif ($availableGroups->isNotEmpty() && ! $student->archived_at)
                 <form method="POST" action="#" class="flex flex-col gap-2 sm:flex-row sm:flex-wrap" x-data="{ g: '', allowDebt: false }" :action="g ? '{{ url('groups') }}/' + g + '/students' : '#'">
                     @csrf
@@ -142,7 +142,7 @@
                         <td>
                             @if ($r['method'])<span class="{{ $r['method'] === 'Naqt' ? 'badge-green' : 'badge-blue' }}">{{ $r['method'] }}</span>@else<span class="text-ink-300">—</span>@endif
                         </td>
-                        <td class="text-right font-medium tabular-nums {{ ($r['amount'] ?? 0) < 0 ? 'text-brand-600' : 'text-emerald-600' }}">
+                        <td class="text-right font-medium tabular-nums {{ ($r['amount'] ?? 0) < 0 ? 'text-danger-600' : 'text-emerald-600' }}">
                             @if ($r['amount'] !== null){{ $r['amount'] > 0 ? '+' : '' }}{{ \App\Support\Format::money($r['amount'], false) }}@else<span class="text-ink-300">—</span>@endif
                         </td>
                         <td class="text-right tabular-nums">@if ($r['balance'] !== null){{ \App\Support\Format::money($r['balance'], false) }}@else<span class="text-ink-300">—</span>@endif</td>

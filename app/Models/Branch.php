@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 class Branch extends Model
 {
     /** v9: umumiy Edunova rangi (agar filial o'z rangini tanlamagan bo'lsa). */
-    public const DEFAULT_BRAND_COLOR = '#dc2626';
+    public const DEFAULT_BRAND_COLOR = '#5d46e2';
 
     protected $fillable = [
         'name', 'code', 'phone', 'address', 'charity_percent', 'discount_days_before', 'discount_days_after', 'sms_enabled', 'sms_modem_daily_limit', 'status', 'opened_at', 'closed_at', 'closed_reason', 'subscription_ends_on', 'subscription_exempt',

@@ -39,9 +39,9 @@
         <x-input name="title" label="Sarlavha" :value="old('title', $doc->title)" required />
 
         <div>
-            <label class="label" for="body">Matn <span class="text-brand-600">*</span></label>
+            <label class="label" for="body">Matn <span class="text-danger-600">*</span></label>
             <textarea id="body" name="body" rows="22" required class="input font-mono text-[13px] leading-relaxed @error('body') input-error @enderror">{{ old('body', $doc->body) }}</textarea>
-            @error('body')<p class="mt-1 text-xs text-brand-600">{{ $message }}</p>@enderror
+            @error('body')<p class="mt-1 text-xs text-danger-600">{{ $message }}</p>@enderror
             <p class="mt-1.5 text-xs text-ink-400">Format: <code>## Sarlavha</code> — bo'lim sarlavhasi; <code>- </code> bilan boshlangan qatorlar — ro'yxat; bo'sh qator bilan ajratilgan matn — alohida xatboshi. Matn yuridik mutaxassis tomonidan ko'rib chiqilishi tavsiya etiladi.</p>
         </div>
 
