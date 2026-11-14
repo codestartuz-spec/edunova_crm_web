@@ -44,6 +44,12 @@ Route::get('manifest.webmanifest', [\App\Http\Controllers\PwaController::class, 
 Route::get('offline', [\App\Http\Controllers\PwaController::class, 'offline'])->name('pwa.offline');
 Route::get('brand/{file}', [\App\Http\Controllers\BrandController::class, 'asset'])->where('file', '[a-z0-9-]+\.png')->name('brand.asset');
 
+// v25: SEO - robots.txt, sitemap.xml va ochiq landing ("/" ni mehmonlarga ServeLanding middleware beradi)
+Route::get('robots.txt', [\App\Http\Controllers\LandingController::class, 'robots'])->name('seo.robots');
+Route::get('sitemap.xml', [\App\Http\Controllers\LandingController::class, 'sitemap'])->name('seo.sitemap');
+Route::get('ru', [\App\Http\Controllers\LandingController::class, 'ru'])->name('landing.ru');
+Route::get('uz', [\App\Http\Controllers\LandingController::class, 'uz'])->name('landing.uz');
+
 Route::middleware('guest')->group(function () {
     Route::get('login', [LoginController::class, 'show'])->name('login');
     Route::post('login', [LoginController::class, 'store'])->middleware('throttle:30,1');

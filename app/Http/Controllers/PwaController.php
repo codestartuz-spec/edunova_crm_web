@@ -15,7 +15,7 @@ class PwaController extends Controller
             'name' => \App\Support\Brand::name(),
             'short_name' => \App\Support\Brand::short(),
             'description' => "O'quv markazi boshqaruv tizimi",
-            'start_url' => $base.'/',
+            'start_url' => $base.'/login', // kirmagan foydalanuvchi login'ni ko'radi (landing emas); kirganni login panelga o'tkazadi
             'scope' => $base.'/',
             'display' => 'standalone',
             'orientation' => 'portrait-primary',

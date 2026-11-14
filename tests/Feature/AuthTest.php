@@ -14,7 +14,8 @@ class AuthTest extends TestCase
 
     public function test_guest_is_redirected_to_login(): void
     {
-        $this->get('/')->assertRedirect(route('login'));
+        // v25: "/" mehmonga ochiq landing; yopiq sahifalar esa login'ga yo'naltiradi
+        $this->get('/students')->assertRedirect(route('login'));
     }
 
     public function test_user_can_login_with_username_and_email(): void

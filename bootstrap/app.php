@@ -22,6 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(StripMoneySpaces::class);
         $middleware->append(SecurityHeaders::class);
         $middleware->appendToGroup('web', \App\Http\Middleware\EnsureSubscriptionWritable::class);
+        $middleware->appendToGroup('web', \App\Http\Middleware\ServeLanding::class);
+        // Laravel "auth" ni boshqa middleware'lardan oldin ishlatadi; landing esa undan OLDIN, lekin sessiyadan keyin turishi kerak
+        $middleware->prependToPriorityList(before: \Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests::class, prepend: \App\Http\Middleware\ServeLanding::class);
         $middleware->encryptCookies(except: ['cookie_consent']);
         $middleware->validateCsrfTokens(except: ['telegram/webhook']);
         $middleware->redirectGuestsTo(fn () => route('login'));

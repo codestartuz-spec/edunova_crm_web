@@ -37,6 +37,35 @@
             </div>
 
             <div class="card card-body space-y-5">
+                <div>
+                    <h3 class="font-semibold text-ink-900 dark:text-white">Ochiq sahifadagi aloqa (SEO landing)</h3>
+                    <p class="mt-0.5 text-xs text-ink-500">Tizimga kirmagan mehmonlar ko'radigan bosh sahifadagi "Bog'lanish" tugmalari. Bo'sh qoldirilgan maydon ko'rsatilmaydi.</p>
+                </div>
+                <div class="grid gap-5 sm:grid-cols-2">
+                    <div>
+                        <label class="label" for="landing_telegram">Telegram</label>
+                        <input id="landing_telegram" name="landing_telegram" value="{{ old('landing_telegram', \App\Models\AppSetting::get('landing.telegram', '')) }}" maxlength="100" placeholder="@edunova_uz" class="input @error('landing_telegram') input-error @enderror">
+                        @error('landing_telegram')<p class="error-text">{{ $message }}</p>@enderror
+                    </div>
+                    <div>
+                        <label class="label" for="landing_instagram">Instagram</label>
+                        <input id="landing_instagram" name="landing_instagram" value="{{ old('landing_instagram', \App\Models\AppSetting::get('landing.instagram', '')) }}" maxlength="100" placeholder="@atko_teams" class="input @error('landing_instagram') input-error @enderror">
+                        @error('landing_instagram')<p class="error-text">{{ $message }}</p>@enderror
+                    </div>
+                    <div>
+                        <label class="label" for="landing_phone">Telefon</label>
+                        <input id="landing_phone" name="landing_phone" value="{{ old('landing_phone', \App\Models\AppSetting::get('landing.phone', '')) }}" maxlength="30" placeholder="+998 90 123 45 67" class="input @error('landing_phone') input-error @enderror">
+                        @error('landing_phone')<p class="error-text">{{ $message }}</p>@enderror
+                    </div>
+                    <div>
+                        <label class="label" for="landing_email">E-pochta</label>
+                        <input id="landing_email" type="email" name="landing_email" value="{{ old('landing_email', \App\Models\AppSetting::get('landing.email', '')) }}" maxlength="100" placeholder="info@example.uz" class="input @error('landing_email') input-error @enderror">
+                        @error('landing_email')<p class="error-text">{{ $message }}</p>@enderror
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-body space-y-5">
                 <div class="flex items-start justify-between gap-3">
                     <div>
                         <h3 class="font-semibold text-ink-900 dark:text-white">Logotip</h3>

@@ -39,6 +39,13 @@ class SecurityHeaders
             $response->headers->set('X-Frame-Options', 'DENY');
         }
 
+        // v25: faqat landing (LandingController belgilaydi) qidiruv tizimlariga ochiq; qolgan hamma sahifa
+        // (panel, login, o'quvchi kabineti, hujjatlar, ariza shakllari, xatolar) indekslanmaydi.
+        // robots.txt va sitemap.xml'ga teg qo'yilmaydi - ularni qidiruv robotlari o'qiy olishi kerak.
+        if (! $request->attributes->get('seo.indexable') && ! $request->routeIs('seo.*')) {
+            $response->headers->set('X-Robots-Tag', 'noindex, nofollow');
+        }
+
         if ($request->secure()) {
             $response->headers->set('Strict-Transport-Security', 'max-age=15552000; includeSubDomains');
         }

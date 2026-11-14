@@ -31,6 +31,10 @@ class BrandController extends Controller
             'tagline' => ['nullable', 'string', 'max:120'],
             'logo' => ['nullable', 'file', 'mimes:png', 'max:'.\App\Support\Brand::MAX_KB],
             'logo_wide' => ['nullable', 'file', 'mimes:png', 'max:'.\App\Support\Brand::MAX_KB],
+            'landing_telegram' => ['nullable', 'string', 'max:100', 'regex:~^(https://t\.me/)?@?[A-Za-z0-9_]{3,64}/?$~'],
+            'landing_instagram' => ['nullable', 'string', 'max:100', 'regex:~^(https://(www\.)?instagram\.com/)?@?[A-Za-z0-9_.]{2,64}/?$~'],
+            'landing_phone' => ['nullable', 'string', 'max:30', 'regex:~^[0-9+()\s-]{7,30}$~'],
+            'landing_email' => ['nullable', 'email', 'max:100'],
             'remove_logo' => ['nullable', 'boolean'],
             'remove_logo_wide' => ['nullable', 'boolean'],
         ], [], ['name' => 'Loyiha nomi', 'short' => 'Qisqa nom', 'tagline' => 'Shior', 'logo' => 'Logotip', 'logo_wide' => 'Gorizontal logotip']);
@@ -41,6 +45,10 @@ class BrandController extends Controller
         }
         if ($request->hasFile('logo_wide')) {
             $brand->inspect($request->file('logo_wide'), Brand::WIDE_SIZE, 'logo_wide');
+        }
+
+        foreach (['telegram', 'instagram', 'phone', 'email'] as $k) {
+            AppSetting::put('landing.'.$k, trim((string) ($data['landing_'.$k] ?? '')));
         }
 
         $old = Brand::name();

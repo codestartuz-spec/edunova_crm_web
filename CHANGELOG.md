@@ -1,3 +1,12 @@
+## v25 — Qidiruv tizimlari (SEO) va ochiq landing
+- **Ochiq landing sahifa** (o'zbek `/`, rus `/ru`): imkoniyatlar, rollar, qanday ishlaydi, savol-javoblar, qorong'i/yorug' rejim, mobilga moslashgan. Tizimga kirmagan mehmon asosiy manzilni ochganda endi login emas, shu sahifani ko'radi; kirgan foydalanuvchi avvalgidek panelga tushadi. `/uz` → `/` (301).
+- **SEO teglari:** title/description, canonical, hreflang (uz, ru, x-default), Open Graph + Twitter kartasi (`public/images/og-edunova.png`, 1200×630), JSON-LD (Organization, WebSite, SoftwareApplication, FAQPage).
+- **robots.txt va sitemap.xml** dinamik (manzil `APP_URL` dan). `robots.txt`: faqat landing va uning fayllari ochiq, qolgani yopiq. Statik `public/robots.txt` olib tashlandi.
+- **Himoya:** landingdan boshqa barcha sahifa (panel, login, o'quvchi kabineti, hujjatlar, ariza shakllari, xatolar) `X-Robots-Tag: noindex, nofollow` oladi.
+- Brend sahifasida «Ochiq sahifadagi aloqa» (Telegram, Instagram, telefon, e-pochta). Bo'sh maydon landingda ko'rinmaydi.
+- `.env`: `SEO_GOOGLE_VERIFICATION`, `SEO_YANDEX_VERIFICATION`, `SEO_BING_VERIFICATION` (Search Console / Yandex Webmaster tasdiqlash kodi).
+- PWA `start_url` endi `/login` (o'rnatilgan ilova landingni emas, kirish oynasini ochadi).
+
 ## v24 — Yangi dizayn va Video darslar
 - **Dizayn:** butun panel yangi uslubda: binafsha-indigo asosiy rang + iliq aksent, yorug'/tungi rejim (avtomatik), maxsus duotone ikonkalar to'plami, silliq animatsiyalar, telefon uchun pastki tab-bar, yangilangan kirish sahifasi. Xato va qarz endi alohida qizil rangda.
 - Yon menyu akkordeon: faqat faol sahifaning bo'limi ochiq, qolganlari yopiq.
