@@ -278,6 +278,19 @@
 @keyframes ic-tilt { 0%,100% { transform: rotate(0); } 30% { transform: rotate(-12deg) translateY(-1px); } 65% { transform: rotate(8deg); } }
 
 /* Tasdiqlash oynasi animatsiyasi */
+/* Tasdiqlash oynasi: belgi atrofidagi yumshoq nafas oluvchi halqa */
+.confirm-halo { position: relative; }
+.confirm-halo::before, .confirm-halo::after { content: ''; position: absolute; inset: 0; border-radius: 9999px; background: var(--halo, rgb(var(--brand-500) / .18)); }
+.confirm-halo--brand { --halo: rgb(var(--brand-500) / .16); }
+.confirm-halo--danger { --halo: rgb(236 58 82 / .16); }
+.confirm-halo--success { --halo: rgb(16 185 129 / .16); }
+.confirm-overlay:not(.hidden) .confirm-halo::before { animation: confirm-ring 2.4s ease-out infinite; }
+.confirm-overlay:not(.hidden) .confirm-halo::after { animation: confirm-ring 2.4s ease-out 1.2s infinite; }
+.confirm-overlay:not(.hidden) #confirm-icon { animation: confirm-icon .45s cubic-bezier(.34,1.56,.64,1) .08s both; }
+@keyframes confirm-ring { 0% { transform: scale(.82); opacity: .9; } 100% { transform: scale(1.35); opacity: 0; } }
+@keyframes confirm-icon { from { transform: scale(.5) rotate(-12deg); opacity: 0; } to { transform: none; opacity: 1; } }
+.confirm-btn:focus-visible { box-shadow: 0 0 0 2px rgb(var(--brand-500) / .55); }
+@media (prefers-reduced-motion: reduce) { .confirm-halo::before, .confirm-halo::after, #confirm-icon { animation: none !important; } }
 @keyframes confirm-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes confirm-pop { from { opacity: 0; transform: translateY(16px) scale(.97); } to { opacity: 1; transform: none; } }
 @keyframes confirm-sheet { from { transform: translateY(100%); } to { transform: none; } }
