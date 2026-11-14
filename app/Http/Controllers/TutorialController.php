@@ -11,12 +11,14 @@ use Illuminate\Validation\Rule;
 
 /**
  * v24: «Video darslar».
- *  v26: ko'rish ham, boshqarish ham FAQAT sAdmin (marshrutda `role:sadmin`); boshqa foydalanuvchilarga menyuda ko'rinmaydi.
+ *  - ko'rish (index, show): hamma foydalanuvchi, lekin faol video bo'lmasa sAdmin'dan boshqaga bo'lim yopiq (menyuda ham ko'rinmaydi);
+ *  - boshqarish (admin, store, update, ...): faqat sAdmin (marshrutda `role:sadmin`).
  */
 class TutorialController extends Controller
 {
     public function index()
     {
+        abort_unless(TutorialVideo::availableTo(request()->user()), 404);
         $videos = TutorialVideo::visible()->ordered()->get();
 
         return view('tutorials.index', [
@@ -28,6 +30,7 @@ class TutorialController extends Controller
 
     public function show(TutorialVideo $video)
     {
+        abort_unless(TutorialVideo::availableTo(request()->user()), 404);
         abort_unless($video->is_active || $this->canManage(), 404);
 
         $playlist = TutorialVideo::visible()->ordered()->get();

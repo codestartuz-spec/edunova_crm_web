@@ -68,7 +68,7 @@
 @endphp
 
 <x-nav-link :href="route('dashboard')" icon="home" :active="request()->routeIs('dashboard')">Bosh sahifa</x-nav-link>
-@if ($me->isSuperAdmin())
+@if (\App\Models\TutorialVideo::availableTo($me))
     <x-nav-link :href="route('tutorials.index')" icon="play" :active="request()->routeIs('tutorials.index', 'tutorials.show')">Video darslar</x-nav-link>
 @endif
 

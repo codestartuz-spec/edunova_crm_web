@@ -17,27 +17,34 @@ class TutorialVideoTest extends TestCase
         return TutorialVideo::create($a + ['title' => 'Kirish', 'url' => 'https://youtu.be/dQw4w9WgXcQ', 'sort_order' => 1, 'is_active' => true]);
     }
 
-    public function test_only_sadmin_can_watch_and_only_sadmin_sees_hidden(): void
+    public function test_everyone_watches_active_videos_and_hidden_one_is_sadmin_only(): void
     {
         $b = $this->branch();
         $this->make(['title' => 'Ochiq dars']);
         $hidden = $this->make(['title' => 'Yashirin dars', 'is_active' => false, 'sort_order' => 2]);
 
-        $this->actingAs($this->user(Role::SAdmin))->get('/tutorials')->assertOk()->assertSee('Ochiq dars')->assertDontSee('Yashirin dars');
-        $this->actingAs($this->user(Role::SAdmin))->get("/tutorials/{$hidden->id}")->assertOk();
-
-        // v26: boshqa hech kim ko'ra olmaydi
-        foreach ([Role::Director, Role::Admin, Role::Manager, Role::Teacher, Role::Operator, Role::Student] as $role) {
-            $u = $this->user($role, $b);
-            $this->actingAs($u)->get('/tutorials')->assertForbidden();
-            $this->actingAs($u)->get("/tutorials/{$hidden->id}")->assertForbidden();
+        foreach ([Role::SAdmin, Role::Director, Role::Admin, Role::Manager, Role::Teacher, Role::Operator, Role::Student] as $role) {
+            $this->actingAs($this->user($role, $b))->get('/tutorials')->assertOk()->assertSee('Ochiq dars')->assertDontSee('Yashirin dars');
         }
+        $this->actingAs($this->user(Role::Manager, $b))->get("/tutorials/{$hidden->id}")->assertNotFound();
+        $this->actingAs($this->user(Role::SAdmin))->get("/tutorials/{$hidden->id}")->assertOk();
+    }
+
+    public function test_without_active_videos_section_is_closed_for_everyone_but_sadmin(): void
+    {
+        $b = $this->branch();
+        $this->make(['title' => 'Faqat yashirin', 'is_active' => false]);
+
+        foreach ([Role::Director, Role::Admin, Role::Manager, Role::Teacher, Role::Operator, Role::Student] as $role) {
+            $this->actingAs($this->user($role, $b))->get('/tutorials')->assertNotFound();
+        }
+        $this->actingAs($this->user(Role::SAdmin))->get('/tutorials')->assertOk();
     }
 
     public function test_player_page_uses_privacy_embed(): void
     {
         $v = $this->make();
-        $this->actingAs($this->user(Role::SAdmin))->get("/tutorials/{$v->id}")
+        $this->actingAs($this->user(Role::Student, $this->branch()))->get("/tutorials/{$v->id}")
             ->assertOk()->assertSee('youtube-nocookie.com/embed/dQw4w9WgXcQ', false)->assertSee('autoplay=1', false);
     }
 
@@ -82,15 +89,22 @@ class TutorialVideoTest extends TestCase
         $this->assertSame(1, TutorialVideo::count());
     }
 
-    public function test_menu_link_only_for_sadmin_and_settings_entry_only_for_sadmin(): void
+    public function test_menu_link_appears_only_when_active_video_exists_and_settings_entry_only_for_sadmin(): void
     {
         $b = $this->branch();
-        $this->actingAs($this->user(Role::Student, $b))->get('/student')->assertOk()->assertDontSee('Video darslar');
-        $this->actingAs($this->user(Role::Manager, $b))->get('/')->assertOk()->assertDontSee('Video darslar');
-        $this->actingAs($this->user(Role::Director))->withSession(['current_branch_id' => $b->id])->get('/')->assertOk()->assertDontSee('Video darslar');
+        $dir = fn () => $this->actingAs($this->user(Role::Director))->withSession(['current_branch_id' => $b->id]);
 
+        // video yo'q: sAdmin'dan boshqaga menyuda yo'q
+        $this->actingAs($this->user(Role::Student, $b))->get('/student')->assertOk()->assertDontSee('Video darslar');
+        $dir()->get('/')->assertOk()->assertDontSee('Video darslar');
         $this->actingAs($this->user(Role::SAdmin))->withSession(['current_branch_id' => $b->id])->get('/')->assertOk()->assertSee('Video darslar');
+
+        // faol video qo'shilgach hammaga ochiladi
+        $this->make();
+        $this->actingAs($this->user(Role::Student, $b))->get('/student')->assertOk()->assertSee('Video darslar');
+        $dir()->get('/')->assertOk()->assertSee('Video darslar');
+
         $this->actingAs($this->user(Role::SAdmin))->withSession(['current_branch_id' => $b->id])->get('/settings')->assertOk()->assertSee('settings/tutorials', false);
-        $this->actingAs($this->user(Role::Director))->withSession(['current_branch_id' => $b->id])->get('/settings')->assertDontSee('settings/tutorials', false);
+        $dir()->get('/settings')->assertDontSee('settings/tutorials', false);
     }
 }

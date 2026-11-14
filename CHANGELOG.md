@@ -4,7 +4,7 @@
 - **«Bir kun CRM ichida»:** sahnalar 3D burilib almashadi, panel orqasida chuqurlik plitalari bor. **Demo bloki:** scroll bilan aylanadigan kublar.
 - `prefers-reduced-motion` yoqilgan bo'lsa 3D animatsiyalar o'chadi; telefonlarda og'ir effektlar yengillashtirilgan.
 - **Login sahifasi:** logotip (chapdagi katta va telefondagi) bosilsa sotuv sahifasi ochiladi.
-- **Video darslar** endi faqat sAdmin'ga ko'rinadi: menyuda ham (xodim va o'quvchi menyusidan olib tashlandi), havola orqali ham (boshqalarga 403).
+- **Video darslar:** faol video bo'lmaganda bo'lim sAdmin'dan boshqa hech kimga ko'rinmaydi (menyuda yo'q, havola 404). Kamida bitta faol video qo'shilishi bilan hamma foydalanuvchiga (xodim va o'quvchiga) menyuda paydo bo'ladi va ochiladi. Boshqarish avvalgidek faqat sAdmin'da.
 
 ## v26 — Direktorga Telegram va shaxsiy kunlik hisobot
 - **Direktorni qo'shish/tahrirlash** formasida yangi blok «Telegram va kunlik hisobot»: **Telegram ID**, **hisobot yuborish vaqti** (soat:daqiqa, 5 daqiqa qadam, tezkor 18/20/21/22), «Kunlik hisobotni yuborish» kaliti.

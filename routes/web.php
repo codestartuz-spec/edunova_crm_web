@@ -102,6 +102,9 @@ Route::middleware(['auth', 'active', 'legal'])->group(function () {
     Route::post('logout', [LoginController::class, 'destroy'])->name('logout');
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
+    // v26: Video darslar - hamma ko'radi, lekin faqat faol video bor bo'lsa (yo'q bo'lsa sAdmin'dan boshqaga bo'lim yopiq); tekshiruv kontrollerda
+    Route::get('tutorials', [\App\Http\Controllers\TutorialController::class, 'index'])->name('tutorials.index');
+    Route::get('tutorials/{video}', [\App\Http\Controllers\TutorialController::class, 'show'])->whereNumber('video')->name('tutorials.show');
     Route::post('tasks/dismiss', [DashboardController::class, 'dismissTask'])->name('tasks.dismiss');
 
     Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -123,9 +126,7 @@ Route::middleware(['auth', 'active', 'legal'])->group(function () {
         Route::post('subscriptions/{branch}/buy', [\App\Http\Controllers\SubscriptionController::class, 'store'])->whereNumber('branch')->middleware(['once', 'throttle:10,1'])->name('subscriptions.store');
     });
     Route::middleware('role:sadmin')->group(function () {
-        // v26: Video darslar - ko'rish ham, boshqarish ham FAQAT sAdmin (boshqa hech kimga menyuda ko'rinmaydi, havola ochilmaydi)
-        Route::get('tutorials', [\App\Http\Controllers\TutorialController::class, 'index'])->name('tutorials.index');
-        Route::get('tutorials/{video}', [\App\Http\Controllers\TutorialController::class, 'show'])->whereNumber('video')->name('tutorials.show');
+        // Video darslarni boshqarish - faqat sAdmin
         Route::get('settings/demo-requests', [\App\Http\Controllers\DemoRequestController::class, 'index'])->name('demo.index');
         Route::put('settings/demo-requests/{demo}', [\App\Http\Controllers\DemoRequestController::class, 'update'])->whereNumber('demo')->name('demo.update');
         Route::delete('settings/demo-requests/{demo}', [\App\Http\Controllers\DemoRequestController::class, 'destroy'])->whereNumber('demo')->name('demo.destroy');

@@ -16,6 +16,23 @@ class TutorialVideo extends Model
         return ['is_active' => 'boolean', 'sort_order' => 'integer'];
     }
 
+    /** Bo'lim shu foydalanuvchiga ochiqmi: sAdmin doim; boshqalarga faqat kamida bitta faol video bo'lsa. */
+    public static function availableTo(?User $user): bool
+    {
+        if ($user?->isSuperAdmin()) {
+            return true;
+        }
+        if ($user === null) {
+            return false;
+        }
+        $attrs = request()->attributes;   // bir so'rov ichida bitta SQL (statik emas: testlar va Octane uchun xavfsiz)
+        if (! $attrs->has('tutorials.has_active')) {
+            $attrs->set('tutorials.has_active', static::query()->where('is_active', true)->exists());
+        }
+
+        return (bool) $attrs->get('tutorials.has_active');
+    }
+
     public function scopeVisible(Builder $q): Builder
     {
         return $q->where('is_active', true);
