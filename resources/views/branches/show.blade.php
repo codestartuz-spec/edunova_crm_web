@@ -81,6 +81,7 @@
                     <div class="flex flex-wrap items-center gap-2">
                         <h1 class="text-2xl font-bold text-ink-900 dark:text-white">{{ $branch->name }}</h1>
                         <span class="{{ $branch->isActive() ? 'badge-green' : 'badge-gray' }}">{{ $branch->status->label() }}</span>
+                        @if ($branch->subscriptionExpired())<span class="badge-red">Obuna tugagan — faqat ko'rish</span>@elseif ($branch->subscription_exempt)<span class="badge-blue">Obunasiz</span>@elseif (($d = $branch->subscriptionDaysLeft()) !== null)<span class="{{ $d <= 7 ? 'badge-amber' : 'badge-gray' }}">Obuna: {{ $d }} kun qoldi</span>@endif
                     </div>
                     <div class="mt-0.5 text-xs text-ink-400">{{ $branch->code }}@unless ($branch->isActive()) · Yopilgan: {{ $branch->closed_at?->format('d.m.Y') }}@if ($branch->closed_reason) — {{ $branch->closed_reason }}@endif @endunless</div>
                     <div class="mt-3 flex flex-wrap gap-2 text-xs text-ink-600 dark:text-ink-300">

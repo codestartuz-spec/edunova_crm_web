@@ -233,4 +233,15 @@ class V22SubscriptionTest extends TestCase
         $this->expire($b);
         $this->actingAs($director)->get(route('subscriptions.buy', $b))->assertOk()->assertSee('Obuna sotib olish');
     }
+
+    public function test_branches_list_shows_subscription_state(): void
+    {
+        $expired = $this->expire($this->branch('Tugagan filial'));
+        $ok = $this->branch('Faol filial');
+        $sadmin = $this->user(Role::SAdmin);
+
+        $this->actingAs($sadmin)->get(route('branches.index'))->assertOk()->assertSee('Obuna tugagan')->assertSee('gacha');
+        $this->actingAs($sadmin)->get(route('branches.show', $expired))->assertOk()->assertSee('Obuna tugagan');
+        $this->actingAs($sadmin)->get(route('branches.show', $ok))->assertOk()->assertSee('kun qoldi');
+    }
 }

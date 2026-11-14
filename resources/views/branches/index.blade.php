@@ -60,10 +60,13 @@
                         <h3 class="truncate text-lg font-semibold text-ink-900 dark:text-white">{{ $branch->name }}</h3>
                         <p class="truncate text-xs text-ink-400">{{ $branch->code }}</p>
                     </div>
-                    <span class="{{ $branch->isActive() ? 'badge-green' : 'badge-gray' }} shrink-0">
-                        @unless ($branch->isActive()){!! $svg($ic['archive'], 'h-3.5 w-3.5') !!}@endunless
-                        {{ $branch->status->label() }}
-                    </span>
+                    <div class="flex shrink-0 flex-col items-end gap-1">
+                        <span class="{{ $branch->isActive() ? 'badge-green' : 'badge-gray' }}">
+                            @unless ($branch->isActive()){!! $svg($ic['archive'], 'h-3.5 w-3.5') !!}@endunless
+                            {{ $branch->status->label() }}
+                        </span>
+                        @if ($branch->subscriptionExpired())<span class="badge-red">Obuna tugagan</span>@endif
+                    </div>
                 </div>
 
                 <dl class="relative mt-4 space-y-1.5 text-sm text-ink-600 dark:text-ink-300">
@@ -84,6 +87,16 @@
                         @if ($limit > 0)
                             <div class="br-meter mt-1.5 h-1.5 overflow-hidden rounded-full bg-ink-100 dark:bg-ink-700"><i style="width: {{ $pct }}%"></i></div>
                         @endif
+                    </div>
+                    @php $subLeft = $branch->subscriptionDaysLeft(); @endphp
+                    <div class="flex items-center justify-between text-xs text-ink-500">
+                        <span class="inline-flex items-center gap-1.5">{!! $svg($ic['wallet'], 'h-3.5 w-3.5') !!} Obuna</span>
+                        <span class="font-medium {{ $branch->subscriptionExpired() ? 'text-brand-600' : 'text-ink-700 dark:text-ink-200' }}">
+                            @if ($branch->subscription_exempt) Obunasiz (doim faol)
+                            @elseif ($branch->subscriptionExpired()) Tugagan · faqat ko'rish ({{ $branch->subscription_ends_on?->format('d.m.Y') }})
+                            @elseif ($subLeft !== null) {{ $branch->subscription_ends_on?->format('d.m.Y') }} gacha · {{ $subLeft }} kun
+                            @else — @endif
+                        </span>
                     </div>
                     @if ($isSadmin)
                         <div class="flex items-center justify-between text-xs text-ink-500">
