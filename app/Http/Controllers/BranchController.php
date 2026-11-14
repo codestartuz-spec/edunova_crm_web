@@ -112,6 +112,31 @@ class BranchController extends Controller
     }
 
     /** Filialning SMS sozlamalari: kunlik modem limiti va (ixtiyoriy) o'z Eskiz akkaunti. */
+    /** Filialning barcha SMS matnlarini Eskiz tasdiqlashiga (moderatsiyaga) yuboradi - filialning o'z (yoki umumiy) akkaunti bilan. */
+    public function submitSmsTemplates(Branch $branch, \App\Services\SmsService $sms): RedirectResponse
+    {
+        $gateway = new \App\Services\Sms\EskizGateway($branch);
+        if (! $gateway->isConfigured()) {
+            return back()->with('error', "Avval Eskiz akkauntini kiriting (yoki umumiy akkaunt sozlansin), keyin shablonlarni yuboring.");
+        }
+
+        $labels = \App\Support\SmsTemplates::all();
+        $sent = 0;
+        $errors = [];
+        foreach ($sms->moderationTexts($branch) as $key => $text) {
+            $r = $gateway->submitTemplate($text);
+            $r['ok'] ? $sent++ : $errors[] = ($labels[$key]['label'] ?? $key).': '.$r['message'];
+        }
+
+        AuditLog::record('sms.templates_submitted', $branch, "{$branch->name}: {$sent} ta SMS shablon Eskiz tasdiqlashiga yuborildi".($errors ? ', '.count($errors).' ta xato' : ''));
+
+        if ($errors) {
+            return back()->with($sent ? 'success' : 'error', "{$sent} ta shablon yuborildi, ".count($errors).' tasida xato: '.implode(' | ', array_slice($errors, 0, 3)));
+        }
+
+        return back()->with('success', "{$sent} ta SMS shablon Eskiz tasdiqlashiga yuborildi. Eskiz odatda tezda ko'rib chiqadi; tasdiqlangach SMS'lar to'siqsiz ketadi.");
+    }
+
     public function sms(Request $request, Branch $branch): RedirectResponse
     {
         $data = $request->validate([

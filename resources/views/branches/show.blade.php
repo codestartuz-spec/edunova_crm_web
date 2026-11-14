@@ -206,6 +206,14 @@
 
                 <div class="space-y-4 xl:col-span-3">
                     <div class="card card-body">
+                        <h2 class="flex items-center gap-2 text-base font-semibold text-ink-900 dark:text-white"><span class="bs-tile flex h-8 w-8 items-center justify-center rounded-lg">{!! $svg($ic['send']) !!}</span> Eskiz shablonlari</h2>
+                        <p class="mb-4 mt-2 text-sm text-ink-500 dark:text-ink-400">Eskiz faqat tasdiqlangan matnlarni o'tkazadi. Bu tugma filialning <b>barcha SMS matnlarini</b> ({{ $branch->hasOwnSmsAccount() ? "filialning o'z Eskiz akkaunti" : 'umumiy Eskiz akkaunti' }} orqali) tasdiqlashga yuboradi. Avval SMS sozlamalarini saqlang.</p>
+                        <form method="POST" action="{{ route('branches.sms.templates', $branch) }}" data-confirm="Filialning barcha SMS shablonlari Eskizga tasdiqlash uchun yuboriladi." data-confirm-title="Hammasini tasdiqlashga yuborasizmi?" data-confirm-ok="Yuborish">@csrf
+                            <button class="btn-primary">{!! $svg($ic['send']) !!} Hammasini tasdiqlashga yuborish</button>
+                        </form>
+                    </div>
+
+                    <div class="card card-body">
                         <h2 class="flex items-center gap-2 text-base font-semibold text-ink-900 dark:text-white"><span class="bs-tile flex h-8 w-8 items-center justify-center rounded-lg">{!! $svg($ic['chart']) !!}</span> Modem orqali yuborilgan SMS</h2>
                         <p class="mt-1 text-xs text-ink-500">Faqat USB modem hisoblanadi. Eskiz orqali yuborilganlar bu yerda sanalmaydi.</p>
                         <div class="mt-4 grid gap-3 sm:grid-cols-3">

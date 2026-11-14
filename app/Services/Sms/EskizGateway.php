@@ -36,6 +36,36 @@ class EskizGateway implements SmsGateway
         return new SmsResult($ok, mb_substr(json_encode($response, JSON_UNESCAPED_UNICODE), 0, 1000), 'eskiz');
     }
 
+    /**
+     * Matnni Eskiz moderatsiyasiga (shablon tasdiqlash) yuboradi: POST /user/template, maydon `template`.
+     * Tasdiqlangach faqat shu andozaga mos SMS'lar o'tadi.
+     *
+     * @return array{ok:bool,message:string}
+     */
+    public function submitTemplate(string $text, bool $retry = true): array
+    {
+        try {
+            [$email, $password] = $this->credentials();
+            $base = rtrim(config('services.eskiz.base_url'), '/');
+            $response = Http::withToken($this->token($email, $password))->timeout(20)->asForm()->post("{$base}/user/template", ['template' => $text]);
+
+            if ($response->status() === 401 && $retry) {
+                Cache::forget($this->tokenKey($email));
+
+                return $this->submitTemplate($text, retry: false);
+            }
+        } catch (RuntimeException $e) {
+            return ['ok' => false, 'message' => $e->getMessage()];
+        } catch (\Illuminate\Http\Client\ConnectionException) {
+            return ['ok' => false, 'message' => 'Eskiz bilan aloqa o\'rnatilmadi.'];
+        }
+
+        $status = strtolower((string) $response->json('status'));
+        $ok = $response->successful() && ! in_array($status, ['error', 'fail', 'failed'], true);
+
+        return ['ok' => $ok, 'message' => $ok ? 'yuborildi' : mb_substr((string) ($response->json('message') ?: $response->body()), 0, 200)];
+    }
+
     /** @return array{0:string,1:string,2:string} */
     private function credentials(): array
     {

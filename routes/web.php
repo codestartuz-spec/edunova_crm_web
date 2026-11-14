@@ -148,6 +148,7 @@ Route::middleware(['auth', 'active', 'legal'])->group(function () {
     Route::middleware('can:branches.manage')->group(function () {
         Route::resource('branches', BranchController::class)->except(['destroy']);
         Route::put('branches/{branch}/sms', [BranchController::class, 'sms'])->name('branches.sms');
+        Route::post('branches/{branch}/sms/templates', [BranchController::class, 'submitSmsTemplates'])->middleware('throttle:6,1')->name('branches.sms.templates');
         Route::post('branches/{branch}/payments', [BranchController::class, 'storePayment'])->middleware('role:sadmin')->name('branches.payments.store');
         Route::post('branches/{branch}/close', [BranchController::class, 'close'])->name('branches.close');
         Route::post('branches/{branch}/reopen', [BranchController::class, 'reopen'])->name('branches.reopen');

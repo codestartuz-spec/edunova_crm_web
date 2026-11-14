@@ -166,4 +166,33 @@ class V14SmsGatewayTest extends TestCase
         $this->assertSame(7, (int) $this->br()->fresh()->sms_modem_daily_limit);
         $this->actingAs($sadmin)->get(route('sms.gateway'))->assertOk();
     }
+
+    public function test_sadmin_submits_all_branch_sms_templates_to_eskiz_moderation(): void
+    {
+        Http::fake(['*/auth/login' => Http::response(['data' => ['token' => 't']]), '*/user/template' => Http::response(['status' => 'success'])]);
+        $branch = $this->branch('Test filial');
+        $branch->update(['eskiz_email' => 'a@b.uz', 'eskiz_password' => 'secret', 'eskiz_from' => '4546']);
+        $sadmin = $this->user(\App\Enums\Role::SAdmin);
+
+        $this->actingAs($sadmin)->post(route('branches.sms.templates', $branch))->assertSessionHas('success');
+
+        $total = count(\App\Support\SmsTemplates::all());
+        Http::assertSentCount(1 + $total);
+        Http::assertSent(fn ($r) => str_contains($r->url(), '/user/template') && str_contains($r['template'], 'Test filial') && ! str_contains($r['template'], '{'));
+        $this->assertDatabaseHas('audit_logs', ['action' => 'sms.templates_submitted']);
+    }
+
+    public function test_template_submission_reports_eskiz_errors_and_needs_account(): void
+    {
+        Http::fake(['*/auth/login' => Http::response(['data' => ['token' => 't']]), '*/user/template' => Http::response(['status' => 'error', 'message' => 'Bunday shablon bor'], 422)]);
+        $branch = $this->branch();
+        $branch->update(['eskiz_email' => 'a@b.uz', 'eskiz_password' => 'secret']);
+        $sadmin = $this->user(\App\Enums\Role::SAdmin);
+
+        $this->actingAs($sadmin)->post(route('branches.sms.templates', $branch))->assertSessionHas('error');
+
+        config(['services.eskiz.email' => null, 'services.eskiz.password' => null]);
+        $other = $this->branch('Boshqa');
+        $this->actingAs($sadmin)->post(route('branches.sms.templates', $other))->assertSessionHas('error');
+    }
 }

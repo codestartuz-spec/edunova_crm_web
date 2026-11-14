@@ -34,6 +34,24 @@ class SmsService
         ];
     }
 
+    /**
+     * Eskiz moderatsiyasi uchun: filialning HAMMA shablonlari (o'zgartirilgan bo'lsa shu matn), o'zgaruvchilar namunaviy
+     * qiymat bilan to'ldirilgan holda. @return array<string,string> kalit => tayyor matn
+     */
+    public function moderationTexts(Branch $branch): array
+    {
+        $sample = ['name' => 'Aziz', 'branch' => $branch->name, 'amount' => "150 000 so'm", 'balance' => "250 000 so'm", 'debt' => "300 000 so'm", 'login' => 'student01', 'password' => 'Ab12cd34', 'group' => 'Koreys tili A1'];
+        $out = [];
+        foreach (array_keys(SmsTemplates::all()) as $key) {
+            $body = trim($this->template($branch, $key)['body']);
+            if ($body !== '') {
+                $out[$key] = $this->render($body, $sample);
+            }
+        }
+
+        return $out;
+    }
+
     public function render(string $body, array $vars): string
     {
         $map = [];
