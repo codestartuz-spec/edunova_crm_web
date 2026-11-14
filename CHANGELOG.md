@@ -1,3 +1,13 @@
+## v27 — Obuna uzaytirish sahifasi (3D, animatsiyali)
+- **Yangi dizayn:** «Obunani uzaytirish / Obuna sotib olish» sahifasi qayta yozildi. Tepada joriy holat (qolgan kunlar sanab chiqadi) va aylanuvchi 3D tangalar, kub hamda panjarali pol; sichqoncha harakatiga parallaks beradi.
+- **Bosqichlar:** Tarif → O'tkazma → Chek. Bajarilgan bosqich yashil belgi oladi, joriysi yorqin 3D plitka bo'lib ko'tariladi.
+- **Tarif kartalari:** sichqoncha ostida qiyshayadi va nur tushadi, tanlangani oldinga chiqadi. Yillik tarifda «Foydali» belgisi, tejash foizi va «oyiga ≈» narxi ko'rinadi.
+- **Summa paneli:** tarif almashganda summa animatsiya bilan o'zgaradi, **yangi muddat sanasi** avtomatik hisoblanadi (tasdiqlash mantig'i bilan bir xil, oy oxirida ham to'g'ri), «Summani nusxalash» tugmasi bor.
+- **3D bank kartasi:** karta raqami 4 xonadan guruhlanadi, kartani sichqoncha ortidan qiyshayadi va yaltiraydi, «Karta raqamini nusxalash» tugmasi bor. Kompyuterda o'ng ustunda, telefonda formaning ichida.
+- **Chek yuklash:** rasmni sudrab tashlash yoki tanlash, oldindan ko'rish, tur (JPG/PNG/WEBP) va hajm (5 MB) tekshiruvi, «O'zgartirish» tugmasi. Yuborishda tugma «Yuborilmoqda…» holatiga o'tadi.
+- Obuna shartlari yig'iladigan blokka o'tkazildi. Forma maydonlari, validatsiya va serverdagi mantiq o'zgarmagan. `prefers-reduced-motion` yoqilgan bo'lsa animatsiyalar o'chadi.
+- Test: `V27SubscriptionBuyPageTest` (4 ta).
+
 ## v26.1 — 3D sotuv sahifasi, login logotipi, Video darslar yopildi
 - **Sotuv sahifasi 3D:** bosh blokdagi tizim oynasi endi qatlamli 3D sahna (orqada rangli plitalar, oldinga chiqib turgan bildirishnomalar, Telegram, 92% davomat halqasi, aylanuvchi tanga va kublar). U sichqoncha bilan burilib, o'zi ham asta chayqaladi (sensorli qurilmada), pastga aylantirilganda orqaga ketib so'nadi. Orqa fonda harakatlanuvchi perspektiv setka (pol) va chuqurlikda siljiydigan 3D kublar.
 - **Imkoniyatlar, rollar, «Qanday ishlaydi» kartalari:** pastdan 3D burilib chiqadi, sichqoncha ostida qiyshayadi, yaltiroq nur tushadi, ikonka va matn turli chuqurlikda ko'tarilib turadi.
