@@ -69,6 +69,7 @@
         'x' => ['slate', '', '<path d="M6 6l12 12M18 6 6 18"/>', ''],
         'menu' => ['slate', '', '<path d="M4 6.5h16M4 12h16"/>', '<path d="M4 17.5h10"/>'],
         'search' => ['violet', '<circle cx="11" cy="11" r="6.5"/>', '<circle cx="11" cy="11" r="6.5"/>', '<path d="m20 20-4.2-4.2"/>'],
+        'play' => ['rose', '<rect x="3" y="5" width="18" height="14" rx="3.4"/>', '<rect x="3" y="5" width="18" height="14" rx="3.4"/>', '<path d="M10.2 9.2v5.6l4.7-2.8z"/>'],
         'chevron' => ['slate', '', '<path d="m6 9 6 6 6-6"/>', ''],
         'edit' => ['sky', '<path d="M4 20h4L19 9l-4-4L4 16z"/>', '<path d="M4 20h4L19 9l-4-4L4 16z"/>', '<path d="m13.5 6.5 4 4"/>'],
         'trash' => ['rose', '<path d="M6 7l1 13h10l1-13z"/>', '<path d="M6 7l1 13h10l1-13"/><path d="M4 7h16M9 7V4h6v3"/>', '<path d="M10 11v5M14 11v5"/>'],

@@ -94,6 +94,10 @@ Route::middleware(['auth', 'active', 'legal'])->group(function () {
 
     Route::post('logout', [LoginController::class, 'destroy'])->name('logout');
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+    // v24: Video darslar - ko'rish HAMMA foydalanuvchi uchun (xodim va o'quvchi)
+    Route::get('tutorials', [\App\Http\Controllers\TutorialController::class, 'index'])->name('tutorials.index');
+    Route::get('tutorials/{video}', [\App\Http\Controllers\TutorialController::class, 'show'])->whereNumber('video')->name('tutorials.show');
     Route::post('tasks/dismiss', [DashboardController::class, 'dismissTask'])->name('tasks.dismiss');
 
     Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -115,6 +119,13 @@ Route::middleware(['auth', 'active', 'legal'])->group(function () {
         Route::post('subscriptions/{branch}/buy', [\App\Http\Controllers\SubscriptionController::class, 'store'])->whereNumber('branch')->middleware(['once', 'throttle:10,1'])->name('subscriptions.store');
     });
     Route::middleware('role:sadmin')->group(function () {
+        // v24: Sozlamalar -> Video darslar (faqat sAdmin boshqaradi; filial tanlash shart emas)
+        Route::get('settings/tutorials', [\App\Http\Controllers\TutorialController::class, 'admin'])->name('tutorials.admin');
+        Route::post('settings/tutorials', [\App\Http\Controllers\TutorialController::class, 'store'])->name('tutorials.store');
+        Route::put('settings/tutorials/{video}', [\App\Http\Controllers\TutorialController::class, 'update'])->whereNumber('video')->name('tutorials.update');
+        Route::post('settings/tutorials/{video}/toggle', [\App\Http\Controllers\TutorialController::class, 'toggle'])->whereNumber('video')->name('tutorials.toggle');
+        Route::post('settings/tutorials/{video}/move', [\App\Http\Controllers\TutorialController::class, 'move'])->whereNumber('video')->name('tutorials.move');
+        Route::delete('settings/tutorials/{video}', [\App\Http\Controllers\TutorialController::class, 'destroy'])->whereNumber('video')->name('tutorials.destroy');
         Route::get('subscriptions/settings', [\App\Http\Controllers\SubscriptionController::class, 'settings'])->name('subscriptions.settings');
         Route::post('subscriptions/settings', [\App\Http\Controllers\SubscriptionController::class, 'saveSettings'])->name('subscriptions.settings.save');
         Route::post('subscriptions/requests/{subscriptionRequest}/approve', [\App\Http\Controllers\SubscriptionController::class, 'approve'])->whereNumber('subscriptionRequest')->middleware('once')->name('subscriptions.approve');

@@ -1,3 +1,11 @@
+## v24 — Yangi dizayn va Video darslar
+- **Dizayn:** butun panel yangi uslubda: binafsha-indigo asosiy rang + iliq aksent, yorug'/tungi rejim (avtomatik), maxsus duotone ikonkalar to'plami, silliq animatsiyalar, telefon uchun pastki tab-bar, yangilangan kirish sahifasi. Xato va qarz endi alohida qizil rangda.
+- Yon menyu akkordeon: faqat faol sahifaning bo'limi ochiq, qolganlari yopiq.
+- Tasdiqlash oynasi (chiqish, o'chirish va b.) qayta ishlandi: ohangga mos rang, belgi animatsiyasi, Esc bilan yopish.
+- Sertifikat sozlamalarida **jonli ko'rinish**: sarlavha, matn, imzo, logo o'zgarishi sertifikatda darhol ko'rinadi.
+- **Video darslar** (yangi): hamma foydalanuvchi (xodim ham, o'quvchi ham) tizim haqidagi video qo'llanmalarni tizim ichida ko'radi (YouTube maxfiy rejimda `youtube-nocookie`, Vimeo, Google Drive yoki .mp4). Kategoriya va qidiruv, keyingi/oldingi dars. Boshqarish (qo'shish, tahrirlash, tartib, yashirish, o'chirish) — faqat sAdmin, Sozlamalar → Video darslar. Migratsiya: `tutorial_videos`.
+- Brend rangi standarti `#5d46e2` (Branch, PWA manifest).
+
 ## v23 — Redis'ga tayyorlash (kesh va navbat)
 - Kesh va navbat Redis'ga o'tkazishga tayyorlandi: `CACHE_STORE=failover` (Redis, yiqilsa avtomatik fayl keshi) va `QUEUE_CONNECTION=redis`. Redis o'chiq bo'lsa hech narsa o'zgarmaydi (standart sozlamalar avvalgidek).
 - Sessiyalar ATAYLAB bazada qoladi: "Seanslar" sahifasi va "parol tiklanganda hamma qurilmadan chiqarish" `sessions` jadvaliga tayanadi.

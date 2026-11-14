@@ -46,6 +46,9 @@ class SettingsMenu
             ['title' => 'Marketing', 'icon' => 'megaphone', 'items' => [
                 ['label' => "O'quvchi manbalari", 'desc' => "O'quvchi qayerdan kelganini aniqlash", 'url' => route('catalog.index', 'lead-sources'), 'active' => $is('settings/lead-sources*')],
             ]],
+            $me?->isSuperAdmin() ? ['title' => 'Yordam', 'icon' => 'play', 'items' => [
+                ['label' => 'Video darslar', 'desc' => "Tizim haqidagi video qo'llanmalar (faqat sAdmin boshqaradi)", 'url' => route('tutorials.admin'), 'active' => $is('settings/tutorials*')],
+            ]] : null,
             ['title' => 'Kalendar', 'icon' => 'calendar', 'items' => [
                 ['label' => 'Dam olish kunlari', 'desc' => "Bayram va dam olish kunlari", 'url' => route('holidays.index'), 'active' => $is('settings/holidays*')],
             ]],
