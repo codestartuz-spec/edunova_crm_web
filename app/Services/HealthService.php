@@ -45,7 +45,10 @@ class HealthService
             $rows[] = ['group' => $groups[$c['key']] ?? 'infra', 'key' => $c['key'], 'label' => $c['label'], 'status' => $map[$c['status']] ?? 'warn', 'detail' => $c['detail']];
         }
 
-        foreach ([$this->php(), $this->database(), $this->storage(), $this->backup(), $this->smsModem(), $this->eskiz(), $this->telegram(), $this->logErrors(), $this->https(), $this->appKey(), $this->watchdog(), $this->publicEnv(), $this->singleSAdmin(), $this->orphanSms()] as $r) {
+        foreach ([$this->php(), $this->database(), $this->redis(), $this->storage(), $this->backup(), $this->smsModem(), $this->eskiz(), $this->telegram(), $this->logErrors(), $this->https(), $this->appKey(), $this->watchdog(), $this->publicEnv(), $this->singleSAdmin(), $this->orphanSms()] as $r) {
+            if ($r === []) {
+                continue;
+            }
             $rows[] = $r;
         }
 
@@ -143,6 +146,27 @@ class HealthService
         }
 
         return $this->row('infra', 'database', 'Ma\'lumotlar bazasi', $ms > 500 ? 'warn' : 'ok', "Ulanish ishlayapti ({$ms} ms).");
+    }
+
+    /** v22: Redis (kesh/navbat) faqat ishlatilayotgan bo'lsa tekshiriladi. */
+    private function redis(): array
+    {
+        $uses = in_array(config('cache.default'), ['redis', 'failover'], true) || config('queue.default') === 'redis';
+        if (! $uses) {
+            return [];
+        }
+
+        try {
+            $t = microtime(true);
+            \Illuminate\Support\Facades\Redis::connection('default')->ping();
+            $ms = (int) round((microtime(true) - $t) * 1000);
+        } catch (\Throwable $e) {
+            $fallback = config('cache.default') === 'failover' ? ' Kesh vaqtincha faylga o\'tgan; navbat (SMS, Telegram) to\'xtashi mumkin.' : '';
+
+            return $this->row('infra', 'redis', 'Redis (kesh/navbat)', 'fail', 'Ulanib bo\'lmadi: '.mb_substr($e->getMessage(), 0, 120).'.'.$fallback);
+        }
+
+        return $this->row('infra', 'redis', 'Redis (kesh/navbat)', $ms > 200 ? 'warn' : 'ok', "Ulanish ishlayapti ({$ms} ms).");
     }
 
     private function storage(): array

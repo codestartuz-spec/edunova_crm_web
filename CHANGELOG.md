@@ -1,3 +1,10 @@
+## v23 — Redis'ga tayyorlash (kesh va navbat)
+- Kesh va navbat Redis'ga o'tkazishga tayyorlandi: `CACHE_STORE=failover` (Redis, yiqilsa avtomatik fayl keshi) va `QUEUE_CONNECTION=redis`. Redis o'chiq bo'lsa hech narsa o'zgarmaydi (standart sozlamalar avvalgidek).
+- Sessiyalar ATAYLAB bazada qoladi: "Seanslar" sahifasi va "parol tiklanganda hamma qurilmadan chiqarish" `sessions` jadvaliga tayanadi.
+- "Tizim holati"ga Redis tekshiruvi qo'shildi (faqat Redis ishlatilganda ko'rinadi).
+- Redis navbatida `retry_after` 180 soniya; `.env.example` ga Redis bo'limi qo'shildi.
+- Tekshirildi: haqiqiy Redis bilan kesh yozish/o'qish, navbatga qo'yish va worker bajarishi, Redis o'chganda failover. Testlar: 608 ta.
+
 ## v22 — Filial obunasi (oylik/yillik to'lov)
 - Yangi **Obuna** bo'limi: direktor o'z filiallari obunasi holati, tugash sanasi va qolgan muddatni ko'radi; faol filialda «Obunani uzaytirish», tugaganida «Obuna sotib olish».
 - Obuna tugagan kuni filial **avtomatik faqat-ko'rish rejimiga** o'tadi (sanaga qarab hisoblanadi, rejalashtiruvchiga bog'liq emas): xodimlar ham, direktor ham yangi ma'lumot kirita olmaydi (HTTP middleware + model darajasida himoya). sAdmin va o'quvchilarga cheklov yo'q.

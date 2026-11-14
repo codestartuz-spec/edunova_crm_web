@@ -143,7 +143,8 @@ return [
 
     'redis' => [
 
-        'client' => env('REDIS_CLIENT', 'phpredis'),
+        // predis: sof PHP kutubxona (PHP kengaytmasi o'rnatish shart emas). phpredis o'rnatilgan bo'lsa REDIS_CLIENT=phpredis qilish mumkin.
+        'client' => env('REDIS_CLIENT', 'predis'),
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),

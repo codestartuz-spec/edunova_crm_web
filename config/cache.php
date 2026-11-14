@@ -77,6 +77,12 @@ return [
             'lock_connection' => env('REDIS_CACHE_LOCK_CONNECTION', 'default'),
         ],
 
+        // v22: Redis yiqilsa sayt to'xtab qolmasligi uchun avtomatik zaxira (fayl keshi). Serverda CACHE_STORE=failover
+        'failover' => [
+            'driver' => 'failover',
+            'stores' => ['redis', 'file'],
+        ],
+
         'dynamodb' => [
             'driver' => 'dynamodb',
             'key' => env('AWS_ACCESS_KEY_ID'),
