@@ -14,7 +14,7 @@
 <body class="h-full" x-data="{ sidebar: false }">
 @php
     $me = auth()->user();
-    $branches = $me->isGlobal() ? \App\Models\Branch::orderBy('name')->get(['id', 'name', 'status']) : collect();
+    $branches = $me->isGlobal() ? \App\Models\Branch::orderBy('name')->get(['id', 'name', 'status', 'subscription_ends_on', 'subscription_exempt']) : collect();
     // v13: qo'shimcha filialli operator uchun ham filial tanlagich (faqat o'ziga ruxsat etilgan filiallar)
     $multiBranch = ! $me->isGlobal() && $me->role === \App\Enums\Role::Operator && \App\Support\BranchContext::extraBranchIds($me) !== [];
     if ($multiBranch) {
@@ -102,7 +102,7 @@
 
     <main class="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
         <x-alert />
-        @include('partials.subscription-banner')
+        @include('partials.subscription-banner', ['layoutBranches' => $branches])
         @yield('content')
         @include('partials.legal-links', ['class' => 'mt-10 border-t border-ink-100 pt-4 dark:border-ink-800'])
     </main>

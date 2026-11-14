@@ -3,12 +3,12 @@
     $__banner = null;
     if ($__u && ! $__u->isStudent()) {
         if ($__u->isSuperAdmin()) {
-            $__n = \App\Models\SubscriptionRequest::where('status', 'pending')->count();
+            $__n = \App\Models\SubscriptionRequest::pendingCount();
             if ($__n > 0) {
                 $__banner = ['tone' => 'amber', 'text' => "Tekshiruvni kutayotgan obuna cheklari: {$__n} ta.", 'href' => route('subscriptions.index'), 'cta' => "Ko'rish"];
             }
         } else {
-            $__cands = $__u->isGlobal() ? \App\Models\Branch::query()->active()->get() : \App\Models\Branch::withoutGlobalScopes()->whereKey($__u->branch_id)->get();
+            $__cands = $__u->isGlobal() ? $layoutBranches->filter(fn ($b) => $b->isActive()) : collect([$__u->branch])->filter();
             $__cur = \App\Support\BranchContext::id();
             if ($__cur) { $__cands = $__cands->where('id', $__cur); }
             $__exp = $__cands->filter(fn ($b) => $b->subscriptionExpired());

@@ -232,28 +232,35 @@ class V7MoneyFlowTest extends TestCase
         $this->assertSame(10000, $s->fresh()->balance);
     }
 
-    public function test_early_discount_is_not_given_when_total_debt_exceeds_group_price(): void
+    /**
+     * Joriy (ishlab turgan) qoida: chegirma "balans + kutayotgan guruhlar narxi" yetarli bo'lganda beriladi,
+     * guruhlar boshlanish sanasi bo'yicha tartiblanib, talab (narx − chegirma) yig'ilib boriladi. Eski v7 izohidagi
+     * "umumiy qarz guruh narxidan oshmasligi" sharti bu modelga almashtirilgan (EarlyDiscountService izohiga qarang).
+     */
+    public function test_early_discount_requirement_accumulates_across_groups(): void
     {
-        // DIQQAT: CHANGELOG v7 "umumiy qarz guruh narxidan oshmasligi sharti"ni yozadi, lekin hozirgi
-        // EarlyDiscountService "balans + kutayotgan guruhlar narxi" (yig'iladigan talab) modeliga o'tgan va
-        // bu shartni tekshirmaydi. Qaysi qoida to'g'riligini egasi hal qilguncha test o'tkazib yuboriladi.
-        $this->markTestSkipped("Chegirma qoidasi (umumiy qarz sharti) bo'yicha biznes qarori kutilmoqda.");
-
         $this->actingAs($this->admin);
         $g1 = app(GroupService::class)->create($this->groupPayload($this->cat, ['name' => 'A1']), $this->admin);
         $g2 = app(GroupService::class)->create($this->groupPayload($this->cat, ['name' => 'A2', 'schedule' => 'even', 'starts_on' => '2026-09-22']), $this->admin);
         $s = $this->student($this->branch);
         $enroll = app(EnrollmentService::class);
         $enroll->enroll($g1, $s, null, $this->admin);
-        $enroll->enroll($g2, $s, null, $this->admin, true);                                    // umumiy qarz 1 000 000 > guruh narxi 500 000
+        $enroll->enroll($g2, $s, null, $this->admin, true);
 
-        // 450 000 to'lasa ham: birinchi guruh uchun talab bajarildi, lekin umumiy qarz (550 000) guruh narxidan (500 000) katta
-        app(PaymentService::class)->receive($s, ['cash' => 450000], null, null, $this->admin);
-        $this->assertSame(0, Payment::where('type', Payment::DISCOUNT)->count());
+        $discounted = fn () => Payment::where('type', Payment::DISCOUNT)->orderBy('id')->pluck('group_id')->all();
+        $pay = fn (int $amount) => app(PaymentService::class)->receive($s, ['cash' => $amount], null, null, $this->admin);
 
-        // Yana 100 000: qarz 450 000 <= 500 000 -> birinchi guruh chegirma oladi (ikkinchisi uchun talab yig'ilgan: 900 000)
-        app(PaymentService::class)->receive($s, ['cash' => 100000], null, null, $this->admin);
-        $this->assertSame([$g1->id], Payment::where('type', Payment::DISCOUNT)->pluck('group_id')->all());
+        // Birinchi guruh talabi (narx − chegirma) bajarildi -> faqat birinchi guruh chegirma oladi
+        $pay(450000);
+        $this->assertSame([$g1->id], $discounted());
+
+        // Ikkinchi guruh uchun talab hali bajarilmadi (yig'ilgan summa yetmaydi)
+        $pay(100000);
+        $this->assertSame([$g1->id], $discounted());
+
+        // Qolgan summa to'langach ikkinchi guruh ham chegirma oladi; birinchisi ikkinchi marta olmaydi
+        $pay(350000);
+        $this->assertSame([$g1->id, $g2->id], $discounted());
     }
 
     public function test_one_payment_is_not_counted_for_two_groups(): void

@@ -94,22 +94,63 @@ class SubscriptionService
 
     public function submit(Branch $branch, User $user, string $plan, UploadedFile $receipt, ?string $note): SubscriptionRequest
     {
-        $path = $receipt->store('subscription-receipts', 'local');
+        $path = $this->storeReceipt($receipt);
 
-        $req = SubscriptionRequest::create([
-            'branch_id' => $branch->id,
-            'user_id' => $user->id,
-            'plan' => $plan,
-            'amount' => self::price($plan),
-            'receipt_path' => $path,
-            'status' => SubscriptionRequest::PENDING,
-            'note' => $note,
-        ]);
+        try {
+            $req = SubscriptionRequest::create([
+                'branch_id' => $branch->id,
+                'user_id' => $user->id,
+                'plan' => $plan,
+                'amount' => self::price($plan),
+                'receipt_path' => $path,
+                'status' => SubscriptionRequest::PENDING,
+                'note' => $note,
+            ]);
+        } catch (\Illuminate\Database\UniqueConstraintViolationException) {
+            // Poyga holati: shu filial uchun chek allaqachon yuborilgan (baza kafolati)
+            Storage::disk('local')->delete($path);
+
+            throw new \RuntimeException('Bu filial uchun chek allaqachon tekshiruvda. Natijani kuting.');
+        }
 
         AuditLog::record('subscription.requested', $branch, "{$branch->name}: {$req->planLabel()} obuna uchun chek yuborildi — ".Format::money($req->amount), [], [], $branch->id);
         $this->notifyAdmins($req, $branch, $user);
 
         return $req;
+    }
+
+    /**
+     * Chek rasmini kichraytirib (eng uzun tomoni 1600 px) JPEG qilib saqlaydi: hajmi ~200–400 KB bo'ladi (zaxiraga
+     * sig'adi) va rasm faylining "yashirin" tarkibi (metadata) olib tashlanadi. GD bo'lmasa asl fayl saqlanadi.
+     */
+    private function storeReceipt(UploadedFile $file): string
+    {
+        $dir = 'subscription-receipts';
+
+        if (function_exists('imagecreatefromstring') && ($img = @imagecreatefromstring((string) file_get_contents($file->getRealPath())))) {
+            $w = imagesx($img);
+            $h = imagesy($img);
+            $scale = min(1.0, 1600 / max($w, $h));
+            if ($scale < 1.0) {
+                $img = imagescale($img, max(1, (int) round($w * $scale)), max(1, (int) round($h * $scale))) ?: $img;
+            }
+            // shaffof PNG ni oq fonga qo'yamiz
+            $canvas = imagecreatetruecolor(imagesx($img), imagesy($img));
+            imagefill($canvas, 0, 0, imagecolorallocate($canvas, 255, 255, 255));
+            imagecopy($canvas, $img, 0, 0, 0, 0, imagesx($img), imagesy($img));
+            ob_start();
+            imagejpeg($canvas, null, 82);
+            $bytes = (string) ob_get_clean();
+
+            if ($bytes !== '') {
+                $path = $dir.'/'.\Illuminate\Support\Str::uuid().'.jpg';
+                Storage::disk('local')->put($path, $bytes);
+
+                return $path;
+            }
+        }
+
+        return $file->store($dir, 'local');
     }
 
     /** Tasdiqlash: faol obunani tugash kunidan uzaytiradi, tugagan bo'lsa bugundan boshlaydi. Ikki marta tasdiqlanmaydi. */
@@ -137,9 +178,9 @@ class SubscriptionService
                 'note' => "Obuna ({$req->planLabel()}) — {$newEnd->format('d.m.Y')} gacha", 'created_by' => $by->id, 'created_at' => now(),
             ]);
 
-            AuditLog::record('subscription.approved', $branch, "{$branch->name}: obuna tasdiqlandi — {$newEnd->format('d.m.Y')} gacha", [], [], $branch->id);
+            AuditLog::record('subscription.approved', $branch, "{$branch->name}: obuna tasdiqlandi — {$newEnd->copy()->subDay()->format('d.m.Y')} kunigacha", [], [], $branch->id);
 
-            $this->tellDirectors($branch, "✅ «{$branch->name}» filiali obunasi tasdiqlandi. Yangi muddat: {$newEnd->format('d.m.Y')}.");
+            $this->tellDirectors($branch, "✅ «{$branch->name}» filiali obunasi tasdiqlandi. Yangi muddat: {$newEnd->copy()->subDay()->format('d.m.Y')} kunigacha.");
 
             return $req;
         });
@@ -159,9 +200,12 @@ class SubscriptionService
         return $req;
     }
 
-    public function deleteReceipt(SubscriptionRequest $req): void
+    /** Filial o'chirilganda uning chek rasmlarini ham diskdan o'chiradi. */
+    public static function deleteReceiptsOf(array $paths): void
     {
-        Storage::disk('local')->delete($req->receipt_path);
+        foreach (array_filter($paths) as $p) {
+            Storage::disk('local')->delete($p);
+        }
     }
 
     // ---- Telegram -------------------------------------------------------------------------------------------
@@ -173,9 +217,15 @@ class SubscriptionService
             if (! $tg->configured()) {
                 return;
             }
-            $text = "💳 Yangi obuna cheki\nFilial: {$branch->name}\nTarif: {$req->planLabel()}\nSumma: ".Format::money($req->amount)."\nYuborgan: {$user->name}\nSahifa: ".route('subscriptions.index');
+            $caption = "💳 Yangi obuna cheki\nFilial: {$branch->name}\nTarif: {$req->planLabel()}\nSumma: ".Format::money($req->amount)."\nYuborgan: {$user->name}\nTekshirish: ".route('subscriptions.index');
+            $file = Storage::disk('local')->path($req->receipt_path);
+
             foreach ($tg->adminIds() as $id) {
-                $tg->sendMessage($id, $text);
+                // chek rasmi bilan birga (sAdmin Telegramdan ham ko'ra oladi); rasm yuborilmasa oddiy xabar
+                $sent = is_file($file) ? $tg->sendDocument($id, $file, $caption, 'chek.jpg') : ['ok' => false];
+                if (! ($sent['ok'] ?? false)) {
+                    $tg->sendMessage($id, e($caption));
+                }
             }
         } catch (\Throwable $e) {
             report($e);
@@ -193,7 +243,7 @@ class SubscriptionService
                 return 0;
             }
             foreach ($this->directorsOf($branch) as $d) {
-                if ($tg->sendMessage($d->telegram_chat_id, $text)) {
+                if ($tg->sendMessage($d->telegram_chat_id, e($text))) {
                     $sent++;
                 }
             }
@@ -229,7 +279,7 @@ class SubscriptionService
             }
             $text = $left === 0
                 ? "⛔ «{$b->name}» filiali obunasi bugun tugadi. Filial faqat ko'rish rejimida. Davom etish uchun obunani uzaytiring: ".route('subscriptions.index')
-                : "⏰ «{$b->name}» filiali obunasi {$left} kundan keyin ({$b->subscription_ends_on->format('d.m.Y')}) tugaydi. Uzaytirish: ".route('subscriptions.index');
+                : "⏰ «{$b->name}» filiali obunasi {$left} kundan keyin (oxirgi kun: {$b->subscriptionLastDay()->format('d.m.Y')}) tugaydi. Uzaytirish: ".route('subscriptions.index');
             $this->tellDirectors($b, $text);
             \Illuminate\Support\Facades\Cache::put($key, 1, now()->addDays(10));
             $count++;

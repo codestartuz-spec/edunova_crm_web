@@ -9,7 +9,7 @@
     @if (! $configured)
         <div class="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">Obuna narxi va karta raqami hali belgilanmagan. Administrator bilan bog'laning.</div>
     @elseif ($hasPending)
-        <div class="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">Bu filial uchun chek allaqachon tekshiruvda. Natija chiqquncha kuting.</div>
+        <div class="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">Bu filial uchun chek allaqachon yuborilgan. Administrator uni {{ \App\Models\SubscriptionRequest::REVIEW_TIME }} ichida ko'rib chiqadi, natija shu sahifada va «Obuna» bo'limida ko'rinadi.</div>
     @else
     <div class="grid gap-6 lg:grid-cols-3">
         <div class="space-y-6 lg:col-span-2">
@@ -35,6 +35,7 @@
                             <div class="font-semibold text-ink-900 dark:text-white">Yillik</div>
                             <div class="text-sm text-ink-500">12 oy</div>
                             <div class="mt-1 text-lg font-bold">{{ \App\Support\Format::money($yearly) }}</div>
+                            @if ($monthly * 12 > $yearly)<div class="mt-1 text-xs font-medium text-emerald-600">{{ \App\Support\Format::money($monthly * 12 - $yearly) }} tejaysiz (−{{ (int) round(($monthly * 12 - $yearly) / ($monthly * 12) * 100) }}%)</div>@endif
                         </label>
                     </div>
                     @error('plan')<p class="error-text">{{ $message }}</p>@enderror
@@ -50,6 +51,7 @@
                     <label class="label" for="note">Izoh (ixtiyoriy)</label>
                     <input id="note" name="note" maxlength="500" value="{{ old('note') }}" class="input">
                 </div>
+                <div class="rounded-xl border border-ink-200 bg-ink-50 p-3 text-xs text-ink-600 dark:border-ink-700 dark:bg-ink-800/60 dark:text-ink-300">Chek yuborilgach administrator uni <b>{{ \App\Models\SubscriptionRequest::REVIEW_TIME }}</b> ichida ko'rib chiqadi. Tasdiqlangach obuna avtomatik faollashadi.</div>
                 <div><button class="btn-primary">Chekni yuborish</button></div>
             </form>
         </div>
@@ -63,8 +65,10 @@
                 </div>
                 <p class="text-xs text-ink-500">Tanlangan tarif summasini aynan shu kartaga o'tkazing, so'ng chekni yuklang.</p>
                 @unless ($branch->subscription_exempt)
-                    <p class="text-xs text-ink-500">Hozirgi muddat: <b>{{ $branch->subscription_ends_on?->format('d.m.Y') }}</b>
-                        {{ $branch->subscriptionExpired() ? '— yangi muddat bugundan boshlanadi.' : '— yangi muddat shu sanadan boshlab hisoblanadi.' }}</p>
+                    <p class="text-xs text-ink-500">
+                        @if ($branch->subscriptionExpired())Obuna <b>{{ $branch->subscriptionLastDay()?->format('d.m.Y') }}</b> kuni tugagan. Yangi muddat to'lov tasdiqlangan kundan boshlanadi.
+                        @else Hozirgi obuna <b>{{ $branch->subscriptionLastDay()?->format('d.m.Y') }}</b> kunigacha amal qiladi. Yangi muddat shundan keyin boshlanadi (qolgan kunlar yo'qolmaydi).
+                        @endif</p>
                 @endunless
             </div>
         </div>

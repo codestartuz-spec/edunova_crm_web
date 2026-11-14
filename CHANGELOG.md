@@ -5,7 +5,18 @@
 - **Obuna sozlamalari** (sAdmin): oylik/yillik narx (hamma filial uchun bir xil), karta raqami va egasi, shartlar matni, yangi filial uchun bepul sinov (standart 30 kun). Filialni «Obunasiz (doim faol)» qilish yoki sanani qo'lda belgilash mumkin.
 - Mavjud filiallarga migratsiya vaqtidan boshlab 30 kun bepul beriladi. Yangi filial sinov muddati bilan ochiladi.
 - Eslatmalar: panel banneri (7 kun qolganda / tugaganda; sAdmin uchun kutayotgan cheklar) va Telegram (`subscriptions:notify`, har kuni 09:30 Toshkent: 7/3/1 kun oldin va tugagan kuni); yangi chek kelganda sAdmin Telegramiga xabar.
-- Testlar: `V22SubscriptionTest` (12 ta); jami 594 ta test, hammasi o'tadi.
+- Faqat-ko'rish rejimi o'quvchi/xodim qo'shish, tahrirlash va o'chirishni ham qamraydi (sAdmin va o'z profili bundan mustasno). Filiallar sahifasida har filial kartochkasida obuna holati ko'rinadi.
+- Sana aniqligi: ekranda "oxirgi faol kun" (`… kunigacha`) ko'rsatiladi; filial keyingi kundan bloklanadi.
+- Tugagan filialda avtomatik SMS (qarz, tug'ilgan kun) to'xtaydi; obuna tiklanganda o'zi qayta boshlanadi.
+- Bir filial uchun bitta kutayotgan chek endi bazaning o'zida kafolatlanadi (`pending_branch_id` unikal).
+- Chek rasmi kichraytirib saqlanadi, zaxira ZIP ichiga kiradi, filial o'chirilganda rasmlar ham o'chadi.
+- Direktor chek yuborganda "4–12 soat ichida ko'rib chiqiladi" xabari; sAdmin Telegramiga chek rasmi bilan xabar boradi. Telegram matnlari HTML-xavfsiz (nomdagi `<` `&` belgilari xato bermaydi).
+- Obuna sozlamalarida yillik narx oylikdan qimmat, lekin 12 oylikdan oshmasligi tekshiriladi; sotib olish sahifasida tejamkorlik ko'rsatiladi.
+- Xavfsizlik: ba'zi filiallarga cheklangan direktor endi bildirishnomani «Barcha filiallar»ga yubora olmaydi.
+- Tezlik: banner uchun qo'shimcha so'rovlar olib tashlandi; sAdmin uchun kutayotgan cheklar soni 60 soniyaga keshlanadi.
+- Chegirma qoidasi aniqlandi: amaldagi model (balans + kutayotgan guruhlar narxi, yig'iladigan talab) saqlandi, eski "umumiy qarz" testi shu modelga moslab qayta yozildi.
+- Yangi: `.github/workflows/tests.yml` (har push'da avtomatik testlar), `deploy.sh` (serverda xavfsiz yangilash va xato bo'lsa orqaga qaytish), `SmokeRoutesTest` (barcha sahifalar ochilishini tekshiradi), `V22IsolationTest`.
+- Testlar: jami 605 ta, hammasi o'tadi.
 
 ## v21 (2026-11) - xavfsizlik va sifat
 - Git: zaxira nusxalar, eski baza dumplari va yuklangan fayllar (`storage/app/*`) endi kuzatilmaydi (`.gitignore`); ular repodan olib tashlandi.

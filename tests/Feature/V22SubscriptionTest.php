@@ -240,8 +240,83 @@ class V22SubscriptionTest extends TestCase
         $ok = $this->branch('Faol filial');
         $sadmin = $this->user(Role::SAdmin);
 
-        $this->actingAs($sadmin)->get(route('branches.index'))->assertOk()->assertSee('Obuna tugagan')->assertSee('gacha');
+        $this->actingAs($sadmin)->get(route('branches.index'))->assertOk()->assertSee('Obuna tugagan')->assertSee('kunigacha');
         $this->actingAs($sadmin)->get(route('branches.show', $expired))->assertOk()->assertSee('Obuna tugagan');
         $this->actingAs($sadmin)->get(route('branches.show', $ok))->assertOk()->assertSee('kun qoldi');
+    }
+
+    public function test_second_pending_receipt_is_blocked_by_database_even_if_code_check_is_bypassed(): void
+    {
+        $b = $this->branch();
+        $row = ['branch_id' => $b->id, 'plan' => 'monthly', 'amount' => 1, 'receipt_path' => 'x.jpg', 'status' => 'pending'];
+        SubscriptionRequest::create($row);
+
+        $this->expectException(\Illuminate\Database\UniqueConstraintViolationException::class);
+        SubscriptionRequest::create($row);
+    }
+
+    public function test_after_review_a_new_receipt_can_be_sent_and_review_time_is_shown(): void
+    {
+        Storage::fake('local');
+        $this->configure();
+        $b = $this->expire($this->branch());
+        $director = $this->user(Role::Director);
+
+        $this->actingAs($director)->post(route('subscriptions.store', $b), ['plan' => 'monthly', 'receipt' => UploadedFile::fake()->image('c.jpg', 2400, 1800)])
+            ->assertSessionHas('success', fn ($m) => str_contains($m, '4–12 soat'));
+        $this->actingAs($director)->get(route('subscriptions.index'))->assertSee('4–12 soat');
+
+        // rasm kichraytirilib saqlangan (eng uzun tomon 1600 px)
+        $req = SubscriptionRequest::firstOrFail();
+        [$w, $h] = getimagesizefromstring(Storage::disk('local')->get($req->receipt_path));
+        $this->assertLessThanOrEqual(1600, max($w, $h));
+    }
+
+    public function test_yearly_price_must_be_between_monthly_and_twelve_months(): void
+    {
+        $sadmin = $this->user(Role::SAdmin);
+        $base = ['card_number' => '8600 1111 2222 3333', 'trial_days' => 30];
+
+        $this->actingAs($sadmin)->post(route('subscriptions.settings.save'), $base + ['price_monthly' => 100000, 'price_yearly' => 100000])->assertSessionHasErrors('price_yearly');
+        $this->actingAs($sadmin)->post(route('subscriptions.settings.save'), $base + ['price_monthly' => 100000, 'price_yearly' => 1300000])->assertSessionHasErrors('price_yearly');
+        $this->actingAs($sadmin)->post(route('subscriptions.settings.save'), $base + ['price_monthly' => 100000, 'price_yearly' => 1000000])->assertSessionHas('success');
+    }
+
+    public function test_auto_sms_commands_skip_expired_branches_and_resume_after_renewal(): void
+    {
+        $expired = $this->expire($this->branch('Tugagan'));
+        $ok = $this->branch('Faol');
+
+        $ids = fn () => Branch::active()->subscribed()->pluck('id')->all();
+        $this->assertContains($ok->id, $ids());
+        $this->assertNotContains($expired->id, $ids());
+
+        // qayta faollashtirilgach avtomatik yana ro'yxatga qaytadi
+        $expired->update(['subscription_ends_on' => today()->addMonth()->toDateString()]);
+        $this->assertContains($expired->id, $ids());
+        $expired->update(['subscription_ends_on' => today()->subDay()->toDateString(), 'subscription_exempt' => true]);
+        $this->assertContains($expired->id, $ids());
+    }
+
+    public function test_last_active_day_is_one_day_before_end_date(): void
+    {
+        $b = $this->branch();
+        $b->update(['subscription_ends_on' => today()->addDays(5)->toDateString()]);
+
+        $this->assertSame(today()->addDays(4)->toDateString(), $b->fresh()->subscriptionLastDay()->toDateString());
+        $this->assertSame(5, $b->fresh()->subscriptionDaysLeft());
+    }
+
+    public function test_receipts_are_removed_with_branch_and_included_in_backup(): void
+    {
+        Storage::fake('local');
+        $b = $this->branch('Oʻchadigan');
+        $path = 'subscription-receipts/a.jpg';
+        Storage::disk('local')->put($path, 'x');
+        SubscriptionRequest::create(['branch_id' => $b->id, 'plan' => 'monthly', 'amount' => 1, 'receipt_path' => $path, 'status' => 'rejected']);
+
+        app(\App\Services\BranchDeletionService::class)->delete($b);
+
+        Storage::disk('local')->assertMissing($path);
     }
 }

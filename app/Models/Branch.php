@@ -91,6 +91,18 @@ class Branch extends Model
         return (int) today()->diffInDays($this->subscription_ends_on->startOfDay(), false);
     }
 
+    /** v22: obunasi tugamagan (yoki obunasiz) filiallar — avtomatik SMS va boshqa avtomatik ishlar faqat shularga. */
+    public function scopeSubscribed(Builder $query): Builder
+    {
+        return $query->where(fn ($q) => $q->where('subscription_exempt', true)->orWhereNull('subscription_ends_on')->orWhere('subscription_ends_on', '>', today()->toDateString()));
+    }
+
+    /** v22: obunaning OXIRGI faol kuni (tugash sanasidan bir kun oldin): ekranda "shu kunigacha" deb ko'rsatiladi. */
+    public function subscriptionLastDay(): ?\Illuminate\Support\Carbon
+    {
+        return $this->subscription_ends_on?->copy()->subDay();
+    }
+
     public function subscriptionRequests(): HasMany
     {
         return $this->hasMany(SubscriptionRequest::class);

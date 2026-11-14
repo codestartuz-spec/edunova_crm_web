@@ -93,8 +93,8 @@
                         <span class="inline-flex items-center gap-1.5">{!! $svg($ic['wallet'], 'h-3.5 w-3.5') !!} Obuna</span>
                         <span class="font-medium {{ $branch->subscriptionExpired() ? 'text-brand-600' : 'text-ink-700 dark:text-ink-200' }}">
                             @if ($branch->subscription_exempt) Obunasiz (doim faol)
-                            @elseif ($branch->subscriptionExpired()) Tugagan · faqat ko'rish ({{ $branch->subscription_ends_on?->format('d.m.Y') }})
-                            @elseif ($subLeft !== null) {{ $branch->subscription_ends_on?->format('d.m.Y') }} gacha · {{ $subLeft }} kun
+                            @elseif ($branch->subscriptionExpired()) Tugagan · faqat ko'rish ({{ $branch->subscriptionLastDay()?->format('d.m.Y') }} dan keyin)
+                            @elseif ($subLeft !== null) {{ $branch->subscriptionLastDay()?->format('d.m.Y') }} kunigacha · {{ $subLeft }} kun
                             @else — @endif
                         </span>
                     </div>

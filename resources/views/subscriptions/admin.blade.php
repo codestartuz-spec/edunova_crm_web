@@ -29,7 +29,7 @@
                                     </form>
                                 </div>
                             @elseif ($r->status === 'approved')
-                                <span class="badge-green">Tasdiqlangan</span> <span class="text-xs text-ink-500">{{ $r->new_ends_on?->format('d.m.Y') }} gacha</span>
+                                <span class="badge-green">Tasdiqlangan</span> <span class="text-xs text-ink-500">{{ $r->new_ends_on?->copy()->subDay()->format('d.m.Y') }} kunigacha</span>
                             @else
                                 <span class="badge-red">Rad etilgan</span> <span class="text-xs text-ink-500">{{ $r->reject_reason }}</span>
                             @endif
@@ -48,7 +48,7 @@
         <div class="border-b border-ink-100 px-5 py-3 font-semibold dark:border-ink-800">Filiallar obunasi</div>
         <div class="table-wrap">
             <table class="table">
-                <thead><tr><th>Filial</th><th>Holati</th><th>Qolgan</th><th>Qo'lda boshqarish</th></tr></thead>
+                <thead><tr><th>Filial</th><th>Holati</th><th>Qolgan</th><th>Qo'lda boshqarish <span class="font-normal text-ink-400">(sana — filial shu kundan bloklanadi)</span></th></tr></thead>
                 <tbody>
                 @foreach ($branches as $branch)
                     @php $left = $branch->subscriptionDaysLeft(); @endphp

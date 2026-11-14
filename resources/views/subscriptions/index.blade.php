@@ -11,14 +11,14 @@
     <div class="card overflow-hidden">
         <div class="table-wrap">
             <table class="table">
-                <thead><tr><th>Filial</th><th>Holati</th><th>Tugash sanasi</th><th>Qolgan muddat</th><th class="text-right">Amal</th></tr></thead>
+                <thead><tr><th>Filial</th><th>Holati</th><th>Oxirgi faol kun</th><th>Qolgan muddat</th><th class="text-right">Amal</th></tr></thead>
                 <tbody>
                 @forelse ($branches as $branch)
                     @php $left = $branch->subscriptionDaysLeft(); @endphp
                     <tr>
                         <td class="font-medium text-ink-900 dark:text-white">{{ $branch->name }}</td>
                         <td>@include('subscriptions._status', ['branch' => $branch])</td>
-                        <td>{{ $branch->subscription_exempt ? '—' : $branch->subscription_ends_on?->format('d.m.Y') }}</td>
+                        <td>{{ $branch->subscription_exempt ? '—' : $branch->subscriptionLastDay()?->format('d.m.Y') }}</td>
                         <td>
                             @if ($branch->subscription_exempt) Cheksiz
                             @elseif ($left === null) —
@@ -30,7 +30,7 @@
                             @if ($branch->subscription_exempt)
                                 <span class="text-xs text-ink-400">Kerak emas</span>
                             @elseif ($pending->has($branch->id))
-                                <span class="badge-amber">Chek tekshiruvda</span>
+                                <span class="badge-amber" title="Administrator {{ \App\Models\SubscriptionRequest::REVIEW_TIME }} ichida ko'rib chiqadi">Tekshiruvda · {{ \App\Models\SubscriptionRequest::REVIEW_TIME }}</span>
                             @elseif ($branch->subscriptionExpired())
                                 <a href="{{ route('subscriptions.buy', $branch) }}" class="btn-primary btn-sm">Obuna sotib olish</a>
                             @else
@@ -59,9 +59,9 @@
                         <td>{{ $r->planLabel() }}</td>
                         <td>{{ \App\Support\Format::money($r->amount) }}</td>
                         <td>
-                            @if ($r->status === 'approved')<span class="badge-green">Tasdiqlangan</span> <span class="text-xs text-ink-500">{{ $r->new_ends_on?->format('d.m.Y') }} gacha</span>
+                            @if ($r->status === 'approved')<span class="badge-green">Tasdiqlangan</span> <span class="text-xs text-ink-500">{{ $r->new_ends_on?->copy()->subDay()->format('d.m.Y') }} kunigacha</span>
                             @elseif ($r->status === 'rejected')<span class="badge-red">Rad etilgan</span> <span class="text-xs text-ink-500">{{ $r->reject_reason }}</span>
-                            @else<span class="badge-amber">Tekshiruvda</span>@endif
+                            @else<span class="badge-amber">Tekshiruvda · {{ \App\Models\SubscriptionRequest::REVIEW_TIME }} ichida</span>@endif
                         </td>
                     </tr>
                 @empty

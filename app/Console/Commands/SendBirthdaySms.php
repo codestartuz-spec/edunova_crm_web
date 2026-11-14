@@ -19,7 +19,7 @@ class SendBirthdaySms extends Command
     {
         $count = 0;
 
-        foreach (Branch::active()->where('sms_enabled', true)->get() as $branch) {
+        foreach (Branch::active()->subscribed()->where('sms_enabled', true)->get() as $branch) {
             $students = User::where('branch_id', $branch->id)->where('role', Role::Student)->whereNull('archived_at')
                 ->whereMonth('birthday', today()->month)->whereDay('birthday', today()->day)->get();
 

@@ -80,8 +80,17 @@ class BackupService
             }
             $zip->addFile($gzPath, basename($gzPath));
             $zip->addFromString('SHA256.txt', "{$sha}  ".basename($gzPath)."\n");
+            // v22: obuna chek rasmlari ham zaxiraga kiradi (kichraytirilgan, ~200–400 KB dan)
+            $names = [basename($gzPath), 'SHA256.txt'];
+            $receiptsDir = \Illuminate\Support\Facades\Storage::disk('local')->path('subscription-receipts');
+            if (is_dir($receiptsDir)) {
+                foreach (File::files($receiptsDir) as $file) {
+                    $zip->addFile($file->getRealPath(), 'receipts/'.$file->getFilename());
+                    $names[] = 'receipts/'.$file->getFilename();
+                }
+            }
             $password = $this->zipPassword();
-            foreach ([basename($gzPath), 'SHA256.txt'] as $name) {
+            foreach ($names as $name) {
                 $zip->setEncryptionName($name, ZipArchive::EM_AES_256, $password);
             }
             if (! $zip->close()) {

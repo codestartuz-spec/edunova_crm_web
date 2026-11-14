@@ -28,6 +28,7 @@ class BranchDeletionService
     {
         $id = $branch->id;
         $name = $branch->name;
+        $receipts = DB::table('subscription_requests')->where('branch_id', $id)->pluck('receipt_path')->all();
 
         DB::transaction(function () use ($id, $name, $branch) {
             $leadIds = DB::table('leads')->where('branch_id', $id)->pluck('id');
@@ -104,6 +105,8 @@ class BranchDeletionService
             // 10) Filialning o'zi
             DB::table('branches')->where('id', $id)->delete();
         });
+
+        \App\Services\SubscriptionService::deleteReceiptsOf($receipts);
 
         if (BranchContext::id() === $id) {
             BranchContext::select(null);

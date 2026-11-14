@@ -25,7 +25,7 @@ class SubscriptionController extends Controller
             return view('subscriptions.admin', [
                 'branches' => $branches,
                 'requests' => SubscriptionRequest::with(['branch', 'user', 'reviewer'])->orderByRaw("status = 'pending' desc")->orderByDesc('id')->paginate(20),
-                'pendingCount' => SubscriptionRequest::where('status', SubscriptionRequest::PENDING)->count(),
+                'pendingCount' => SubscriptionRequest::pendingCount(),
             ]);
         }
 
@@ -73,9 +73,13 @@ class SubscriptionController extends Controller
             'note' => ['nullable', 'string', 'max:500'],
         ], [], ['plan' => 'Tarif', 'receipt' => 'Chek rasmi', 'note' => 'Izoh']);
 
-        $service->submit($branch, $request->user(), $data['plan'], $request->file('receipt'), $data['note'] ?? null);
+        try {
+            $service->submit($branch, $request->user(), $data['plan'], $request->file('receipt'), $data['note'] ?? null);
+        } catch (\RuntimeException $e) {
+            return back()->with('error', $e->getMessage());
+        }
 
-        return redirect()->route('subscriptions.index')->with('success', "Chek yuborildi. Administrator tekshirib tasdiqlagach obuna avtomatik faollashadi.");
+        return redirect()->route('subscriptions.index')->with('success', "Chek yuborildi. Administrator uni ".SubscriptionRequest::REVIEW_TIME." ichida ko'rib chiqadi; tasdiqlangach obuna avtomatik faollashadi.");
     }
 
     /** Chek rasmini faqat sAdmin va shu filialni ko'ra oladigan direktor ko'radi (private disk). */
@@ -93,7 +97,7 @@ class SubscriptionController extends Controller
         $req = $service->approve($subscriptionRequest, $request->user());
 
         return back()->with('success', $req->status === SubscriptionRequest::APPROVED
-            ? "Tasdiqlandi. «{$req->branch->name}» obunasi {$req->new_ends_on->format('d.m.Y')} gacha."
+            ? "Tasdiqlandi. «{$req->branch->name}» obunasi {$req->new_ends_on->copy()->subDay()->format('d.m.Y')} kunigacha."
             : "Bu so'rov allaqachon ko'rib chiqilgan.");
     }
 
@@ -127,6 +131,10 @@ class SubscriptionController extends Controller
         ], ['card_number.regex' => "Karta raqami faqat raqamlardan iborat bo'lishi kerak (12–19 raqam)."],
             ['price_monthly' => 'Oylik narx', 'price_yearly' => 'Yillik narx', 'card_number' => 'Karta raqami', 'card_holder' => 'Karta egasi', 'terms' => 'Shartlar', 'trial_days' => 'Sinov muddati']);
 
+        if ($data['price_yearly'] <= $data['price_monthly'] || $data['price_yearly'] > 12 * $data['price_monthly']) {
+            return back()->withInput()->withErrors(['price_yearly' => "Yillik narx oylikdan qimmat, lekin 12 oylik narxdan oshmasligi kerak (".Format::money(12 * $data['price_monthly'])." gacha)."]);
+        }
+
         foreach ($data as $k => $v) {
             AppSetting::put('subscription.'.$k, $k === 'card_number' ? trim(preg_replace('/\s+/', ' ', $v)) : $v);
         }
@@ -151,7 +159,7 @@ class SubscriptionController extends Controller
         }
         $branch->save();
 
-        AuditLog::record('subscription.manual', $branch, "{$branch->name}: obuna qo'lda o'zgartirildi — ".($exempt ? 'obunasiz (doim faol)' : 'tugash '.$branch->subscription_ends_on?->format('d.m.Y')), [], [], $branch->id);
+        AuditLog::record('subscription.manual', $branch, "{$branch->name}: obuna qo'lda o'zgartirildi — ".($exempt ? 'obunasiz (doim faol)' : 'oxirgi kun '.$branch->subscriptionLastDay()?->format('d.m.Y')), [], [], $branch->id);
 
         return back()->with('success', "«{$branch->name}» obunasi yangilandi.");
     }

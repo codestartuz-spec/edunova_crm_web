@@ -21,7 +21,7 @@ class SendDebtReminderSms extends Command
     {
         $count = 0;
 
-        foreach (Branch::active()->where('sms_enabled', true)->where('sms_auto_debt', true)->get() as $branch) {
+        foreach (Branch::active()->subscribed()->where('sms_enabled', true)->where('sms_auto_debt', true)->get() as $branch) {
             $debtors = User::where('branch_id', $branch->id)->where('role', Role::Student)->whereNull('archived_at')
                 ->where('balance', '<', 0)->get();
 

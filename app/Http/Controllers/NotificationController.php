@@ -43,7 +43,8 @@ class NotificationController extends Controller
             'is_important' => ['nullable', 'boolean'],
         ], [], ['title' => 'Sarlavha', 'body' => 'Matn', 'roles' => 'Rollar', 'branch_ids' => 'Filiallar', 'url' => 'Havola']);
 
-        $branchIds = $request->boolean('all_branches') ? null : ($data['branch_ids'] ?? []);
+        // Ba'zi filiallarga cheklangan direktor «Barcha filiallar»ga yubora olmaydi - faqat o'ziga ruxsat berilganlarga
+        $branchIds = ($request->boolean('all_branches') && \App\Support\BranchContext::restrictedIds() === null) ? null : ($data['branch_ids'] ?? []);
         if ($branchIds !== null && $branchIds === []) {
             return back()->withInput()->withErrors(['branch_ids' => 'Filial tanlang yoki «Barcha filiallar»ni belgilang.']);
         }
