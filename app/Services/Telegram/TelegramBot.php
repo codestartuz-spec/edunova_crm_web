@@ -30,6 +30,13 @@ class TelegramBot
 
         $cmd = strtolower(strtok($text, " @\n") ?: '');
 
+        // v26: direktor formasidagi bir martalik havola: t.me/bot?start=d...
+        if ($cmd === '/start' && preg_match('/^\/start(?:@\w+)?\s+(d[a-z0-9]{20,40})$/i', $text, $mm)) {
+            $this->linkDirector($chatId, strtolower($mm[1]), $m['from']['username'] ?? null);
+
+            return;
+        }
+
         match ($cmd) {
             '/start' => $this->start($chatId),
             '/status' => $this->adminOnly($fromId, $chatId, fn () => $this->status($chatId)),
@@ -45,6 +52,14 @@ class TelegramBot
         $this->tg->sendMessage($chatId, "Assalomu alaykum! ".\App\Support\Brand::name()." boti.\nParolni tiklash kodlarini olish uchun telefon raqamingizni bog'lang: pastdagi tugmani bosing.", [
             'reply_markup' => ['keyboard' => [[['text' => '📱 Telefon raqamini yuborish', 'request_contact' => true]]], 'resize_keyboard' => true, 'one_time_keyboard' => true],
         ]);
+    }
+
+    private function linkDirector(int $chatId, string $token, ?string $username): void
+    {
+        $d = app(DirectorTelegram::class)->consume($token, $chatId, $username);
+        $this->tg->sendMessage($chatId, $d
+            ? "✅ Ulandi: <b>".e($d->name)."</b>.\nKunlik hisobot har kuni soat <b>".e($d->report_time ?: '20:00')."</b> da shu yerga keladi."
+            : "Havola eskirgan yoki allaqachon ishlatilgan. Tizimda direktor formasidan yangi havola oling.");
     }
 
     private function linkContact(int $chatId, int $fromId, array $contact, ?string $username): void

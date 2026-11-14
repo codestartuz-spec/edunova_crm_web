@@ -37,7 +37,38 @@ class TelegramService
 
     public function sendMessage(int|string $chatId, string $text, array $extra = []): bool
     {
-        return (bool) ($this->call('sendMessage', ['chat_id' => $chatId, 'text' => $text, 'parse_mode' => 'HTML'] + $extra)['ok'] ?? false);
+        return $this->deliver($chatId, $text, $extra)['ok'];
+    }
+
+    /**
+     * Xabar yuboradi va sababini qaytaradi.
+     * `blocked` = foydalanuvchi botni bloklagan / chat yo'q (403, yoki 400 "chat not found") - bog'lanishni tozalash kerak.
+     *
+     * @return array{ok:bool,blocked:bool,error:?string}
+     */
+    public function deliver(int|string $chatId, string $text, array $extra = []): array
+    {
+        $r = $this->call('sendMessage', ['chat_id' => $chatId, 'text' => $text, 'parse_mode' => 'HTML'] + $extra);
+        if ($r['ok'] ?? false) {
+            return ['ok' => true, 'blocked' => false, 'error' => null];
+        }
+        $code = (int) ($r['error_code'] ?? 0);
+        $desc = (string) ($r['description'] ?? 'Noma\'lum xato');
+        $blocked = $code === 403 || ($code === 400 && stripos($desc, 'chat not found') !== false);
+
+        return ['ok' => false, 'blocked' => $blocked, 'error' => $desc];
+    }
+
+    /** Bot username (t.me havolasi uchun); 1 kun keshlanadi. */
+    public function botUsername(): ?string
+    {
+        if (! $this->configured()) {
+            return null;
+        }
+
+        return \Illuminate\Support\Facades\Cache::remember('telegram.bot_username', now()->addDay(), function () {
+            return $this->call('getMe')['result']['username'] ?? null;
+        }) ?: null;
     }
 
     /** @return array{ok:bool,error:?string} */

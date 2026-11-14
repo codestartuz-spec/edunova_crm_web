@@ -27,7 +27,8 @@ Schedule::job(new QueueHeartbeatJob())->everyFiveMinutes();
 Schedule::call(fn () => app(\App\Services\HealthService::class)->run())->everyFifteenMinutes()->name('health-check')->withoutOverlapping();
 
 // v15: kunlik hisobot (filiallar kesimida) - har kuni 20:00 Toshkent
-Schedule::command('report:daily')->dailyAt('20:00')->timezone('Asia/Tashkent')->withoutOverlapping();
+// v26: har bir direktor o'z vaqtida oladi - har 5 daqiqada vaqti kelganlarga yuboriladi
+Schedule::command('report:daily')->everyFiveMinutes()->withoutOverlapping();
 
 // v22: filial obunasi tugashi haqida eslatma (7/3/1 kun oldin va tugagan kuni) - Telegram orqali direktorga
 Schedule::command('subscriptions:notify')->dailyAt('09:30')->timezone('Asia/Tashkent')->withoutOverlapping();

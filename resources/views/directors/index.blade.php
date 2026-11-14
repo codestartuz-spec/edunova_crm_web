@@ -12,7 +12,7 @@
     <div class="card overflow-hidden">
         <div class="table-wrap">
             <table class="table">
-                <thead><tr><th>F.I.O</th><th>Login</th><th>Telefon</th><th>Ruxsatlar</th><th>Filiallar</th><th>Holat</th><th>Oxirgi kirish</th><th class="text-right">Amallar</th></tr></thead>
+                <thead><tr><th>F.I.O</th><th>Login</th><th>Telefon</th><th>Ruxsatlar</th><th>Filiallar</th><th>Telegram hisobot</th><th>Holat</th><th>Oxirgi kirish</th><th class="text-right">Amallar</th></tr></thead>
                 <tbody>
                 @forelse ($directors as $d)
                     <tr>
@@ -32,6 +32,15 @@
                                 </div>
                             @endif
                         </td>
+                        <td>
+                            @if (! $d->telegram_chat_id)
+                                <span class="badge-gray">Ulanmagan</span>
+                            @elseif ($d->report_enabled ?? true)
+                                <span class="badge-green">Soat {{ $d->report_time ?: '20:00' }}</span>
+                            @else
+                                <span class="badge-gray">Hisobot o'chiq</span>
+                            @endif
+                        </td>
                         <td><span class="{{ $d->isActive() ? 'badge-green' : 'badge-gray' }}">{{ $d->status->label() }}</span></td>
                         <td class="text-xs text-ink-500">{{ $d->last_login_at?->format('d.m.Y H:i') ?? '—' }}</td>
                         <td>
@@ -47,7 +56,7 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="8" class="py-10 text-center text-ink-500">Hali direktor qo'shilmagan.</td></tr>
+                    <tr><td colspan="9" class="py-10 text-center text-ink-500">Hali direktor qo'shilmagan.</td></tr>
                 @endforelse
                 </tbody>
             </table>

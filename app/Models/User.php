@@ -42,6 +42,8 @@ class User extends Authenticatable
             'hired_at' => 'date:Y-m-d',
             'last_login_at' => 'datetime',
             'telegram_linked_at' => 'datetime',
+            'report_enabled' => 'boolean',
+            'report_last_sent_on' => 'date',
             'archived_at' => 'datetime',
             'all_branches' => 'boolean',
             'password_changed_at' => 'datetime',
@@ -64,7 +66,7 @@ class User extends Authenticatable
             if (! $user->branch_id || (\Illuminate\Support\Facades\Auth::id() && \Illuminate\Support\Facades\Auth::id() === $user->id)) {
                 return;
             }
-            if ($checkDirty && array_diff(array_keys($user->getDirty()), ['last_login_at', 'remember_token', 'updated_at', 'telegram_chat_id', 'telegram_username', 'telegram_linked_at']) === []) {
+            if ($checkDirty && array_diff(array_keys($user->getDirty()), ['last_login_at', 'remember_token', 'updated_at', 'telegram_chat_id', 'telegram_username', 'telegram_linked_at', 'report_enabled', 'report_time', 'report_last_sent_on']) === []) {
                 return;
             }
             \App\Services\SubscriptionService::assertWritable((int) $user->branch_id);

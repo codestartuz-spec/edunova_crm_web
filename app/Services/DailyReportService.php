@@ -10,11 +10,15 @@ use App\Models\User;
 use App\Services\Telegram\TelegramService;
 use App\Support\Format;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 /** v15: har kuni kechqurun Telegram orqali filiallar kesimida kunlik hisobot. */
 class DailyReportService
 {
+    /** Admin ID lar va yangi direktorlar uchun standart yuborish vaqti. */
+    public const DEFAULT_TIME = '20:00';
+
     public function __construct(private TelegramService $telegram) {}
 
     /** @return array<string,int|float|null> bitta filial uchun ko'rsatkichlar */
@@ -61,6 +65,17 @@ class DailyReportService
     /** @param  array<int,string>  $branches id => nom */
     public function build(array $branches, CarbonImmutable $day): string
     {
+        return implode("\n\n", $this->parts($branches, $day));
+    }
+
+    /**
+     * Hisobot bloklari (sarlavha, har filial, JAMI). Telegram 4096 belgi chegarasi uchun `chunks()` bilan bo'laklanadi.
+     *
+     * @param  array<int,string>  $branches id => nom
+     * @return array<int,string>
+     */
+    public function parts(array $branches, CarbonImmutable $day): array
+    {
         $out = ['📊 <b>Kunlik hisobot — '.$day->format('d.m.Y').'</b>'];
         $tot = [];
         $money = fn ($v) => Format::money($v);
@@ -77,7 +92,31 @@ class DailyReportService
             $out[] = "━━━━━━━━━━\n".$this->block('🧮 <b>JAMI</b>', $tot + ['income_delta' => null, 'att_rate' => null], $money);
         }
 
-        return implode("\n\n", $out);
+        return $out;
+    }
+
+    /**
+     * Bloklarni ≤ $limit belgili xabarlarga joylaydi (blok o'rtasidan uzmaydi).
+     *
+     * @param  array<int,string>  $parts
+     * @return array<int,string>
+     */
+    public function chunks(array $parts, int $limit = 3800): array
+    {
+        $chunks = [];
+        $cur = '';
+        foreach ($parts as $p) {
+            if ($cur !== '' && mb_strlen($cur) + 2 + mb_strlen($p) > $limit) {
+                $chunks[] = $cur;
+                $cur = '';
+            }
+            $cur = $cur === '' ? $p : $cur."\n\n".$p;
+        }
+        if ($cur !== '') {
+            $chunks[] = $cur;
+        }
+
+        return $chunks;
     }
 
     private function block(string $title, array $s, callable $money): string
@@ -102,33 +141,95 @@ class DailyReportService
         return implode("\n", $lines);
     }
 
-    /** @return array<int, array{chat:int,branches:array<int,string>}> qabul qiluvchilar (chat_id => filiallar) */
+    /**
+     * Direktor ko'radigan faol filiallar (id => nom): "Barcha filiallar" yoki tanlanganlari.
+     *
+     * @param  array<int,string>  $all faol filiallar
+     * @return array<int,string>
+     */
+    public function branchesFor(User $u, array $all): array
+    {
+        if ($u->role !== Role::Director || ($u->all_branches ?? true)) {
+            return $u->role === Role::Director ? $all : ($u->branch_id && isset($all[$u->branch_id]) ? [$u->branch_id => $all[$u->branch_id]] : []);
+        }
+        $ids = DB::table('director_branches')->where('user_id', $u->id)->pluck('branch_id')->map(fn ($v) => (int) $v)->all();
+
+        return array_intersect_key($all, array_flip($ids));
+    }
+
+    /**
+     * Qabul qiluvchilar. Admin ID (sozlamadagi) lar barcha filial bo'yicha, doim DEFAULT_TIME da;
+     * direktor/admin foydalanuvchilar o'z filiallari va o'z vaqti bo'yicha.
+     *
+     * @return array<int, array{chat:int,branches:array<int,string>,time:string,user:?User}>
+     */
     public function recipients(): array
     {
         $all = Branch::where('status', 'active')->orderBy('name')->pluck('name', 'id')->all();
         $map = [];
 
         foreach ($this->telegram->adminIds() as $id) {
-            $map[$id] = $all;
+            $map[$id] = ['chat' => (int) $id, 'branches' => $all, 'time' => self::DEFAULT_TIME, 'user' => null];
         }
         User::whereIn('role', [Role::Director->value, Role::Admin->value])->where('status', UserStatus::Active->value)
-            ->whereNotNull('telegram_chat_id')->get()->each(function (User $u) use (&$map, $all) {
+            ->whereNull('archived_at')->where('report_enabled', true)->whereNotNull('telegram_chat_id')->get()->each(function (User $u) use (&$map, $all) {
                 $chat = (int) $u->telegram_chat_id;
                 if (isset($map[$chat])) {
                     return;
                 }
-                if ($u->role === Role::Director) {
-                    $map[$chat] = $all;
-                } elseif ($u->branch_id && isset($all[$u->branch_id])) {
-                    $map[$chat] = [$u->branch_id => $all[$u->branch_id]];
+                $branches = $this->branchesFor($u, $all);
+                if ($branches !== []) {
+                    $map[$chat] = ['chat' => $chat, 'branches' => $branches, 'time' => $u->report_time ?: self::DEFAULT_TIME, 'user' => $u];
                 }
             });
 
-        return collect($map)->map(fn ($b, $chat) => ['chat' => (int) $chat, 'branches' => $b])->values()->all();
+        return array_values($map);
     }
 
-    /** @return int yuborilgan xabarlar soni */
-    public function send(?CarbonImmutable $day = null): int
+    /** Hisobot vaqti kelganmi va bugun hali yuborilmaganmi? */
+    public function isDue(array $r, CarbonImmutable $now): bool
+    {
+        if ($now->format('H:i') < $r['time']) {
+            return false;
+        }
+
+        return $r['user']
+            ? ($r['user']->report_last_sent_on?->toDateString() !== $now->toDateString())
+            : ! Cache::has($this->sentKey($r['chat'], $now));
+    }
+
+    private function sentKey(int $chat, CarbonImmutable $day): string
+    {
+        return 'daily_report.sent.'.$day->toDateString().'.'.$chat;
+    }
+
+    /**
+     * Bitta qabul qiluvchiga yuboradi (bo'laklab). Bot bloklangan bo'lsa Telegram bog'lanishi tozalanadi.
+     *
+     * @return bool hammasi yetib bordimi
+     */
+    public function deliverTo(array $r, CarbonImmutable $day): bool
+    {
+        $ok = true;
+        foreach ($this->chunks($this->parts($r['branches'], $day)) as $text) {
+            $res = $this->telegram->deliver($r['chat'], $text);
+            if (! $res['ok']) {
+                $ok = false;
+                if ($res['blocked'] && $r['user']) {
+                    $r['user']->forceFill(['telegram_chat_id' => null, 'telegram_username' => null, 'telegram_linked_at' => null])->save();
+                }
+                break;
+            }
+        }
+
+        return $ok;
+    }
+
+    /**
+     * @param  bool  $onlyDue true: faqat vaqti kelgan va bugun olmaganlarga (har 5 daqiqada); false: hammaga hozir
+     * @return int yuborilgan qabul qiluvchilar soni
+     */
+    public function send(?CarbonImmutable $day = null, bool $onlyDue = false): int
     {
         if (! $this->telegram->configured()) {
             return 0;
@@ -136,8 +237,21 @@ class DailyReportService
         $day ??= CarbonImmutable::now('Asia/Tashkent');
         $sent = 0;
         foreach ($this->recipients() as $r) {
-            if ($r['branches'] !== [] && $this->telegram->sendMessage($r['chat'], $this->build($r['branches'], $day))) {
+            if ($onlyDue && ! $this->isDue($r, $day)) {
+                continue;
+            }
+            try {
+                $ok = $this->deliverTo($r, $day);
+            } catch (\Throwable $e) {
+                report($e);
+                $ok = false;   // bitta qabul qiluvchi xatosi qolganlarni to'xtatmaydi
+            }
+            if ($ok) {
                 $sent++;
+            }
+            if ($onlyDue && ($ok || $r['user'] === null)) {
+                // muvaffaqiyatli yoki Admin ID: bugun qayta urinmaymiz (xato bo'lsa user uchun keyingi 5 daqiqada qayta uriniladi)
+                $r['user'] ? $r['user']->forceFill(['report_last_sent_on' => $day->toDateString()])->save() : Cache::put($this->sentKey($r['chat'], $day), 1, now()->addDays(2));
             }
         }
 

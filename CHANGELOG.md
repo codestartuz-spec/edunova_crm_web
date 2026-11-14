@@ -1,3 +1,13 @@
+## v26 — Direktorga Telegram va shaxsiy kunlik hisobot
+- **Direktorni qo'shish/tahrirlash** formasida yangi blok «Telegram va kunlik hisobot»: **Telegram ID**, **hisobot yuborish vaqti** (soat:daqiqa, 5 daqiqa qadam, tezkor 18/20/21/22), «Kunlik hisobotni yuborish» kaliti.
+- Telegram ID saqlanayotganda bot unga tasdiq xabari yuboradi; direktor botga /start yozmagan yoki ID noto'g'ri bo'lsa, xato ko'rsatiladi. Bir ID ikki direktorga berilmaydi. Maydonni bo'shatib saqlash Telegramni uzadi.
+- **Havola orqali ulash:** «Havola yaratish» - direktorga yuboriladigan bir martalik `t.me/<bot>?start=...` havola (30 daqiqa amal qiladi). Direktor bossa, bot uni o'zi bog'laydi, forma esa ulanishni o'zi sezadi.
+- «Sinov hisobotini yuborish» va «Telegramni uzish» tugmalari. Direktorlar ro'yxatida «Telegram hisobot» ustuni (soat / ulanmagan / o'chiq).
+- **Hisobot faqat direktorning o'z filiallari bo'yicha** keladi («Barcha filiallar» yoki tanlanganlari); avval hamma direktorga barcha filial yuborilardi.
+- **Har kim o'z vaqtida oladi:** rejalashtiruvchi har 5 daqiqada vaqti kelganlarga yuboradi (kuniga bir marta). Vaqt bugun o'tib ketgan bo'lsa, o'zgartirilganda hisobot ertadan boshlanadi. Admin ID lar (Telegram bot sozlamalaridagi) avvalgidek 20:00 da oladi. `php artisan report:daily --now` - hammaga hozir yuborish.
+- **Ishonchlilik:** bitta direktorga yetmasa qolganlariga yuborish davom etadi; bot bloklangan bo'lsa (403) Telegram bog'lanishi tozalanadi («Ulanmagan» bo'ladi); uzun hisobot 4096 belgi chegarasidan oshmaydigan bo'laklarga bo'linadi.
+- Migratsiya: `users.report_enabled`, `users.report_time`, `users.report_last_sent_on`.
+
 ## v25 — Qidiruv tizimlari (SEO) va ochiq landing
 - **Ochiq landing sahifa** (o'zbek `/`, rus `/ru`): imkoniyatlar, rollar, qanday ishlaydi, savol-javoblar, qorong'i/yorug' rejim, mobilga moslashgan. Tizimga kirmagan mehmon asosiy manzilni ochganda endi login emas, shu sahifani ko'radi; kirgan foydalanuvchi avvalgidek panelga tushadi. `/uz` → `/` (301).
 - **SEO teglari:** title/description, canonical, hreflang (uz, ru, x-default), Open Graph + Twitter kartasi (`public/images/og-edunova.png`, 1200×630), JSON-LD (Organization, WebSite, SoftwareApplication, FAQPage).

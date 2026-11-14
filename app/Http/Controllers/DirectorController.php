@@ -7,6 +7,8 @@ use App\Enums\UserStatus;
 use App\Models\AuditLog;
 use App\Models\User;
 use App\Rules\UzPhone;
+use App\Services\DailyReportService;
+use App\Services\Telegram\DirectorTelegram;
 use App\Support\DirectorPermissions;
 use App\Support\Format;
 use App\Support\PermissionRegistry;
@@ -60,10 +62,13 @@ class DirectorController extends Controller
             'email' => ['nullable', 'email', 'max:255', Rule::unique('users', 'email')],
             'phone' => ['required', 'string', new UzPhone],
             'password' => ['required', 'confirmed', Password::defaults()],
+            'telegram_chat_id' => ['nullable', 'string', 'max:20'],
+            'report_enabled' => ['nullable', 'boolean'],
+            'report_time' => ['nullable', 'regex:/^([01]\d|2[0-3]):[0-5]\d$/'],
             'branch_mode' => ['nullable', Rule::in(['all', 'selected'])],
             'branch_ids' => ['required_if:branch_mode,selected', 'nullable', 'array'],
             'branch_ids.*' => ['integer', Rule::exists('branches', 'id')],
-        ], ['branch_ids.required_if' => "Kamida bitta filialni belgilang yoki «Barcha filiallar» ni tanlang."], ['branch_mode' => 'Filial ruxsati', 'branch_ids' => 'Filiallar', 'name' => 'F.I.O', 'username' => 'Login', 'email' => 'Email', 'phone' => 'Telefon', 'password' => 'Parol']);
+        ], ['branch_ids.required_if' => "Kamida bitta filialni belgilang yoki «Barcha filiallar» ni tanlang."], ['branch_mode' => 'Filial ruxsati', 'branch_ids' => 'Filiallar', 'name' => 'F.I.O', 'username' => 'Login', 'email' => 'Email', 'phone' => 'Telefon', 'password' => 'Parol', 'telegram_chat_id' => 'Telegram ID', 'report_time' => 'Hisobot vaqti']);
 
         $phone = Format::canonicalPhone($data['phone']) ?: $data['phone'];
         if (User::whereIn('role', [Role::SAdmin, Role::Director])->where('phone', $phone)->exists()) {
@@ -82,6 +87,14 @@ class DirectorController extends Controller
 
         // Barcha direktorlar uchun umumiy ruxsatlar shabloni darhol qo'llanadi.
         DirectorPermissions::applyTo($director);
+
+        try {
+            $this->saveReport($director, $request, $data);
+        } catch (ValidationException $e) {
+            // direktor yaratildi, faqat Telegram ulanmadi: qayta yaratmaslik uchun tahrirlash sahifasiga qaytamiz
+            return redirect()->route('directors.edit', $director->id)->withErrors($e->errors())
+                ->with('success', "{$director->name} qo'shildi, lekin Telegram ulanmadi: pastdagi xabarga qarang.");
+        }
 
         return redirect()->route('directors.index')
             ->with('success', "{$director->name} direktor sifatida qo'shildi. Unga direktorlarning umumiy ruxsatlari berildi.");
@@ -103,10 +116,13 @@ class DirectorController extends Controller
             'email' => ['nullable', 'email', 'max:255', Rule::unique('users', 'email')->ignore($director->id)],
             'phone' => ['required', 'string', new UzPhone],
             'password' => ['nullable', 'confirmed', Password::defaults()],
+            'telegram_chat_id' => ['nullable', 'string', 'max:20'],
+            'report_enabled' => ['nullable', 'boolean'],
+            'report_time' => ['nullable', 'regex:/^([01]\d|2[0-3]):[0-5]\d$/'],
             'branch_mode' => ['nullable', Rule::in(['all', 'selected'])],
             'branch_ids' => ['required_if:branch_mode,selected', 'nullable', 'array'],
             'branch_ids.*' => ['integer', Rule::exists('branches', 'id')],
-        ], ['branch_ids.required_if' => "Kamida bitta filialni belgilang yoki «Barcha filiallar» ni tanlang."], ['branch_mode' => 'Filial ruxsati', 'branch_ids' => 'Filiallar', 'name' => 'F.I.O', 'username' => 'Login', 'email' => 'Email', 'phone' => 'Telefon', 'password' => 'Parol']);
+        ], ['branch_ids.required_if' => "Kamida bitta filialni belgilang yoki «Barcha filiallar» ni tanlang."], ['branch_mode' => 'Filial ruxsati', 'branch_ids' => 'Filiallar', 'name' => 'F.I.O', 'username' => 'Login', 'email' => 'Email', 'phone' => 'Telefon', 'password' => 'Parol', 'telegram_chat_id' => 'Telegram ID', 'report_time' => 'Hisobot vaqti']);
 
         $phone = Format::canonicalPhone($data['phone']) ?: $data['phone'];
         if (User::whereIn('role', [Role::SAdmin, Role::Director])->where('phone', $phone)->where('id', '!=', $director->id)->exists()) {
@@ -121,6 +137,7 @@ class DirectorController extends Controller
         $director->save();
         $before = $this->branchSummary($director);
         $branchNote = $this->saveBranches($director, $data);
+        $this->saveReport($director, $request, $data);
 
         if ($passwordChanged) {
             $sessions = app(\App\Services\SessionService::class);
@@ -130,6 +147,73 @@ class DirectorController extends Controller
         AuditLog::record('director.updated', $director, "Direktor ma'lumoti yangilandi: {$director->name}".($passwordChanged ? ' (parol almashtirildi)' : '').". Filiallar: {$branchNote}".($before !== $branchNote ? " (oldin: {$before})" : ''));
 
         return redirect()->route('directors.index')->with('success', "{$director->name} ma'lumotlari saqlandi.");
+    }
+
+    /**
+     * v26: kunlik Telegram hisobot sozlamasi (yoqish/vaqt) va Telegram ID.
+     * Vaqt bugun allaqachon o'tib ketgan bo'lsa, hisobot bugun darhol yuborilmaydi - ertadan boshlanadi.
+     */
+    private function saveReport(User $director, Request $request, array $data): void
+    {
+        if (! $request->has('report_time') && ! $request->has('telegram_chat_id')) {
+            return;   // forma yuborilmagan - o'zgarmaydi
+        }
+        $time = $data['report_time'] ?? $director->report_time ?: DailyReportService::DEFAULT_TIME;
+        $director->forceFill([
+            'report_enabled' => $request->boolean('report_enabled'),
+            'report_time' => $time,
+        ]);
+        if ($director->isDirty('report_time') && now('Asia/Tashkent')->format('H:i') >= $time) {
+            $director->report_last_sent_on = now('Asia/Tashkent')->toDateString();
+        }
+        $director->save();
+
+        if ($request->has('telegram_chat_id')) {
+            app(DirectorTelegram::class)->setChatId($director, $data['telegram_chat_id'] ?? null);
+        }
+    }
+
+    /** Bir martalik Telegram havolasi (AJAX). */
+    public function telegramLink(int $id)
+    {
+        $link = app(DirectorTelegram::class)->makeLink($this->find($id));
+
+        return $link ? response()->json($link) : response()->json(['message' => 'Telegram bot sozlanmagan (Sozlamalar → Telegram bot).'], 422);
+    }
+
+    /** Ulanish holati (havola bosilganini kutish uchun, AJAX). */
+    public function telegramStatus(int $id)
+    {
+        $d = $this->find($id);
+
+        return response()->json(['linked' => $d->telegram_chat_id !== null, 'chat_id' => $d->telegram_chat_id, 'username' => $d->telegram_username]);
+    }
+
+    public function telegramUnlink(int $id): RedirectResponse
+    {
+        $d = $this->find($id);
+        app(DirectorTelegram::class)->unlink($d);
+        AuditLog::record('director.telegram_unlinked', $d, "Direktorning Telegrami uzildi: {$d->name}");
+
+        return back()->with('success', 'Telegram uzildi.');
+    }
+
+    /** Sinov: hisobotni shu direktorga hozir yuboradi (o'z filiallari bo'yicha). */
+    public function telegramTest(int $id): RedirectResponse
+    {
+        $d = $this->find($id);
+        $svc = app(DailyReportService::class);
+        if (! $d->telegram_chat_id) {
+            return back()->withErrors(['telegram_chat_id' => 'Avval Telegramni ulang.']);
+        }
+        $all = \App\Models\Branch::where('status', 'active')->orderBy('name')->pluck('name', 'id')->all();
+        $branches = $svc->branchesFor($d, $all);
+        if ($branches === []) {
+            return back()->withErrors(['telegram_chat_id' => 'Direktorga faol filial berilmagan.']);
+        }
+        $ok = $svc->deliverTo(['chat' => (int) $d->telegram_chat_id, 'branches' => $branches, 'time' => $d->report_time, 'user' => $d], \Carbon\CarbonImmutable::now('Asia/Tashkent'));
+
+        return $ok ? back()->with('success', 'Sinov hisobot Telegramga yuborildi.') : back()->withErrors(['telegram_chat_id' => "Yuborib bo'lmadi. Direktor botni bloklagan bo'lishi mumkin; qayta ulang."]);
     }
 
     /** Barcha direktorlar uchun BITTA umumiy ruxsatlar sahifasi (faqat sAdmin). */

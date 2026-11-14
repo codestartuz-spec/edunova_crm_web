@@ -207,6 +207,10 @@ Route::middleware(['auth', 'active', 'legal'])->group(function () {
         Route::post('directors', [DirectorController::class, 'store'])->name('directors.store');
         Route::get('directors/{id}/edit', [DirectorController::class, 'edit'])->whereNumber('id')->name('directors.edit');
         Route::put('directors/{id}', [DirectorController::class, 'update'])->whereNumber('id')->name('directors.update');
+        Route::post('directors/{id}/telegram-link', [DirectorController::class, 'telegramLink'])->whereNumber('id')->name('directors.telegram.link');
+        Route::get('directors/{id}/telegram-status', [DirectorController::class, 'telegramStatus'])->whereNumber('id')->name('directors.telegram.status');
+        Route::post('directors/{id}/telegram-unlink', [DirectorController::class, 'telegramUnlink'])->whereNumber('id')->name('directors.telegram.unlink');
+        Route::post('directors/{id}/telegram-test', [DirectorController::class, 'telegramTest'])->whereNumber('id')->name('directors.telegram.test');
         Route::post('directors/{id}/toggle', [DirectorController::class, 'toggle'])->whereNumber('id')->name('directors.toggle');
         Route::delete('directors/{id}', [DirectorController::class, 'destroy'])->whereNumber('id')->name('directors.destroy');
         // Barcha direktorlar uchun BITTA umumiy ruxsatlar shabloni
