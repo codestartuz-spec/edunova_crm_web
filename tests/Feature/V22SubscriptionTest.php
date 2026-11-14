@@ -215,4 +215,22 @@ class V22SubscriptionTest extends TestCase
         $this->assertSame(0, $service->sendReminders());
         $this->artisan('subscriptions:notify')->assertSuccessful();
     }
+
+    public function test_all_subscription_pages_render(): void
+    {
+        $b = $this->branch();
+        $director = $this->user(Role::Director);
+        $sadmin = $this->user(Role::SAdmin);
+
+        foreach ([false, true] as $configured) {
+            $configured && $this->configure();
+            $this->actingAs($director)->get(route('subscriptions.buy', $b))->assertOk();
+            $this->actingAs($director)->get(route('subscriptions.index'))->assertOk()->assertSee('Obunani uzaytirish');
+            $this->actingAs($sadmin)->get(route('subscriptions.index'))->assertOk();
+            $this->actingAs($sadmin)->get(route('subscriptions.settings'))->assertOk();
+        }
+
+        $this->expire($b);
+        $this->actingAs($director)->get(route('subscriptions.buy', $b))->assertOk()->assertSee('Obuna sotib olish');
+    }
 }

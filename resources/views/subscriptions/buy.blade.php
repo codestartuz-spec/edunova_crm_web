@@ -63,7 +63,8 @@
                 </div>
                 <p class="text-xs text-ink-500">Tanlangan tarif summasini aynan shu kartaga o'tkazing, so'ng chekni yuklang.</p>
                 @unless ($branch->subscription_exempt)
-                    <p class="text-xs text-ink-500">Hozirgi muddat: <b>{{ $branch->subscription_ends_on?->format('d.m.Y') }}</b>@if(! $branch->subscriptionExpired()) — yangi muddat shu sanadan boshlab hisoblanadi@else — yangi muddat bugundan boshlanadi@endif.</p>
+                    <p class="text-xs text-ink-500">Hozirgi muddat: <b>{{ $branch->subscription_ends_on?->format('d.m.Y') }}</b>
+                        {{ $branch->subscriptionExpired() ? '— yangi muddat bugundan boshlanadi.' : '— yangi muddat shu sanadan boshlab hisoblanadi.' }}</p>
                 @endunless
             </div>
         </div>
