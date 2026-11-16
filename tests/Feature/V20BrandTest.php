@@ -57,7 +57,7 @@ class V20BrandTest extends TestCase
 
     public function test_defaults_are_edunova_and_name_can_be_changed(): void
     {
-        $this->assertSame('Edunova CRM', Brand::name());
+        $this->assertSame('NovaCrm', Brand::name());
 
         $sa = $this->user(Role::SAdmin);
         $this->actingAs($sa)->post('/brand', $this->data())->assertRedirect('/brand');
@@ -76,7 +76,7 @@ class V20BrandTest extends TestCase
         $this->actingAs($sa)->post('/brand', $this->data() + ['logo' => $this->png(600, 400)])->assertSessionHasErrors('logo');
         $this->actingAs($sa)->post('/brand', $this->data() + ['logo' => $this->png(512, 511)])->assertSessionHasErrors('logo');
         $this->assertFalse(Brand::hasLogo());
-        $this->assertSame('Edunova CRM', Brand::name()); // xatoda hech narsa saqlanmaydi
+        $this->assertSame('NovaCrm', Brand::name()); // xatoda hech narsa saqlanmaydi
     }
 
     public function test_logo_must_be_png(): void

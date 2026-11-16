@@ -1,4 +1,4 @@
-# Edunova tashqi monitoring
+# NovaCrm tashqi monitoring
 
 Sayt serveri o'chib qolsa, uning o'zi xabar yubora olmaydi. Bu skript **boshqa** kompyuterda (ofis yoki uydagi Ubuntu) ishlaydi.
 

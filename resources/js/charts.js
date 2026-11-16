@@ -1,5 +1,5 @@
 /*
- * Edunova CRM grafiklari (Chart.js). Ma'lumot serverdan tayyor "spec" ko'rinishida keladi (App\Support\Viz),
+ * NovaCrm grafiklari (Chart.js). Ma'lumot serverdan tayyor "spec" ko'rinishida keladi (App\Support\Viz),
  * jadval ko'rinishi ham xuddi shu ma'lumotdan quriladi.
  *
  * Qoidalar: ingichka ustunlar (<= 24px, uchi 4px yumaloq), 2px chiziqlar, ingichka jimjima setka,

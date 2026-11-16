@@ -13,7 +13,7 @@ class ImportLegacy extends Command
 {
     protected $signature = 'app:import-legacy {file : .sql yoki .sql.gz dump} {--primary= : Fayldagi qaysi sAdmin ID hozirgi sAdminga birlashadi} {--dry-run : Faqat tekshirish} {--force : Tasdiqsiz} {--token= : Veb jarayon identifikatori} {--backup : Avval zaxira olish}';
 
-    protected $description = "Eski Edunova bazasi dampini hozirgi tizimga ko'chiradi (sAdmin hisobi, sozlamalar saqlanadi)";
+    protected $description = "Eski NovaCrm bazasi dampini hozirgi tizimga ko'chiradi (sAdmin hisobi, sozlamalar saqlanadi)";
 
     public function handle(LegacyImporter $importer): int
     {

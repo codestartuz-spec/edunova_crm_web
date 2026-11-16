@@ -7,7 +7,7 @@ use App\Models\Branch;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-/** v9 (3-band): ochiq murojaat sahifasida Edunova o'rniga filialning o'z nomi/rangi/ma'lumoti. */
+/** v9 (3-band): ochiq murojaat sahifasida NovaCrm o'rniga filialning o'z nomi/rangi/ma'lumoti. */
 class V9BranchBrandingTest extends TestCase
 {
     use RefreshDatabase;
@@ -23,7 +23,7 @@ class V9BranchBrandingTest extends TestCase
             ->assertSee('Andijon')
             ->assertSee("Andijon filiali haqida qisqa ma'lumot")
             ->assertSee('#123abc', false)
-            ->assertDontSee('Edunova');
+            ->assertDontSee('NovaCrm');
     }
 
     public function test_apply_show_falls_back_to_default_color_when_unset(): void
@@ -32,7 +32,7 @@ class V9BranchBrandingTest extends TestCase
 
         $response = $this->get("/apply/{$branch->code}");
 
-        $response->assertOk()->assertSee('Namangan')->assertSee(Branch::DEFAULT_BRAND_COLOR, false)->assertDontSee('Edunova');
+        $response->assertOk()->assertSee('Namangan')->assertSee(Branch::DEFAULT_BRAND_COLOR, false)->assertDontSee('NovaCrm');
     }
 
     public function test_apply_index_page_still_shows_generic_branding(): void
@@ -40,7 +40,7 @@ class V9BranchBrandingTest extends TestCase
         $this->branch('Farg\'ona');
         $this->branch('Xorazm');
 
-        $this->get('/apply')->assertOk()->assertSee('Edunova');
+        $this->get('/apply')->assertOk()->assertSee('NovaCrm');
     }
 
     public function test_sadmin_can_update_branch_branding(): void

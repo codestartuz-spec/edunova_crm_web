@@ -151,7 +151,7 @@ class LegalService
             'privacy' => <<<'TXT'
 ## 1. Umumiy qoidalar
 
-Ushbu Maxfiylik siyosati Edunova CRM tizimi (bundan keyin — «Tizim») foydalanuvchilarining shaxsiy ma'lumotlari qanday yig'ilishi, saqlanishi, ishlatilishi va himoya qilinishini tushuntiradi. Tizimdan foydalanish orqali siz ushbu siyosat shartlariga rozilik bildirasiz.
+Ushbu Maxfiylik siyosati NovaCrm tizimi (bundan keyin — «Tizim») foydalanuvchilarining shaxsiy ma'lumotlari qanday yig'ilishi, saqlanishi, ishlatilishi va himoya qilinishini tushuntiradi. Tizimdan foydalanish orqali siz ushbu siyosat shartlariga rozilik bildirasiz.
 
 ## 2. Qanday ma'lumotlar yig'iladi
 
@@ -191,7 +191,7 @@ TXT,
             'terms' => <<<'TXT'
 ## 1. Shartlarni qabul qilish
 
-Edunova CRM tizimidan (bundan keyin — «Tizim») foydalanish orqali siz ushbu Foydalanish shartlariga rozilik bildirasiz. Rozi bo'lmasangiz, Tizimdan foydalanmang.
+NovaCrm tizimidan (bundan keyin — «Tizim») foydalanish orqali siz ushbu Foydalanish shartlariga rozilik bildirasiz. Rozi bo'lmasangiz, Tizimdan foydalanmang.
 
 ## 2. Akkaunt va xavfsizlik
 

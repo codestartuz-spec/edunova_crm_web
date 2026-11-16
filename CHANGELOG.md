@@ -1,3 +1,6 @@
+## v29 — Rebrend: Edunova CRM → NovaCrm
+- Loyiha nomi **NovaCrm** ga o'zgardi: standart brend nomi (`App\Support\Brand`), `APP_NAME`, `config/app.php`, huquqiy matnlar (Maxfiylik siyosati, Foydalanish shartlari), composer paketi, kod izohlari va testlar. Logotip fayllari o'zgarmadi.
+
 ## v28 — Butun panel 3D dizaynda, o'quv mavzusidagi animatsion fon, filial rangiga moslashgan ranglar
 - **Umumiy 3D tizim** (`resources/css/edu3d.css`, `resources/js/edu3d.js`): barcha sahifalardagi karta, tugma, forma maydoni, jadval, belgi, menyu, yuqori va mobil panel, oyna va xabar ranglari bir tizimda chuqurlik oladi. Kartalar «plita» ko'rinishida, tugmalar bosiladigan «klavisha» (bosganda pastga tushadi), maydonlar botiq, jadval sarlavhasi va qatorlar bo'rtma. Tailwind komponentlariga tegilmagan, hamma sahifaga avtomatik tushadi.
 - **Sahifa turiga qarab daraja** (`App\Support\Edu3D`): *rich* (bosh sahifa, statistika, o'quvchi kabineti, kirish) - stat kartalari sichqoncha ortidan qiyshayadi, belgilar 3D ko'tariladi; *calm* (jadval, moliya, hisobotlar) - faqat chuqurlik va yumshoq ko'tarilish, ma'lumot o'qilishiga xalaqit bermaydi; *form* (yaratish/tahrirlash, sozlamalar) - botiq maydonlar va klavisha tugmalar.

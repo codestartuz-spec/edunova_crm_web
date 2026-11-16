@@ -6,7 +6,7 @@ use App\Models\Branch;
 
 /**
  * Filial rangi: tanlangan (yoki foydalanuvchining) filialida `brand_color` belgilangan bo'lsa, butun panel
- * (Tailwind `brand-*` ranglari CSS o'zgaruvchilari orqali) shu rangga o'tadi. Aks holda standart Edunova qizili.
+ * (Tailwind `brand-*` ranglari CSS o'zgaruvchilari orqali) shu rangga o'tadi. Aks holda standart NovaCrm qizili.
  * Rang tanlovidan 50..950 shkalasi yasaladi; 600 darajasi oq matn bilan o'qiladigan (kontrast >= 4.5) qilib to'g'rilanadi.
  */
 class BrandTheme

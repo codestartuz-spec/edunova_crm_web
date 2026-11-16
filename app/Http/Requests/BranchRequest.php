@@ -23,7 +23,7 @@ class BranchRequest extends FormRequest
             'eskiz_email' => ['nullable', 'email', 'max:255'],
             'eskiz_password' => ['nullable', 'string', 'max:255'],
             'eskiz_from' => ['nullable', 'string', 'max:30'],
-            // v9: ochiq murojaat sahifasida Edunova o'rniga ko'rsatiladigan filial rangi va ma'lumoti.
+            // v9: ochiq murojaat sahifasida NovaCrm o'rniga ko'rsatiladigan filial rangi va ma'lumoti.
             'brand_color' => ['nullable', 'regex:/^#[0-9a-fA-F]{6}$/'],
             'public_about' => ['nullable', 'string', 'max:1000'],
         ];

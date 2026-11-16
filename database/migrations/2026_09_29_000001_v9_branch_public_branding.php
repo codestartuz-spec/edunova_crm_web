@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * v9 (3-band): ochiq murojaat (Varonka/apply) sahifasida Edunova o'rniga har bir filialning
+ * v9 (3-band): ochiq murojaat (Varonka/apply) sahifasida NovaCrm o'rniga har bir filialning
  * o'z rangi va qisqa ma'lumoti ko'rsatilishi uchun. Fayl yuklash yo'q — faqat rang (HEX) va matn.
  */
 return new class extends Migration

@@ -6,13 +6,13 @@ use App\Models\AppSetting;
 
 /**
  * v20: tizim brendi - loyiha nomi, shiori va logotiplar. Qiymatlar `app_settings` da (brand.*), fayllar
- * `storage/app/brand/` da turadi va `/brand/{fayl}` marshruti orqali beriladi. Sozlanmagan bo'lsa - avvalgi Edunova.
+ * `storage/app/brand/` da turadi va `/brand/{fayl}` marshruti orqali beriladi. Sozlanmagan bo'lsa - standart NovaCrm.
  */
 class Brand
 {
-    public const DEFAULT_NAME = 'Edunova CRM';
+    public const DEFAULT_NAME = 'NovaCrm';
 
-    public const DEFAULT_SHORT = 'Edunova';
+    public const DEFAULT_SHORT = 'NovaCrm';
 
     public const DEFAULT_TAGLINE = "O'quv markazingizni bitta tizimdan boshqaring.";
 

@@ -88,7 +88,7 @@ class V25SeoLandingTest extends TestCase
     public function test_sadmin_saves_landing_contacts_with_validation(): void
     {
         $this->actingAs($this->user(Role::SAdmin));
-        $base = ['name' => 'EduNova CRM', 'short' => 'EduNova'];
+        $base = ['name' => 'NovaCrm', 'short' => 'NovaCrm'];
         $this->post(route('brand.update'), $base + ['landing_telegram' => 'bad url!!'])->assertSessionHasErrors('landing_telegram');
         $this->post(route('brand.update'), $base + ['landing_telegram' => '@edunova_uz', 'landing_email' => 'info@edunova.uz'])->assertSessionHasNoErrors();
         $this->assertSame('@edunova_uz', AppSetting::get('landing.telegram'));

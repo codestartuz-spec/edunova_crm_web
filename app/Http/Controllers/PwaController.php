@@ -41,7 +41,7 @@ class PwaController extends Controller
         $icon = json_encode(\App\Support\Brand::iconUrl(192));
         $title = json_encode(\App\Support\Brand::name(), JSON_UNESCAPED_UNICODE);
         $js = <<<JS
-const CACHE = 'edunova-static-v1';
+const CACHE = 'novacrm-static-v1';
 const OFFLINE = {$offline};
 self.addEventListener('install', e => {
     e.waitUntil(caches.open(CACHE).then(c => c.add(OFFLINE)).then(() => self.skipWaiting()));

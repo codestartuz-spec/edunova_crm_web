@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Schema;
 use RuntimeException;
 
 /**
- * v15: eski (masalan, temuriy-crm.uz) Edunova bazasi dampidagi ma'lumotlarni HOZIRGI tizimga ko'chiradi.
+ * v15: eski (masalan, temuriy-crm.uz) NovaCrm bazasi dampidagi ma'lumotlarni HOZIRGI tizimga ko'chiradi.
  *
  *  - Fayldagi SQL bajarilmaydi, faqat qatorlari o'qiladi (SqlDumpReader). Jadvallar tuzilmasi o'zgarmaydi.
  *  - Hozirgi sAdmin hisobi saqlanadi; fayldagi asosiy sAdmin shu hisobga birlashtiriladi, boshqa sAdminlar
@@ -103,7 +103,7 @@ class LegacyImporter
         $warnings = [];
         foreach (['users', 'branches'] as $need) {
             if (! isset($tables[$need])) {
-                $errors[] = "Faylda «{$need}» jadvali yo'q: bu Edunova bazasining dampi emas.";
+                $errors[] = "Faylda «{$need}» jadvali yo'q: bu NovaCrm bazasining dampi emas.";
             }
         }
         if (! in_array(true, array_map(fn ($m) => str_contains((string) $m, 'create_users_table'), $migrations), true) && $migrations !== []) {

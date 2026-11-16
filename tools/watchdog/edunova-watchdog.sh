@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Edunova CRM tashqi monitoring (watchdog).
+# NovaCrm tashqi monitoring (watchdog).
 # Boshqa kompyuterda (Ubuntu) ishlaydi: saytni tekshiradi, o'chib qolsa Telegram orqali admin(lar)ga xabar beradi.
 # Cron: * * * * * /opt/edunova-watchdog/edunova-watchdog.sh >/dev/null 2>&1
 set -u
@@ -16,7 +16,7 @@ CONF="${WATCHDOG_CONF:-$DIR/watchdog.env}"
 FAILS_BEFORE_ALERT="${FAILS_BEFORE_ALERT:-3}"     # ketma-ket nechta xatodan keyin xabar beriladi
 REMINDER_MINUTES="${REMINDER_MINUTES:-60}"        # o'chiq turganda necha daqiqada eslatma
 TIMEOUT="${TIMEOUT:-10}"
-NAME="${NAME:-Edunova CRM}"
+NAME="${NAME:-NovaCrm}"
 STATE_DIR="${STATE_DIR:-$HOME/.edunova-watchdog}"
 mkdir -p "$STATE_DIR"
 STATE="$STATE_DIR/state"

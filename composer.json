@@ -1,7 +1,7 @@
 {
-    "name": "edunova/crm",
+    "name": "novacrm/crm",
     "type": "project",
-    "description": "Edunova CRM - ko'p filialli o'quv markazlari boshqaruv tizimi",
+    "description": "NovaCrm - ko'p filialli o'quv markazlari boshqaruv tizimi",
     "license": "proprietary",
     "require": {
         "php": "^8.2",

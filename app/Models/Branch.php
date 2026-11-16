@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 
 class Branch extends Model
 {
-    /** v9: umumiy Edunova rangi (agar filial o'z rangini tanlamagan bo'lsa). */
+    /** v9: umumiy NovaCrm rangi (agar filial o'z rangini tanlamagan bo'lsa). */
     public const DEFAULT_BRAND_COLOR = '#5d46e2';
 
     protected $fillable = [
